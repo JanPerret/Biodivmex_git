@@ -37,3 +37,12 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+.Rproj.user
+*.Rproj
+
+# Data folder
+data/
+
+# Figure output folder
+output/plots/
+
