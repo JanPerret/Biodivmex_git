@@ -41,8 +41,9 @@ vignettes/*.pdf
 *.Rproj
 
 # Data folder
-data/
+data/*.csv
 
 # Figure output folder
-output/plots/
+output/plots/*.pdf
+output/plots/*.png
 
