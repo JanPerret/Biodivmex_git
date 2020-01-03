@@ -7,7 +7,6 @@
 # jan.perret@cefe.cnrs.fr
 #################################################
 
-# commit test after synchronizing folder with SyncBackFree
 
 # load data
 fungi_data <- read_delim("./data/TEST_v10_SIMPLE_RESULT_GENBANK_v10_fungi_references.csv", delim = ",", col_names = TRUE,
