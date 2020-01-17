@@ -47,3 +47,6 @@ data/*.csv
 output/plots/*.pdf
 output/plots/*.png
 
+# Text output folder
+output/text/*.csv
+
