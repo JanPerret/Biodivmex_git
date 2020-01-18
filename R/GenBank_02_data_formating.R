@@ -156,25 +156,14 @@ fish_data_med <- metazoa_data_med %>% filter(taxa == "Fish") ###################
 ############################# ICI IL Y A UN FILTRAGE DES GENES A FAIRE AUSSI POUR GARDER QUE LES MITOC POUR LES TAXONS DE METAZOAIRES TERRESTRES
 ############################# utiliser filter() et faire une liste des genes nucleaires avec une condition gene != nuc_gene_list 
 
-# 3 arguments necessaires pour la future fonction
-
-kingdom_data = plant_data
-taxa_data = plant_data
-taxa_data_med = plant_data_med
-
-kingdom_data = metazoa_data
-taxa_data = amph_data
-taxa_data_med = amph_data_med
-
-kingdom_data = metazoa_data
-taxa_data = lumbri_data
-taxa_data_med = lumbri_data_med
 
 GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med) {
+GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name) {
   
-  # initiaze table to store the 6 general general descriptive informations 
-  descritive_table <- setNames(data.frame(matrix(ncol = 6, nrow = 1)),
-                                     c("n_seq", "taxa_n_seq", "loc_rate", "n_seq_med", "n_seq_sp_level_med", "n_sp_med"))
+  # initiaze table to store the 6 general general descriptive informations
+  descritive_table <- setNames(data.frame(matrix(ncol = 7, nrow = 1)),
+                               c("taxa", "n_seq", "taxa_n_seq", "loc_rate", "n_seq_med", "sp_level_rate_med", "n_sp_med"))
+  descritive_table$taxa <- taxa_name
   
   # 1. number of sequences in GenBank for the reign (metazoa, thracheophyta or fungi)
   descritive_table$n_seq <- length(kingdom_data$access_num)
@@ -184,14 +173,13 @@ GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med) {
   
   # 3. percentage of sequences with a sample origin information
   descritive_table$loc_rate <- round((sum(!is.na(taxa_data$sample_origin))/length(taxa_data$access_num))*100, 2)
-
+  
   # 4. number of sequences affiliated to a country of the mediterranean basin for the taxa
   descritive_table$n_seq_med <- length(taxa_data_med$access_num)
   
   # 5. percentage of sequences affiliated at least to species level (can be more precise) for the taxa in the mediterranean basin
-  # descritive_table$n_seq_sp_level_med <- round((sum(!is.na(taxa_data_med$species_level))/length(taxa_data_med$species_level))*100, 2)
-  descritive_table$n_seq_sp_level_med <- round((sum(!is.na(taxa_data_med$species_level | taxa_data_med$species_level != "hyrid"))/length(taxa_data_med$species_level))*100, 2)
-  ######################################################################### ICI IL Y A LES HYBRIDES A GERER !!!!
+  a = sum(!is.na(taxa_data_med$species_level)) - length(which(taxa_data_med$species_level == "hybrid"))
+  descritive_table$sp_level_rate_med <- round((a/length(taxa_data_med$species_level))*100, 2)
   
   # 6. number of different species names for the taxa in the mediterranean basin
   descritive_table$n_sp_med <- length(unique(taxa_data_med$species_level))
@@ -199,6 +187,32 @@ GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med) {
   return(descritive_table)
 }
 
-GB_extract_general_info(kingdom_data = metazoa_data,
-                        taxa_data = lumbri_data,
-                        taxa_data_med = lumbri_data_med)
+plant_desc_tab <- GB_extract_general_info(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = plant_data_med, taxa_name = "plant")
+fungi_desc_tab <- GB_extract_general_info(kingdom_data = fungi_data, taxa_data = fungi_data, taxa_data_med = fungi_data_med, taxa_name = "fungi")
+amph_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = amph_data, taxa_data_med = amph_data_med, taxa_name = "amphibian")
+rept_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = rept_data, taxa_data_med = rept_data_med, taxa_name = "reptile")
+bird_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = bird_data, taxa_data_med = bird_data_med, taxa_name = "bird")
+mammal_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = mammal_data, taxa_data_med = mammal_data_med, taxa_name = "mammal")
+coleo_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = coleo_data, taxa_data_med = coleo_data_med, taxa_name = "coleoptera")
+lumbri_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = lumbri_data, taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
+papilio_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = papilio_data, taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
+sponge_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = sponge_data, taxa_data_med = sponge_data_med, taxa_name = "porifera")
+crusta_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
+fish_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = fish_data, taxa_data_med = fish_data_med, taxa_name = "fish")
+
+
+
+# ajouter un rowbind() de tous les tableaux ci-dessus ici et un export de ce tableau en csv
+# ce sera tres utile pour comparer les groupes taxonomiques
+
+all_taxa_desc_tab <- rbind(plant_desc_tab, fungi_desc_tab, amph_desc_tab, rept_desc_tab, bird_desc_tab, mammal_desc_tab,
+                           coleo_desc_tab, lumbri_desc_tab, papilio_desc_tab, sponge_desc_tab, crusta_desc_tab, fish_desc_tab)
+
+write_csv2(all_taxa_desc_tab, path = "./output/text/GenBank_all_taxa_descriptive_mesures.csv", col_names = TRUE)
+
+
+
+#############################
+############################# # ICI SORTIR L'INFO DU NOMBRE DE SEQUENCES POUR CHAQUE GENE (dont "NA") + une colonne avec le nombre total de sequences pour faire des pourcentages
+############################# et sortir les deux tableaux : un avec les effectifs et un avec ls pourcentages et les sauver en CSV
+
