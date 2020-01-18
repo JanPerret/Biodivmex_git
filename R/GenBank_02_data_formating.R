@@ -117,12 +117,23 @@ metazoa_data <- metazoa_data %>%
   mutate(sample_origin = replace(sample_origin, sample_origin == "West Bank", "Palestine"))
 
 
-### make sub data frames for the mediterranean basin and each animal taxa
+### create sub-data frame without nuclear genes (only used for marine taxa)
+nuc_gene_names <- c("18S rRNA", "28S rRNA", "5.8S rRNA", "ITS", "Rag 2")
+
+# save data frame with nuclear sequences for marine taxa
+metazoa_data_with_nuc <- metazoa_data
+
+# data frame for terrestrial taxa
+metazoa_data <- metazoa_data %>% 
+  filter(!str_detect(gene, paste(nuc_gene_names, sep = "|")))
+
+
+### make sub-data frames for the mediterranean basin and each animal taxa
 # load list of mediterranean countries and island
 med_countries_list <- read_delim("./data/name_list_med_countries_and_islands_GenBank.csv", delim = ",", col_names = FALSE)
 med_countries_list <- med_countries_list$X1
 
-# make a sub-dataframe for each animal taxa in the WORLD
+# make a sub-data frame for each animal taxa in the WORLD
 amph_data <- metazoa_data %>% filter(taxa == "Amphibian")
 rept_data <- metazoa_data %>% filter(taxa == "Reptile")
 bird_data <- metazoa_data %>% filter(taxa == "Bird")
@@ -130,17 +141,18 @@ mammal_data <- metazoa_data %>% filter(taxa == "Mammal")
 coleo_data <- metazoa_data %>% filter(taxa == "Coleoptera")
 lumbri_data <- metazoa_data %>% filter(taxa == "Lumbricina")
 papilio_data <- metazoa_data %>% filter(taxa == "Papilionoidea")
-sponge_data <- metazoa_data %>% filter(taxa == "Sponge") #########################
-crusta_data <- metazoa_data %>% filter(taxa == "Crustacea") ###################### A VOIR SI JE PRENDS LA COLONNE TAXA OU LES COLONNES CREES AVEC LES NOMS D'ESPECES
-fish_data <- metazoa_data %>% filter(taxa == "Fish") #############################
+sponge_data <- metazoa_data_with_nuc %>% filter(taxa == "Sponge") #########################
+crusta_data <- metazoa_data_with_nuc %>% filter(taxa == "Crustacea") ###################### A VOIR SI JE PRENDS LA COLONNE TAXA OU LES COLONNES CREES AVEC LES NOMS D'ESPECES
+fish_data <- metazoa_data_with_nuc %>% filter(taxa == "Fish") #############################
 
-# make a sub-dataframe for each animal taxa in the MEDITERRANEAN BASIN
+# make a sub-data frame for each animal taxa in the MEDITERRANEAN BASIN
 # filter dataframes with med countries
 plant_data_med <- plant_data %>% filter(sample_origin %in% med_countries_list)
 fungi_data_med <- fungi_data %>% filter(sample_origin %in% med_countries_list)
 metazoa_data_med <- metazoa_data %>% filter(sample_origin %in% med_countries_list)
+metazoa_data_with_nuc_med <- metazoa_data_with_nuc %>% filter(sample_origin %in% med_countries_list)
 
-# make sub-dataframes
+# make sub-data frames
 amph_data_med <- metazoa_data_med %>% filter(taxa == "Amphibian")
 rept_data_med <- metazoa_data_med %>% filter(taxa == "Reptile")
 bird_data_med <- metazoa_data_med %>% filter(taxa == "Bird")
@@ -148,16 +160,11 @@ mammal_data_med <- metazoa_data_med %>% filter(taxa == "Mammal")
 coleo_data_med <- metazoa_data_med %>% filter(taxa == "Coleoptera")
 lumbri_data_med <- metazoa_data_med %>% filter(taxa == "Lumbricina")
 papilio_data_med <- metazoa_data_med %>% filter(taxa == "Papilionoidea")
-sponge_data_med <- metazoa_data_med %>% filter(taxa == "Sponge") #########################
-crusta_data_med <- metazoa_data_med %>% filter(taxa == "Crustacea") ###################### A VOIR SI JE PRENDS LA COLONNE TAXA OU LES COLONNES CREES AVEC LES NOMS D'ESPECES
-fish_data_med <- metazoa_data_med %>% filter(taxa == "Fish") #############################
+sponge_data_med <- metazoa_data_with_nuc_med %>% filter(taxa == "Sponge") #########################
+crusta_data_med <- metazoa_data_with_nuc_med %>% filter(taxa == "Crustacea") ###################### A VOIR SI JE PRENDS LA COLONNE TAXA OU LES COLONNES CREES AVEC LES NOMS D'ESPECES
+fish_data_med <- metazoa_data_with_nuc_med %>% filter(taxa == "Fish") #############################
 
-#############################
-############################# ICI IL Y A UN FILTRAGE DES GENES A FAIRE AUSSI POUR GARDER QUE LES MITOC POUR LES TAXONS DE METAZOAIRES TERRESTRES
-############################# utiliser filter() et faire une liste des genes nucleaires avec une condition gene != nuc_gene_list 
-
-
-GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med) {
+# function to extract general informations for a diven taxa
 GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name) {
   
   # initiaze table to store the 6 general general descriptive informations
@@ -187,6 +194,8 @@ GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med, taxa
   return(descritive_table)
 }
 
+
+### extract general information for each taxa
 plant_desc_tab <- GB_extract_general_info(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = plant_data_med, taxa_name = "plant")
 fungi_desc_tab <- GB_extract_general_info(kingdom_data = fungi_data, taxa_data = fungi_data, taxa_data_med = fungi_data_med, taxa_name = "fungi")
 amph_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = amph_data, taxa_data_med = amph_data_med, taxa_name = "amphibian")
@@ -196,23 +205,17 @@ mammal_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_dat
 coleo_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = coleo_data, taxa_data_med = coleo_data_med, taxa_name = "coleoptera")
 lumbri_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = lumbri_data, taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
 papilio_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = papilio_data, taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
-sponge_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = sponge_data, taxa_data_med = sponge_data_med, taxa_name = "porifera")
-crusta_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
-fish_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = fish_data, taxa_data_med = fish_data_med, taxa_name = "fish")
+sponge_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = sponge_data, taxa_data_med = sponge_data_med, taxa_name = "porifera")
+crusta_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
+fish_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = fish_data, taxa_data_med = fish_data_med, taxa_name = "fish")
 
-
-
-# ajouter un rowbind() de tous les tableaux ci-dessus ici et un export de ce tableau en csv
-# ce sera tres utile pour comparer les groupes taxonomiques
-
+# make recap table
 all_taxa_desc_tab <- rbind(plant_desc_tab, fungi_desc_tab, amph_desc_tab, rept_desc_tab, bird_desc_tab, mammal_desc_tab,
                            coleo_desc_tab, lumbri_desc_tab, papilio_desc_tab, sponge_desc_tab, crusta_desc_tab, fish_desc_tab)
-
+# save table
 write_csv2(all_taxa_desc_tab, path = "./output/text/GenBank_all_taxa_descriptive_mesures.csv", col_names = TRUE)
-
 
 
 #############################
 ############################# # ICI SORTIR L'INFO DU NOMBRE DE SEQUENCES POUR CHAQUE GENE (dont "NA") + une colonne avec le nombre total de sequences pour faire des pourcentages
 ############################# et sortir les deux tableaux : un avec les effectifs et un avec ls pourcentages et les sauver en CSV
-
