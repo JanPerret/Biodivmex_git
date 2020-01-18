@@ -141,9 +141,9 @@ mammal_data <- metazoa_data %>% filter(taxa == "Mammal")
 coleo_data <- metazoa_data %>% filter(taxa == "Coleoptera")
 lumbri_data <- metazoa_data %>% filter(taxa == "Lumbricina")
 papilio_data <- metazoa_data %>% filter(taxa == "Papilionoidea")
-sponge_data <- metazoa_data_with_nuc %>% filter(taxa == "Sponge") #########################
-crusta_data <- metazoa_data_with_nuc %>% filter(taxa == "Crustacea") ###################### A VOIR SI JE PRENDS LA COLONNE TAXA OU LES COLONNES CREES AVEC LES NOMS D'ESPECES
-fish_data <- metazoa_data_with_nuc %>% filter(taxa == "Fish") #############################
+sponge_data <- metazoa_data_with_nuc %>% filter(taxa == "Sponge")
+crusta_data <- metazoa_data_with_nuc %>% filter(taxa == "Crustacea")
+fish_data <- metazoa_data_with_nuc %>% filter(taxa == "Fish")
 
 # make a sub-data frame for each animal taxa in the MEDITERRANEAN BASIN
 # filter dataframes with med countries
@@ -160,9 +160,11 @@ mammal_data_med <- metazoa_data_med %>% filter(taxa == "Mammal")
 coleo_data_med <- metazoa_data_med %>% filter(taxa == "Coleoptera")
 lumbri_data_med <- metazoa_data_med %>% filter(taxa == "Lumbricina")
 papilio_data_med <- metazoa_data_med %>% filter(taxa == "Papilionoidea")
-sponge_data_med <- metazoa_data_with_nuc_med %>% filter(taxa == "Sponge") #########################
-crusta_data_med <- metazoa_data_with_nuc_med %>% filter(taxa == "Crustacea") ###################### A VOIR SI JE PRENDS LA COLONNE TAXA OU LES COLONNES CREES AVEC LES NOMS D'ESPECES
-fish_data_med <- metazoa_data_with_nuc_med %>% filter(taxa == "Fish") #############################
+
+# for marine taxa we take sequences assignated to taxonomic group with mediterranean sea species list and not GenBank's taxonomical hierarchy
+sponge_data_med <- metazoa_data_with_nuc_med %>% filter(sponge == "sponge")
+crusta_data_med <- metazoa_data_with_nuc_med %>% filter(crustacea == "crustacea")
+fish_data_med <- metazoa_data_with_nuc_med %>% filter(fish == "fish")
 
 
 ### extract general information for each taxa
