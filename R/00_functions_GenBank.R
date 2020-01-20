@@ -33,7 +33,11 @@ GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med, taxa
   descritive_table$sp_level_rate_med <- round((a/length(taxa_data_med$species_level))*100, 2)
   
   # 6. number of different species names for the taxa in the mediterranean basin
-  descritive_table$n_sp_med <- length(unique(taxa_data_med$species_level))
+  descritive_table$n_sp_med <- length(levels(as.factor(taxa_data_med$species_level))) # here levels() if better than unique() because it don't count NA as a value
+  
+  if ("hybrid" %in% levels(as.factor(taxa_data_med$species_level))) {
+    descritive_table$n_sp_med <- descritive_table$n_sp_med - 1 # minus one if the "hybrid" level is present because it is not a species name
+  }
   
   return(descritive_table)
 }
