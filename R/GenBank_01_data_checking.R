@@ -26,6 +26,7 @@ fungi_data <- read_delim("./data/TEST_v10_SIMPLE_RESULT_GENBANK_v10_fungi_refere
                            crustacea = col_character()
                          ))
 
+
 plant_data <- read_delim("./data/TEST_v10_SIMPLE_RESULT_GENBANK_v10_plant_references.csv", delim = ",", col_names = TRUE,
                          col_types = cols(
                            access_num = col_character(),
