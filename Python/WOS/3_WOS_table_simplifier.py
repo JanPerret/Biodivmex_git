@@ -221,8 +221,27 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 		crustacea_names.append(" " + crustacea_line.lower().replace('\n','') + " ")
 	crustacea_length = len(crustacea_names)
 	crustacea = ""
+	
+	# loading the TREE species name list
+	tree = open("name_list_tree_species_cyprus_version.txt", "r")
+	tree_line = []
+	tree_names = []
+	for line in tree:
+		tree_line = line
+		tree_names.append(" " + tree_line.lower().replace('\n','') + " ")
+	tree_length = len(tree_names)
+	tree = ""
+	
+	# loading the TREE CO-OCCURRENCE WORD list
+	tree_words_index = open("name_list_co-occurrence_word_list.txt", "r")
+	tree_words_line = ""
+	tree_words = []
+	for line in tree_words_index:
+		tree_words_line = line
+		tree_words.append(" " + tree_words_line.lower().replace('\n','') + " ")
+	tree_words_length = len(tree_words)
 
-	# initialising the objects used in the loop
+	# initializing the objects used in the loop
 	doc_type = ""
 	language = ""
 	publisher = ""
@@ -259,6 +278,7 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 	coleoptera = ""
 	papilionoidea = ""
 	lumbricina = ""
+	tree = ""
 	ref_infos = ""
 	line_cnt = 1;
 
@@ -481,9 +501,21 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 				if not name_final in lumbricina:
 					lumbricina += ' ' + name_final
 					lumbricina = lumbricina.strip()
+					
+		# CWR assignation with only 2 conditional levels
+			for a in range(0,tree_words_length):
+				name1 = tree_words[a]
+				if name1 in search_mix:
+					for d in range(0,tree_length):
+						name2 = tree_names[d]
+						name_final2 = "tree"
+						if name2 in search_mix:
+							if not name_final2 in tree:
+								tree += ' ' + name_final2
+								tree = tree.strip()
 
 
-		ref_infos = access_num+','+language+','+doc_type+','+publisher+','+year+','+author_nationality_tot+','+fw_country_tot+','+marine_region_tot+','+outside_med+','+plant+','+fungi+','+amphibian+','+reptile+','+bird+','+mammal+','+fish+','+sponge+','+crustacea+','+coleoptera+','+papilionoidea+','+lumbricina
+		ref_infos = access_num+','+language+','+doc_type+','+publisher+','+year+','+author_nationality_tot+','+fw_country_tot+','+marine_region_tot+','+outside_med+','+plant+','+fungi+','+amphibian+','+reptile+','+bird+','+mammal+','+fish+','+sponge+','+crustacea+','+coleoptera+','+papilionoidea+','+lumbricina+','+tree
 
 		doc_type = ""
 		language = ""
@@ -521,13 +553,14 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 		coleoptera = ""
 		papilionoidea = ""
 		lumbricina = ""
+		tree = ""
 
 		output_table.write('\n'+ref_infos)
 
 
-output_table = open('TEST_SIMPLE_v14_'+table_file_name,'w') # opening a file to write the output
+output_table = open('TEST_SIMPLE_v15_'+table_file_name,'w') # opening a file to write the output
 # write the column headers
-output_table.write('access_num'+','+'language'+','+'doc_type'+','+'publisher'+','+'year'+','+'author_nationality'+','+'fieldwork_country'+','+'marine_region'+','+'outside_med'+','+'plant'+','+'fungi'+','+'amphibian'+','+'reptile'+','+'bird'+','+'mammal'+','+'fish'+','+'sponge'+','+'crustacea'+','+'coleoptera'+','+'papilionoidea'+','+'lumbricina')
+output_table.write('access_num'+','+'language'+','+'doc_type'+','+'publisher'+','+'year'+','+'author_nationality'+','+'fieldwork_country'+','+'marine_region'+','+'outside_med'+','+'plant'+','+'fungi'+','+'amphibian'+','+'reptile'+','+'bird'+','+'mammal'+','+'fish'+','+'sponge'+','+'crustacea'+','+'coleoptera'+','+'papilionoidea'+','+'lumbricina'+','+'tree')
 Simple_WOS_table_maker(table_file_name, output_table)
 output_table.close()
 
