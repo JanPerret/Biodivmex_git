@@ -483,7 +483,7 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 					lumbricina = lumbricina.strip()
 
 
-		ref_infos = access_num+','+language+','+doc_type+','+year+','+author_nationality_tot+','+fw_country_tot+','+marine_region_tot+','+outside_med+','+plant+','+fungi+','+amphibian+','+reptile+','+bird+','+mammal+','+fish+','+sponge+','+crustacea+','+coleoptera+','+papilionoidea+','+lumbricina
+		ref_infos = access_num+','+language+','+doc_type+','+publisher+','+year+','+author_nationality_tot+','+fw_country_tot+','+marine_region_tot+','+outside_med+','+plant+','+fungi+','+amphibian+','+reptile+','+bird+','+mammal+','+fish+','+sponge+','+crustacea+','+coleoptera+','+papilionoidea+','+lumbricina
 
 		doc_type = ""
 		language = ""
@@ -527,7 +527,7 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 
 output_table = open('TEST_SIMPLE_v14_'+table_file_name,'w') # opening a file to write the output
 # write the column headers
-output_table.write('access_num'+','+'language'+','+'doc_type'+','+'year'+','+'author_nationality'+','+'fieldwork_country'+','+'marine_region'+','+'outside_med'+','+'plant'+','+'fungi'+','+'amphibian'+','+'reptile'+','+'bird'+','+'mammal'+','+'fish'+','+'sponge'+','+'crustacea'+','+'coleoptera'+','+'papilionoidea'+','+'lumbricina')
+output_table.write('access_num'+','+'language'+','+'doc_type'+','+'publisher'+','+'year'+','+'author_nationality'+','+'fieldwork_country'+','+'marine_region'+','+'outside_med'+','+'plant'+','+'fungi'+','+'amphibian'+','+'reptile'+','+'bird'+','+'mammal'+','+'fish'+','+'sponge'+','+'crustacea'+','+'coleoptera'+','+'papilionoidea'+','+'lumbricina')
 Simple_WOS_table_maker(table_file_name, output_table)
 output_table.close()
 

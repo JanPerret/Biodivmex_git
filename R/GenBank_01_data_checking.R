@@ -9,7 +9,7 @@
 
 
 # load data
-fungi_data <- read_delim("./data/TEST_v10_SIMPLE_RESULT_GENBANK_v10_fungi_references.csv", delim = ",", col_names = TRUE,
+fungi_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_fungi_references.csv", delim = ",", col_names = TRUE,
                          col_types = cols(
                            access_num = col_character(),
                            mol_type = col_character(),
@@ -23,11 +23,12 @@ fungi_data <- read_delim("./data/TEST_v10_SIMPLE_RESULT_GENBANK_v10_fungi_refere
                            species_level = col_character(),
                            fish = col_character(),
                            sponge = col_character(),
-                           crustacea = col_character()
+                           crustacea = col_character(),
+                           tree = col_character()
                          ))
 
 
-plant_data <- read_delim("./data/TEST_v10_SIMPLE_RESULT_GENBANK_v10_plant_references.csv", delim = ",", col_names = TRUE,
+plant_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_plant_references.csv", delim = ",", col_names = TRUE,
                          col_types = cols(
                            access_num = col_character(),
                            mol_type = col_character(),
@@ -41,10 +42,11 @@ plant_data <- read_delim("./data/TEST_v10_SIMPLE_RESULT_GENBANK_v10_plant_refere
                            species_level = col_character(),
                            fish = col_character(),
                            sponge = col_character(),
-                           crustacea = col_character()
+                           crustacea = col_character(),
+                           tree = col_character()
                          ))
 
-metazoa_data <- read_delim("./data/TEST_v10_SIMPLE_RESULT_GENBANK_v10_animal_references_mitochondrial_nuclear_seq.csv", delim = ",", col_names = TRUE,
+metazoa_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_animal_references_mitochondrial_nuclear_seq.csv", delim = ",", col_names = TRUE,
                            col_types = cols(
                              access_num = col_character(),
                              mol_type = col_character(),
@@ -58,16 +60,19 @@ metazoa_data <- read_delim("./data/TEST_v10_SIMPLE_RESULT_GENBANK_v10_animal_ref
                              species_level = col_character(),
                              fish = col_character(),
                              sponge = col_character(),
-                             crustacea = col_character()
+                             crustacea = col_character(),
+                             tree = col_character()
                               ))
 
 # drop marine taxa columns for plants and fungi
 fungi_data <- fungi_data %>%
-  select(-fish, -sponge, -crustacea)
+  select(-fish, -sponge, -crustacea, -tree)
 
 plant_data <- plant_data %>%
   select(-fish, -sponge, -crustacea)
 
+metazoa_data <- metazoa_data %>%
+  select(-tree)
 
 # check molecule type
 levels(as.factor(fungi_data$mol_type))
