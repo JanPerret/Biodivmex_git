@@ -171,6 +171,8 @@ sponge_data_med <- metazoa_data_with_nuc_med %>% filter(sponge == "sponge")
 crusta_data_med <- metazoa_data_with_nuc_med %>% filter(crustacea == "crustacea")
 fish_data_med <- metazoa_data_with_nuc_med %>% filter(fish == "fish")
 
+# same thing for trees (sequences assignation to this group is done with a species name list and not GenBank's taxonomical hierarchy)
+tree_data_med <- plant_data_med %>% filter(tree == "tree")
 
 ### extract general information for each taxa
 plant_desc_tab <- GB_extract_general_info(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = plant_data_med, taxa_name = "plant")
@@ -185,10 +187,13 @@ papilio_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_da
 sponge_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = sponge_data, taxa_data_med = sponge_data_med, taxa_name = "porifera")
 crusta_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 fish_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = fish_data, taxa_data_med = fish_data_med, taxa_name = "fish")
+tree_desc_tab <- GB_extract_general_info(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = tree_data_med, taxa_name = "tree")
+tree_desc_tab[,3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
 
 # make recap table
 all_taxa_desc_tab <- rbind(plant_desc_tab, fungi_desc_tab, amph_desc_tab, rept_desc_tab, bird_desc_tab, mammal_desc_tab,
-                           coleo_desc_tab, lumbri_desc_tab, papilio_desc_tab, sponge_desc_tab, crusta_desc_tab, fish_desc_tab)
+                           coleo_desc_tab, lumbri_desc_tab, papilio_desc_tab, sponge_desc_tab, crusta_desc_tab, fish_desc_tab,
+                           tree_desc_tab)
 # save table
 write_csv2(all_taxa_desc_tab, path = "./output/text/GenBank_all_taxa_descriptive_mesures.csv", col_names = TRUE)
 
@@ -240,6 +245,8 @@ papilio_year_tab <- GB_roll_over_years(kingdom_data = metazoa_data, taxa_data = 
 sponge_year_tab <- GB_roll_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = sponge_data, taxa_data_med = sponge_data_med, taxa_name = "porifera")
 crusta_year_tab <- GB_roll_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 fish_year_tab <- GB_roll_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = fish_data, taxa_data_med = fish_data_med, taxa_name = "fish")
+tree_year_tab <- GB_roll_over_years(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = tree_data_med, taxa_name = "tree")
+tree_year_tab[,3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
 
 
 # save tables
@@ -255,4 +262,6 @@ write_csv2(papilio_year_tab, path = "./output/text/GenBank_papilio_year_tab.csv"
 write_csv2(sponge_year_tab, path = "./output/text/GenBank_sponge_year_tab.csv", col_names = TRUE)
 write_csv2(crusta_year_tab, path = "./output/text/GenBank_crusta_year_tab.csv", col_names = TRUE)
 write_csv2(fish_year_tab, path = "./output/text/GenBank_fish_year_tab.csv", col_names = TRUE)
+write_csv2(tree_year_tab, path = "./output/text/GenBank_tree_year_tab.csv", col_names = TRUE)
+
 
