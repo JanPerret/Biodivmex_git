@@ -8,7 +8,7 @@
 #################################################
 
 
-# function to extract general informations for a diven taxa
+### function to extract general informations for a diven taxa
 GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name) {
   
   # initiaze table to store the 6 general  descriptive informations
@@ -43,7 +43,7 @@ GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med, taxa
 }
 
 
-# function to extract the same information than GB_extract_general_info() but for each year
+### function to extract the same information than GB_extract_general_info() but for each year
 GB_loop_over_years <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name) {
   
   # initiaze table to store the 6 general descriptive informations
@@ -71,6 +71,59 @@ GB_loop_over_years <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name
   }
   
   return(general_table)
+}
+
+
+### extract number of sequences containing each gene for a given taxa
+GB_extract_gene <- function(taxa_data_med, taxa_name) {
+  
+  # initiaze table
+  gene_table <- setNames(data.frame(matrix(ncol = 27, nrow = 1)), c("taxa", paste0(gene_list), "n_NA", "tot_n_seq"))
+  
+  # loop through gene names and fill gene_table
+  gene = ""
+  for (gene in gene_list) {
+    gene_table$taxa <- taxa_name
+    
+    # count number of sequences containing the given gene
+    gene_table[gene] <- sum(grepl(gene, taxa_data_med$gene)) # grepl is like str_detect but it doesn't return NA when used on NA
+    
+    # number of sequences without a gene assignation
+    gene_table$n_NA <- sum(is.na(taxa_data_med$gene))
+    
+    # total number of sequences
+    gene_table$tot_n_seq <- length(taxa_data_med$access_num)
+  }
+  
+  return(gene_table)
+}
+
+
+### extract the same information than GB_extract_gene() but for each year
+GB_gene_recap_loop_over_years <- function(taxa_data_med, taxa_name) {
+  
+  # initiaze table
+  gene_table <- setNames(data.frame(matrix(ncol = 28, nrow = 0)), c("taxa", "year", paste0(gene_list), "n_NA", "tot_n_seq"))
+  
+  # list years since the first sequence was deposited in GenBank (for our taxa + genes conditions)
+  vect_year <- as.integer(c(1987:2019)) # first sequences is from 1987 in our dataframe
+  
+  # loop over years
+  for (year in vect_year) {
+    given_year <- as.integer(year) # because otherway it doesn't work with filter()
+    
+    # subset tables for the given year
+    taxa_data_med_year <- taxa_data_med %>% filter(year == given_year)
+    
+    # extract information of the year tables with GB_extract_general_info() function
+    tab_given_year <- GB_extract_gene(taxa_data_med = taxa_data_med_year, taxa_name = taxa_name)
+    
+    # binding extracted informations to the output table
+    tab_given_year <- cbind(tab_given_year, year = given_year)
+    gene_table <- rbind(gene_table, tab_given_year)
+  }
+  
+  return(gene_table)
 }
 
 

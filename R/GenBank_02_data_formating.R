@@ -198,11 +198,6 @@ all_taxa_desc_tab <- rbind(plant_desc_tab, fungi_desc_tab, amph_desc_tab, rept_d
 write_csv2(all_taxa_desc_tab, path = "./output/text/GenBank_all_taxa_descriptive_mesures.csv", col_names = TRUE)
 
 
-#############################
-############################# # ICI SORTIR L'INFO DU NOMBRE DE SEQUENCES POUR CHAQUE GENE (dont "NA") + une colonne avec le nombre total de sequences pour faire des pourcentages
-############################# et sortir les deux tableaux : un avec les effectifs et un avec ls pourcentages et les sauver en CSV
-
-
 ### extract these general information per year
 plant_year_tab <- GB_loop_over_years(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = plant_data_med, taxa_name = "plant")
 fungi_year_tab <- GB_loop_over_years(kingdom_data = fungi_data, taxa_data = fungi_data, taxa_data_med = fungi_data_med, taxa_name = "fungi")
@@ -234,5 +229,73 @@ write_csv2(sponge_year_tab, path = "./output/text/GenBank_sponge_year_tab.csv", 
 write_csv2(crusta_year_tab, path = "./output/text/GenBank_crusta_year_tab.csv", col_names = TRUE)
 write_csv2(fish_year_tab, path = "./output/text/GenBank_fish_year_tab.csv", col_names = TRUE)
 write_csv2(tree_year_tab, path = "./output/text/GenBank_tree_year_tab.csv", col_names = TRUE)
+
+
+### recap tables for number of sequences for each gene in med region
+# load gene name list
+gene_list <- read_delim("./data/name_list_all_genes.csv", delim = ";", col_names = FALSE)
+gene_list <- gene_list$X1
+
+### extract number of sequences containing each gene
+plant_gene_tab <- GB_extract_gene(taxa_data_med = plant_data_med, taxa_name = "plant")
+fungi_gene_tab <- GB_extract_gene(taxa_data_med = fungi_data_med, taxa_name = "fungi")
+amph_gene_tab <- GB_extract_gene(taxa_data_med = amph_data_med, taxa_name = "amphibian")
+rept_gene_tab <- GB_extract_gene(taxa_data_med = rept_data_med, taxa_name = "reptile")
+bird_gene_tab <- GB_extract_gene(taxa_data_med = bird_data_med, taxa_name = "bird")
+mammal_gene_tab <- GB_extract_gene(taxa_data_med = mammal_data_med, taxa_name = "mammal")
+coleo_gene_tab <- GB_extract_gene(taxa_data_med = coleo_data_med, taxa_name = "coleoptera")
+lumbri_gene_tab <- GB_extract_gene(taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
+papilio_gene_tab <- GB_extract_gene(taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
+sponge_gene_tab <- GB_extract_gene(taxa_data_med = sponge_data_med, taxa_name = "porifera")
+crusta_gene_tab <- GB_extract_gene(taxa_data_med = crusta_data_med, taxa_name = "crustacea")
+fish_gene_tab <- GB_extract_gene(taxa_data_med = fish_data_med, taxa_name = "fish")
+tree_gene_tab <- GB_extract_gene(taxa_data_med = tree_data_med, taxa_name = "tree")
+
+# make recap table in effectives
+all_taxa_gene_tab <- rbind(plant_gene_tab, fungi_gene_tab, amph_gene_tab, rept_gene_tab, bird_gene_tab, mammal_gene_tab,
+                           coleo_gene_tab, lumbri_gene_tab, papilio_gene_tab, sponge_gene_tab, crusta_gene_tab, fish_gene_tab,
+                           tree_gene_tab)
+
+# recap table in percentage
+all_taxa_gene_tab_percentage <- all_taxa_gene_tab[,-c(1, 27)] %>% sapply(`/`, all_taxa_gene_tab[,27])
+all_taxa_gene_tab_percentage <- round(all_taxa_gene_tab_percentage, digits = 2)
+all_taxa_gene_tab_percentage <- as.data.frame(cbind(taxa = all_taxa_gene_tab$taxa, all_taxa_gene_tab_percentage, tot_n_seq = all_taxa_gene_tab$tot_n_seq))
+
+# save tables
+write_csv2(all_taxa_gene_tab, path = "./output/text/GenBank_all_taxa_gene_tab.csv", col_names = TRUE)
+write_csv2(all_taxa_gene_tab_percentage, path = "./output/text/GenBank_all_taxa_gene_tab_percentage.csv", col_names = TRUE)
+
+
+# loop over years to have the number of sequences containing each gene for each year
+plant_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = plant_data_med, taxa_name = "plant")
+fungi_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = fungi_data_med, taxa_name = "fungi")
+amph_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = amph_data_med, taxa_name = "amphibian")
+rept_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = rept_data_med, taxa_name = "reptile")
+bird_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = bird_data_med, taxa_name = "bird")
+mammal_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = mammal_data_med, taxa_name = "mammal")
+coleo_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = coleo_data_med, taxa_name = "coleoptera")
+lumbri_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
+papilio_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
+sponge_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = sponge_data_med, taxa_name = "porifera")
+crusta_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = crusta_data_med, taxa_name = "crustacea")
+fish_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = fish_data_med, taxa_name = "fish")
+tree_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = tree_data_med, taxa_name = "tree")
+
+# save tables
+write_csv2(plant_gene_year_tab, path = "./output/text/GenBank_plant_gene_year_tab.csv", col_names = TRUE)
+write_csv2(fungi_gene_year_tab, path = "./output/text/GenBank_fungi_gene_year_tab.csv", col_names = TRUE)
+write_csv2(amph_gene_year_tab, path = "./output/text/GenBank_amph_gene_year_tab.csv", col_names = TRUE)
+write_csv2(rept_gene_year_tab, path = "./output/text/GenBank_rept_gene_year_tab.csv", col_names = TRUE)
+write_csv2(bird_gene_year_tab, path = "./output/text/GenBank_bird_gene_year_tab.csv", col_names = TRUE)
+write_csv2(mammal_gene_year_tab, path = "./output/text/GenBank_mammal_gene_year_tab.csv", col_names = TRUE)
+write_csv2(coleo_gene_year_tab, path = "./output/text/GenBank_coleo_gene_year_tab.csv", col_names = TRUE)
+write_csv2(lumbri_gene_year_tab, path = "./output/text/GenBank_lumbri_gene_year_tab.csv", col_names = TRUE)
+write_csv2(papilio_gene_year_tab, path = "./output/text/GenBank_papilio_gene_year_tab.csv", col_names = TRUE)
+write_csv2(sponge_gene_year_tab, path = "./output/text/GenBank_sponge_gene_year_tab.csv", col_names = TRUE)
+write_csv2(crusta_gene_year_tab, path = "./output/text/GenBank_crusta_gene_year_tab.csv", col_names = TRUE)
+write_csv2(fish_gene_year_tab, path = "./output/text/GenBank_fish_gene_year_tab.csv", col_names = TRUE)
+write_csv2(tree_gene_year_tab, path = "./output/text/GenBank_tree_gene_year_tab.csv", col_names = TRUE)
+
+
 
 
