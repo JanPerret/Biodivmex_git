@@ -36,20 +36,12 @@ source("R/00_functions_GenBank.R")
 source("R/00_functions_WOS.R")
 
 ##################
-# inspecting data for GenBank
+# data formating for GenBank
 ##################
-# source("R/GenBank_01_data_checking.R")
+source("R/GenBank_02_data_formating.R")
 
 ##################
-# inspecting data for WOS
+# data formating for WOS
 ##################
-# source("R/.R")
-
-##################
-# formating data for GenBank
-##################
-# source("R/.R")
-
-
-# ... etc.
+# source("R/WOS_02_data_formating.R")
 
