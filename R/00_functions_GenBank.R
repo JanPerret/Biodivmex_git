@@ -50,11 +50,11 @@ GB_loop_over_years <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name
   general_table <- setNames(data.frame(matrix(ncol = 8, nrow = 0)),
                             c("taxa", "n_seq", "taxa_n_seq", "loc_rate", "n_seq_med", "sp_level_rate_med", "n_sp_med", "year"))
   
-  # list containing years since the first sequence was deposited in GenBank for the considered taxa's kingdom
-  vect_reign <- sort(unique(kingdom_data$year))
+  # list years since the first sequence was deposited in GenBank (for our taxa + genes conditions)
+  vect_year <- as.integer(c(1987:2019)) # first sequences is from 1987 in our data
   
   # loop over years
-  for (year in vect_reign) {
+  for (year in vect_year) {
     given_year <- as.integer(year) # because else it doesn't work with filter()
     
     # subset tables for the given year
