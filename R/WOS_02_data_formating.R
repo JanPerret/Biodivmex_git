@@ -311,8 +311,6 @@ wos_data_div$author_nationality <- fct_explicit_na(wos_data_div$author_nationali
 fdwk_country = ""
 author_natio = ""
 country_detection = FALSE
-# i=2 # author_nationality = Italy // Israel
-# i=5 # author_nationality = Netherlands
 
 for (i in 1:length(wos_data_div$access_num)) {
   fdwk_country = as.character(wos_data_div$fieldwork_country[i])
@@ -351,10 +349,9 @@ wos_data_div$author_loc <- factor(wos_data_div$author_loc, levels = c("from_coun
 # give missing values an explicit factor level to ensure that they appear in summaries and plots
 wos_data_div$author_loc <- fct_explicit_na(wos_data_div$author_loc)
 
-# test if missing values are still missing
+# # test if missing values are still missing
 # table(wos_data_div$author_nationality, useNA = "always")
 # table(wos_data_div$author_loc, useNA = "always")
-# -> ok the 2564 '(Missing)' values are still there
 
 # sub data frames per taxa
 plant_loc_df <- subset(wos_data_div, wos_data_div$plant == "plant")
@@ -478,5 +475,87 @@ taxa_journals_table[which(taxa_journals_table$taxa == "tree"),5:(4+length(year_l
 write_csv2(taxa_journals_table, path = "./output/text/WOS_taxa_journals_table.csv", col_names = TRUE)
 
 
+### USE OF MARINE REGIONS INSTEAD OF COUNTRIES FOR MARINE TAXA ###
+
+### number of articles per marine region for each taxa
+# first multiply rows with multiple assignations in marine_region
+# work on separate dataframe 
+wos_data_div_marine <- wos_data
+
+# initiate variables
+times = rep(NA, length(wos_data_div_marine$access_num))
+reg = list()
+region = c()
+
+# loop through the dataframe
+for (i in 1:length(wos_data_div_marine$access_num)){
+  
+  region <- as.vector(strsplit(wos_data_div_marine$marine_region[i], split = " // ")[[1]]) # extract multiple regions stored in marine_region as a vector
+  times[i] <- length(region) # number of different regions for given article
+  reg <- rlist::list.append(reg, region) # append reg list with the regions stored in region object
+  
+}
+
+times[times==0] <- 1 # if there is no region name in marine_region reference still count for one row
+
+# replace positions of length 0 by NA
+reg <- lapply(reg, function(x) if(identical(x, character(0))) NA_character_ else x)
+
+# pass "reg" from list to vector
+reg <- unlist(reg)
+
+# repeat rows the number of times indicated in the vector "times"
+wos_data_div_marine <- wos_data_div_marine[rep(seq_len(nrow(wos_data_div_marine)), times),]
+# so if there was zero or one value in marine_region, the row won't be repeated, if there were 2 regions it will be repeated twice, etc.
+
+# assign back unlisted regions
+wos_data_div_marine$marine_region <- reg
+
+# fix marine_region factor levels
+region_list <- sort(unique(wos_data_div_marine$marine_region))
+wos_data_div_marine$marine_region <- factor(wos_data_div_marine$marine_region, levels = region_list, ordered = FALSE)
+wos_data_div_marine$marine_region <- fct_explicit_na(wos_data_div_marine$marine_region) # give marine_region NAs an explicit value
+
+# sub data frames per taxa
+fish_region_df <- subset(wos_data_div_marine, wos_data_div_marine$fish == "fish")
+sponge_region_df <- subset(wos_data_div_marine, wos_data_div_marine$sponge == "sponge")
+crusta_region_df <- subset(wos_data_div_marine, wos_data_div_marine$crustacea == "crustacea")
+
+# number of articles per region
+# initiaze table
+taxa_region_table <- setNames(data.frame(matrix(ncol = 3, nrow = length(region_list)+1)), c("fish", "sponge", "crustacea"))
+
+# number of articles per region
+taxa_region_table[,1] <- as.data.frame(table(fish_region_df$marine_region))$Freq
+taxa_region_table[,2] <- as.data.frame(table(sponge_region_df$marine_region))$Freq
+taxa_region_table[,3] <- as.data.frame(table(crusta_region_df$marine_region))$Freq
+
+# bind region name column
+taxa_region_table <- cbind(marine_region = c(paste0(region_list), "NA"), taxa_region_table)
+
+# save table
+write_csv2(taxa_region_table, path = "./output/text/WOS_recap_table_articles_per_marine_region.csv", col_names = TRUE)
+
+
+### number of articles per year per marine region for each taxa (l.236)
+# region/year contingency table
+fish_year_tab_per_region <- fish_region_df %>% group_by(marine_region, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
+sponge_year_tab_per_region <- sponge_region_df %>% group_by(marine_region, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
+crusta_year_tab_per_region <- crusta_region_df %>% group_by(marine_region, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
+
+# save tables
+write_csv2(fish_year_tab_per_region, path = "./output/text/WOS_fish_year_tab_per_region.csv", col_names = TRUE)
+write_csv2(sponge_year_tab_per_region, path = "./output/text/WOS_sponge_year_tab_per_region.csv", col_names = TRUE)
+write_csv2(crusta_year_tab_per_region, path = "./output/text/WOS_crusta_year_tab_per_region.csv", col_names = TRUE)
+
+# passing from raw counts to accumulation tables
+fish_year_tab_per_region_acc <- WOS_accumulate(year_tab = fish_year_tab_per_region, first_column = 2)
+sponge_year_tab_per_region_acc <- WOS_accumulate(year_tab = sponge_year_tab_per_region, first_column = 2)
+crusta_year_tab_per_region_acc <- WOS_accumulate(year_tab = crusta_year_tab_per_region, first_column = 2)
+
+# save tables
+write_csv2(fish_year_tab_per_region_acc, path = "./output/text/WOS_fish_year_tab_per_region_acc.csv", col_names = TRUE)
+write_csv2(sponge_year_tab_per_region_acc, path = "./output/text/WOS_sponge_year_tab_per_region_acc.csv", col_names = TRUE)
+write_csv2(crusta_year_tab_per_region_acc, path = "./output/text/WOS_crusta_year_tab_per_region_acc.csv", col_names = TRUE)
 
 

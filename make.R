@@ -43,5 +43,5 @@ source("R/GenBank_02_data_formating.R")
 ##################
 # data formating for WOS
 ##################
-# source("R/WOS_02_data_formating.R")
+source("R/WOS_02_data_formating.R")
 
