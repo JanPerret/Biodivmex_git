@@ -62,6 +62,7 @@ wos_data <- wos_data %>%
 year_list <- c((truncation_year+1):2019)
 wos_data$year <- factor(wos_data$year, levels = year_list, ordered = TRUE)
 
+
 ### total number of articles on each taxonomic group
 taxa_vect <- c("plant", "fungi", "amphibian", "reptile", "bird", "mammal", "fish", "sponge", "crustacea", "coleoptera", "papilionoidea", "lumbricina", "tree")
 
@@ -154,15 +155,18 @@ write_csv2(taxa_year_table_acc, path = "./output/text/WOS_recap_table_articles_p
 
 ### number of articles per country for each taxa
 # first multiply rows with multiple assignations in fieldwork_country
+# work on separate dataframe 
+wos_data_div <- wos_data
+
 # initiate variables
-times = rep(NA, length(wos_data$access_num))
+times = rep(NA, length(wos_data_div$access_num))
 coun = list()
 country = c()
 
 # loop through the dataframe
-for (i in 1:length(wos_data$access_num)){
+for (i in 1:length(wos_data_div$access_num)){
   
-  country <- as.vector(strsplit(wos_data$fieldwork_country[i], split = " // ")[[1]]) # extract multiple countries stored in fieldwork_country as a vector
+  country <- as.vector(strsplit(wos_data_div$fieldwork_country[i], split = " // ")[[1]]) # extract multiple countries stored in fieldwork_country as a vector
   times[i] <- length(country) # number of different countries for given article
   coun <- rlist::list.append(coun, country) # append coun list with the countries stored in country object
   
@@ -177,31 +181,31 @@ coun <- lapply(coun, function(x) if(identical(x, character(0))) NA_character_ el
 coun <- unlist(coun)
 
 # repeat rows the number of times indicated in the vector "times"
-wos_data <- wos_data[rep(seq_len(nrow(wos_data)), times),]
+wos_data_div <- wos_data_div[rep(seq_len(nrow(wos_data_div)), times),]
 # so if there was zero or one value in fieldwork_country, the row won't be repeated, if there were 2 countries it will be repeated twice, etc.
 
 # assign back unlisted fieldwork countries
-wos_data$fieldwork_country <- coun
+wos_data_div$fieldwork_country <- coun
 
 # fix fieldwork_country factor levels
-country_list <- sort(unique(wos_data$fieldwork_country))
-wos_data$fieldwork_country <- factor(wos_data$fieldwork_country, levels = country_list, ordered = FALSE)
-wos_data$fieldwork_country <- fct_explicit_na(wos_data$fieldwork_country) # give fieldwork_country NAs an explicit value
+country_list <- sort(unique(wos_data_div$fieldwork_country))
+wos_data_div$fieldwork_country <- factor(wos_data_div$fieldwork_country, levels = country_list, ordered = FALSE)
+wos_data_div$fieldwork_country <- fct_explicit_na(wos_data_div$fieldwork_country) # give fieldwork_country NAs an explicit value
 
 # sub data frames per taxa
-plant_country_df <- subset(wos_data, wos_data$plant == "plant")
-fungi_country_df <- subset(wos_data, wos_data$fungi == "fungi")
-amph_country_df <- subset(wos_data, wos_data$amphibian == "amphibian")
-rept_country_df <- subset(wos_data, wos_data$reptile == "reptile")
-bird_country_df <- subset(wos_data, wos_data$bird == "bird")
-mammal_country_df <- subset(wos_data, wos_data$mammal == "mammal")
-fish_country_df <- subset(wos_data, wos_data$fish == "fish")
-sponge_country_df <- subset(wos_data, wos_data$sponge == "sponge")
-crusta_country_df <- subset(wos_data, wos_data$crustacea == "crustacea")
-coleo_country_df <- subset(wos_data, wos_data$coleoptera == "coleoptera")
-papilio_country_df <- subset(wos_data, wos_data$papilionoidea == "papilionoidea")
-lumbri_country_df <- subset(wos_data, wos_data$lumbricina == "lumbricina")
-tree_country_df <- subset(wos_data, wos_data$tree == "tree")
+plant_country_df <- subset(wos_data_div, wos_data_div$plant == "plant")
+fungi_country_df <- subset(wos_data_div, wos_data_div$fungi == "fungi")
+amph_country_df <- subset(wos_data_div, wos_data_div$amphibian == "amphibian")
+rept_country_df <- subset(wos_data_div, wos_data_div$reptile == "reptile")
+bird_country_df <- subset(wos_data_div, wos_data_div$bird == "bird")
+mammal_country_df <- subset(wos_data_div, wos_data_div$mammal == "mammal")
+fish_country_df <- subset(wos_data_div, wos_data_div$fish == "fish")
+sponge_country_df <- subset(wos_data_div, wos_data_div$sponge == "sponge")
+crusta_country_df <- subset(wos_data_div, wos_data_div$crustacea == "crustacea")
+coleo_country_df <- subset(wos_data_div, wos_data_div$coleoptera == "coleoptera")
+papilio_country_df <- subset(wos_data_div, wos_data_div$papilionoidea == "papilionoidea")
+lumbri_country_df <- subset(wos_data_div, wos_data_div$lumbricina == "lumbricina")
+tree_country_df <- subset(wos_data_div, wos_data_div$tree == "tree")
 
 # number of articles per country
 # initiaze table
@@ -293,14 +297,14 @@ write_csv2(tree_year_tab_per_country_acc, path = "./output/text/WOS_tree_year_ta
 
 ### number of articles per country with from_country / inside_med / outside_med corresponding author for each taxa
 # add empty column "author_loc"
-wos_data["author_loc"] <- NA
-wos_data <- wos_data %>% mutate(author_loc = as.character(author_loc))
+wos_data_div["author_loc"] <- NA
+wos_data_div <- wos_data_div %>% mutate(author_loc = as.character(author_loc))
 
 # fix factor levels for author_nationality
-wos_data$author_nationality <- factor(wos_data$author_nationality, levels = unique(wos_data$author_nationality), ordered = FALSE)
+wos_data_div$author_nationality <- factor(wos_data_div$author_nationality, levels = unique(wos_data_div$author_nationality), ordered = FALSE)
 
 # give missing values an explicit factor level to ensure that they appear in summaries and plots
-wos_data$author_nationality <- fct_explicit_na(wos_data$author_nationality)
+wos_data_div$author_nationality <- fct_explicit_na(wos_data_div$author_nationality)
 
 # loop to fill the column
 # initialize variables
@@ -310,9 +314,9 @@ country_detection = FALSE
 # i=2 # author_nationality = Italy // Israel
 # i=5 # author_nationality = Netherlands
 
-for (i in 1:length(wos_data$access_num)) {
-  fdwk_country = as.character(wos_data$fieldwork_country[i])
-  author_natio = as.character(wos_data$author_nationality[i])
+for (i in 1:length(wos_data_div$access_num)) {
+  fdwk_country = as.character(wos_data_div$fieldwork_country[i])
+  author_natio = as.character(wos_data_div$author_nationality[i])
 
   # detect if there is mediterranean country in author_natio
   for (coun_name in country_list) {
@@ -321,51 +325,51 @@ for (i in 1:length(wos_data$access_num)) {
   
   # to avoid bug in case of missing value
   if (author_natio == "(Missing)") {author_natio <- "XXXXXXXXXXXXXXXX"}
-  if (fdwk_country == "(Missing)") {fdwk_country <- "ZZZZZZZZZZZZZZZZ"} # as NAs have an explicit value in wos_data$fieldwork_country we can't use is.na() 
+  if (fdwk_country == "(Missing)") {fdwk_country <- "ZZZZZZZZZZZZZZZZ"} # as NAs have an explicit value in wos_data_div$fieldwork_country we can't use is.na() 
 
   # to fill author loc for from_country authors
-  if (str_detect(author_natio, fdwk_country)) {wos_data$author_loc[i] <- "from_country"}
-  else if (fdwk_country == "Balearic Islands" & str_detect(author_natio, "Spain")) {wos_data$author_loc[i] <- "from_country"}
-  else if (fdwk_country == "Corsica" & str_detect(author_natio, "France")) {wos_data$author_loc[i] <- "from_country"}
-  else if (fdwk_country == "Crete" & str_detect(author_natio, "Greece")) {wos_data$author_loc[i] <- "from_country"}
-  else if (fdwk_country == "Sardinia" & str_detect(author_natio, "Italy")) {wos_data$author_loc[i] <- "from_country"}
-  else if (fdwk_country == "Sicily" & str_detect(author_natio, "Italy")) {wos_data$author_loc[i] <- "from_country"}
+  if (str_detect(author_natio, fdwk_country)) {wos_data_div$author_loc[i] <- "from_country"}
+  else if (fdwk_country == "Balearic Islands" & str_detect(author_natio, "Spain")) {wos_data_div$author_loc[i] <- "from_country"}
+  else if (fdwk_country == "Corsica" & str_detect(author_natio, "France")) {wos_data_div$author_loc[i] <- "from_country"}
+  else if (fdwk_country == "Crete" & str_detect(author_natio, "Greece")) {wos_data_div$author_loc[i] <- "from_country"}
+  else if (fdwk_country == "Sardinia" & str_detect(author_natio, "Italy")) {wos_data_div$author_loc[i] <- "from_country"}
+  else if (fdwk_country == "Sicily" & str_detect(author_natio, "Italy")) {wos_data_div$author_loc[i] <- "from_country"}
   
   # for inside_med authors
-  else if (country_detection == TRUE) {wos_data$author_loc[i] <- "inside_med"}
+  else if (country_detection == TRUE) {wos_data_div$author_loc[i] <- "inside_med"}
   
   # for outside_med authors
-  else if (author_natio != "XXXXXXXXXXXXXXXX") {wos_data$author_loc[i] <- "outside_med"}
+  else if (author_natio != "XXXXXXXXXXXXXXXX") {wos_data_div$author_loc[i] <- "outside_med"}
   
   # at the end of the loop set country_detection to FALSE again before next iteration
   country_detection <- FALSE
 }
 
 # fix factor levels
-wos_data$author_loc <- factor(wos_data$author_loc, levels = c("from_country", "outside_med", "inside_med"), ordered = FALSE)
+wos_data_div$author_loc <- factor(wos_data_div$author_loc, levels = c("from_country", "outside_med", "inside_med"), ordered = FALSE)
 
 # give missing values an explicit factor level to ensure that they appear in summaries and plots
-wos_data$author_loc <- fct_explicit_na(wos_data$author_loc)
+wos_data_div$author_loc <- fct_explicit_na(wos_data_div$author_loc)
 
 # test if missing values are still missing
-# table(wos_data$author_nationality, useNA = "always")
-# table(wos_data$author_loc, useNA = "always")
+# table(wos_data_div$author_nationality, useNA = "always")
+# table(wos_data_div$author_loc, useNA = "always")
 # -> ok the 2564 '(Missing)' values are still there
 
 # sub data frames per taxa
-plant_loc_df <- subset(wos_data, wos_data$plant == "plant")
-fungi_loc_df <- subset(wos_data, wos_data$fungi == "fungi")
-amph_loc_df <- subset(wos_data, wos_data$amphibian == "amphibian")
-rept_loc_df <- subset(wos_data, wos_data$reptile == "reptile")
-bird_loc_df <- subset(wos_data, wos_data$bird == "bird")
-mammal_loc_df <- subset(wos_data, wos_data$mammal == "mammal")
-fish_loc_df <- subset(wos_data, wos_data$fish == "fish")
-sponge_loc_df <- subset(wos_data, wos_data$sponge == "sponge")
-crusta_loc_df <- subset(wos_data, wos_data$crustacea == "crustacea")
-coleo_loc_df <- subset(wos_data, wos_data$coleoptera == "coleoptera")
-papilio_loc_df <- subset(wos_data, wos_data$papilionoidea == "papilionoidea")
-lumbri_loc_df <- subset(wos_data, wos_data$lumbricina == "lumbricina")
-tree_loc_df <- subset(wos_data, wos_data$tree == "tree")
+plant_loc_df <- subset(wos_data_div, wos_data_div$plant == "plant")
+fungi_loc_df <- subset(wos_data_div, wos_data_div$fungi == "fungi")
+amph_loc_df <- subset(wos_data_div, wos_data_div$amphibian == "amphibian")
+rept_loc_df <- subset(wos_data_div, wos_data_div$reptile == "reptile")
+bird_loc_df <- subset(wos_data_div, wos_data_div$bird == "bird")
+mammal_loc_df <- subset(wos_data_div, wos_data_div$mammal == "mammal")
+fish_loc_df <- subset(wos_data_div, wos_data_div$fish == "fish")
+sponge_loc_df <- subset(wos_data_div, wos_data_div$sponge == "sponge")
+crusta_loc_df <- subset(wos_data_div, wos_data_div$crustacea == "crustacea")
+coleo_loc_df <- subset(wos_data_div, wos_data_div$coleoptera == "coleoptera")
+papilio_loc_df <- subset(wos_data_div, wos_data_div$papilionoidea == "papilionoidea")
+lumbri_loc_df <- subset(wos_data_div, wos_data_div$lumbricina == "lumbricina")
+tree_loc_df <- subset(wos_data_div, wos_data_div$tree == "tree")
 
 # make recap tables
 plant_article_loc_tab <- plant_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
@@ -455,14 +459,24 @@ taxa_journals_table$tot_articles <- c(length(plant_journals_df$access_num),
 # mean number of articles per journal
 taxa_journals_table$mean_art_per_journal <- round(taxa_journals_table$tot_articles / taxa_journals_table$tot_n_journals, digits = 2)
 
-# number of journals through the years
+# fill taxa_journals_table by indexing rows with taxa name and columns with year_list length
+taxa_journals_table[which(taxa_journals_table$taxa == "plant"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = plant_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "fungi"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = fungi_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "amphibian"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = amph_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "reptile"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = rept_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "bird"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = bird_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "mammal"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = mammal_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "fish"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = fish_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "sponge"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = sponge_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "crustacea"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = crusta_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "coleoptera"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = coleo_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "papilionoidea"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = papilio_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "lumbricina"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = lumbri_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "tree"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = tree_journals_df)
 
-########## question : is the raw number of journals per year interesting or the accumulation number of journals ?
-########## -> probably only the accumulation
+# save table
+write_csv2(taxa_journals_table, path = "./output/text/WOS_taxa_journals_table.csv", col_names = TRUE)
 
-########## extract this info with a loop that subsets the data frame at each iteration with a "given_year" variable going from 1980 to 2019, 
-########## and a subset condition in the form of : subset(plant_journals_df, plant_journals_df$year <= given_year), 
-########## and do a length(unique(plant_journals_df$publisher)) at each step.
-########## put that in a function, and make the function turn for each taxa
+
 
 
