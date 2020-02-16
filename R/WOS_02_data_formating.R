@@ -292,31 +292,39 @@ write_csv2(tree_year_tab_per_country_acc, path = "./output/text/WOS_tree_year_ta
 
 
 ### number of articles per country with from_country / inside_med / outside_med corresponding author for each taxa
-### add column "author_loc"
-# wos_data <- cbind(wos_data, author_loc = c(rep(NA, length(wos_data$access_num))))
-
-# wos_data$author_loc <- c(rep(NA, length(wos_data$access_num)))
-
 # add empty column "author_loc"
 wos_data["author_loc"] <- NA
 wos_data <- wos_data %>% mutate(author_loc = as.character(author_loc))
+
+# fix factor levels for author_nationality
+wos_data$author_nationality <- factor(wos_data$author_nationality, levels = unique(wos_data$author_nationality), ordered = FALSE)
+
+# give missing values an explicit factor level to ensure that they appear in summaries and plots
+wos_data$author_nationality <- fct_explicit_na(wos_data$author_nationality)
 
 # loop to fill the column
 # initialize variables
 fdwk_country = ""
 author_natio = ""
+country_detection = FALSE
+# i=2 # author_nationality = Italy // Israel
+# i=5 # author_nationality = Netherlands
 
 for (i in 1:length(wos_data$access_num)) {
   fdwk_country = as.character(wos_data$fieldwork_country[i])
   author_natio = as.character(wos_data$author_nationality[i])
-  country_detection <- sum(pmatch(x = country_list, table = author_natio, nomatch = 0, duplicates.ok = TRUE))
-  # pmatch() seeks matches for the elements of x among those of table, and returns a vector of matches indexes
+
+  # detect if there is mediterranean country in author_natio
+  for (coun_name in country_list) {
+    if (str_detect(author_natio, coun_name)) {country_detection <- TRUE}
+  }
   
-  # to avoid bug in case of NA
-  if (fdwk_country == "(Missing)" | author_natio == "(Missing)") {} # as NA have an explicit value in wos_data$fieldwork_country, we can't use is.na()
-  
+  # to avoid bug in case of missing value
+  if (author_natio == "(Missing)") {author_natio <- "XXXXXXXXXXXXXXXX"}
+  if (fdwk_country == "(Missing)") {fdwk_country <- "ZZZZZZZZZZZZZZZZ"} # as NAs have an explicit value in wos_data$fieldwork_country we can't use is.na() 
+
   # to fill author loc for from_country authors
-  else if (str_detect(author_natio, fdwk_country)) {wos_data$author_loc[i] <- "from_country"}
+  if (str_detect(author_natio, fdwk_country)) {wos_data$author_loc[i] <- "from_country"}
   else if (fdwk_country == "Balearic Islands" & str_detect(author_natio, "Spain")) {wos_data$author_loc[i] <- "from_country"}
   else if (fdwk_country == "Corsica" & str_detect(author_natio, "France")) {wos_data$author_loc[i] <- "from_country"}
   else if (fdwk_country == "Crete" & str_detect(author_natio, "Greece")) {wos_data$author_loc[i] <- "from_country"}
@@ -324,11 +332,13 @@ for (i in 1:length(wos_data$access_num)) {
   else if (fdwk_country == "Sicily" & str_detect(author_natio, "Italy")) {wos_data$author_loc[i] <- "from_country"}
   
   # for inside_med authors
-  else if (country_detection != 0) {wos_data$author_loc[i] <- "inside_med"}
+  else if (country_detection == TRUE) {wos_data$author_loc[i] <- "inside_med"}
   
   # for outside_med authors
-  else if (!is.na(author_natio)) {wos_data$author_loc[i] <- "outside_med"}
-
+  else if (author_natio != "XXXXXXXXXXXXXXXX") {wos_data$author_loc[i] <- "outside_med"}
+  
+  # at the end of the loop set country_detection to FALSE again before next iteration
+  country_detection <- FALSE
 }
 
 # fix factor levels
@@ -336,6 +346,11 @@ wos_data$author_loc <- factor(wos_data$author_loc, levels = c("from_country", "o
 
 # give missing values an explicit factor level to ensure that they appear in summaries and plots
 wos_data$author_loc <- fct_explicit_na(wos_data$author_loc)
+
+# test if missing values are still missing
+# table(wos_data$author_nationality, useNA = "always")
+# table(wos_data$author_loc, useNA = "always")
+# -> ok the 2564 '(Missing)' values are still there
 
 # sub data frames per taxa
 plant_loc_df <- subset(wos_data, wos_data$plant == "plant")
@@ -367,20 +382,87 @@ crusta_article_loc_tab <- crusta_loc_df %>% group_by(fieldwork_country, author_l
 fish_article_loc_tab <- fish_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 tree_article_loc_tab <- tree_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 
-plant_article_loc_tab %>% print(n=30)
+# save tables
+write_csv2(plant_article_loc_tab, path = "./output/text/WOS_plant_article_loc_tab.csv", col_names = TRUE)
+write_csv2(fungi_article_loc_tab, path = "./output/text/WOS_fungi_article_loc_tab.csv", col_names = TRUE)
+write_csv2(amph_article_loc_tab, path = "./output/text/WOS_amph_article_loc_tab.csv", col_names = TRUE)
+write_csv2(rept_article_loc_tab, path = "./output/text/WOS_rept_article_loc_tab.csv", col_names = TRUE)
+write_csv2(bird_article_loc_tab, path = "./output/text/WOS_bird_article_loc_tab.csv", col_names = TRUE)
+write_csv2(mammal_article_loc_tab, path = "./output/text/WOS_mammal_article_loc_tab.csv", col_names = TRUE)
+write_csv2(coleo_article_loc_tab, path = "./output/text/WOS_coleo_article_loc_tab.csv", col_names = TRUE)
+write_csv2(lumbri_article_loc_tab, path = "./output/text/WOS_lumbri_article_loc_tab.csv", col_names = TRUE)
+write_csv2(papilio_article_loc_tab, path = "./output/text/WOS_papilio_article_loc_tab.csv", col_names = TRUE)
+write_csv2(sponge_article_loc_tab, path = "./output/text/WOS_sponge_article_loc_tab.csv", col_names = TRUE)
+write_csv2(crusta_article_loc_tab, path = "./output/text/WOS_crusta_article_loc_tab.csv", col_names = TRUE)
+write_csv2(fish_article_loc_tab, path = "./output/text/WOS_fish_article_loc_tab.csv", col_names = TRUE)
+write_csv2(tree_article_loc_tab, path = "./output/text/WOS_tree_article_loc_tab.csv", col_names = TRUE)
 
-# fieldwork_country         from_country outside_med inside_med `(Missing)`
-# ...
-# 29 (Missing)                         0        2125       5438         267
-                                                      #### WTF !?
+### number of different journals through the years for each taxa
+# keep only document types "Article", "Correction" and "Review" because journal names are the most standardized
+wos_data_journals <- wos_data %>% 
+  filter(doc_type %in% c("Article", "Correction", "Review"))
 
-# pmatch(c("", "ab", "ab"), c("abc", "ab"), dup = FALSE)
-# pmatch(c("", "ab", "ab"), c("abc", "ab"), dup = TRUE)
+# sub data frames per taxa
+plant_journals_df <- subset(wos_data_journals, wos_data_journals$plant == "plant")
+fungi_journals_df <- subset(wos_data_journals, wos_data_journals$fungi == "fungi")
+amph_journals_df <- subset(wos_data_journals, wos_data_journals$amphibian == "amphibian")
+rept_journals_df <- subset(wos_data_journals, wos_data_journals$reptile == "reptile")
+bird_journals_df <- subset(wos_data_journals, wos_data_journals$bird == "bird")
+mammal_journals_df <- subset(wos_data_journals, wos_data_journals$mammal == "mammal")
+fish_journals_df <- subset(wos_data_journals, wos_data_journals$fish == "fish")
+sponge_journals_df <- subset(wos_data_journals, wos_data_journals$sponge == "sponge")
+crusta_journals_df <- subset(wos_data_journals, wos_data_journals$crustacea == "crustacea")
+coleo_journals_df <- subset(wos_data_journals, wos_data_journals$coleoptera == "coleoptera")
+papilio_journals_df <- subset(wos_data_journals, wos_data_journals$papilionoidea == "papilionoidea")
+lumbri_journals_df <- subset(wos_data_journals, wos_data_journals$lumbricina == "lumbricina")
+tree_journals_df <- subset(wos_data_journals, wos_data_journals$tree == "tree")
 
-# subset(plant_loc_df, plant_loc_df$fieldwork_country == "(Missing)" & plant_loc_df$author_loc == "inside_med") %>% print(n=50)
+# initiaze table
+taxa_journals_table <- setNames(data.frame(matrix(ncol = 4+length(year_list), nrow = 13)), nm = c("taxa", "tot_n_journals", "tot_articles", "mean_art_per_journal", paste0(year_list)))
+taxa_journals_table$taxa <- taxa_vect
 
-# il reste un truc a corriger dans la boucle qui assigne la localite de l'auteur ! probablement un probleme avec la fonction pmatch
-# au pire je corrige avec une boucle en plus qui boucle sur les28 noms de pays mediterraneens
+# total number of journals
+taxa_journals_table$tot_n_journals <- c(length(unique(plant_journals_df$publisher)),
+                                        length(unique(fungi_journals_df$publisher)),
+                                        length(unique(amph_journals_df$publisher)),
+                                        length(unique(rept_journals_df$publisher)),
+                                        length(unique(bird_journals_df$publisher)),
+                                        length(unique(mammal_journals_df$publisher)),
+                                        length(unique(fish_journals_df$publisher)),
+                                        length(unique(sponge_journals_df$publisher)),
+                                        length(unique(crusta_journals_df$publisher)),
+                                        length(unique(coleo_journals_df$publisher)),
+                                        length(unique(papilio_journals_df$publisher)),
+                                        length(unique(lumbri_journals_df$publisher)),
+                                        length(unique(tree_journals_df$publisher))
+                                        )
 
+# total number of articles
+taxa_journals_table$tot_articles <- c(length(plant_journals_df$access_num),
+                                        length(fungi_journals_df$access_num),
+                                        length(amph_journals_df$access_num),
+                                        length(rept_journals_df$access_num),
+                                        length(bird_journals_df$access_num),
+                                        length(mammal_journals_df$access_num),
+                                        length(fish_journals_df$access_num),
+                                        length(sponge_journals_df$access_num),
+                                        length(crusta_journals_df$access_num),
+                                        length(coleo_journals_df$access_num),
+                                        length(papilio_journals_df$access_num),
+                                        length(lumbri_journals_df$access_num),
+                                        length(tree_journals_df$access_num)
+                                        )
+# mean number of articles per journal
+taxa_journals_table$mean_art_per_journal <- round(taxa_journals_table$tot_articles / taxa_journals_table$tot_n_journals, digits = 2)
+
+# number of journals through the years
+
+########## question : is the raw number of journals per year interesting or the accumulation number of journals ?
+########## -> probably only the accumulation
+
+########## extract this info with a loop that subsets the data frame at each iteration with a "given_year" variable going from 1980 to 2019, 
+########## and a subset condition in the form of : subset(plant_journals_df, plant_journals_df$year <= given_year), 
+########## and do a length(unique(plant_journals_df$publisher)) at each step.
+########## put that in a function, and make the function turn for each taxa
 
 
