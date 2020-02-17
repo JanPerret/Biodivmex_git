@@ -183,10 +183,10 @@ GB_recap_species_level <- function(taxa_data_med, taxa_name) {
 
 
 ### transform table with number of sequences in GenBank per country (rows) and years (columns) for accumulation curve
-GB_accumulate_over_years <- function(year_tab) {
+GB_accumulate <- function(year_tab, first_column) {
   
   len <- c(1:nrow(year_tab))
-  large <- c(3:ncol(year_tab))
+  large <- c((first_column+1):ncol(year_tab))
   
   for (i in len){ # loop over rows
     for (n in large){ # loop over columns

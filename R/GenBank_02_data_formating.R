@@ -243,6 +243,48 @@ write_csv2(fish_desc_year_tab, path = "./output/text/GenBank_fish_desc_year_tab.
 write_csv2(tree_desc_year_tab, path = "./output/text/GenBank_tree_desc_year_tab.csv", col_names = TRUE)
 
 
+### recap table with number of sequences through time for each taxa
+# initiaze table
+year_list <- c(1987:2019)
+all_taxa_year_tab <- setNames(data.frame(matrix(ncol = length(year_list), nrow = 0)), c(paste0(year_list)))
+
+# 
+all_taxa_year_tab <- rbind(plant_desc_year_tab$n_seq_med,
+                           fungi_desc_year_tab$n_seq_med,
+                           amph_desc_year_tab$n_seq_med,
+                           rept_desc_year_tab$n_seq_med,
+                           bird_desc_year_tab$n_seq_med,
+                           mammal_desc_year_tab$n_seq_med,
+                           fish_desc_year_tab$n_seq_med,
+                           sponge_desc_year_tab$n_seq_med,
+                           crusta_desc_year_tab$n_seq_med,
+                           coleo_desc_year_tab$n_seq_med,
+                           papilio_desc_year_tab$n_seq_med,
+                           lumbri_desc_year_tab$n_seq_med,
+                           tree_desc_year_tab$n_seq_med
+                           )
+
+colnames(all_taxa_year_tab) <- c(as.character(paste0(year_list)))
+
+# save table
+write_csv2(all_taxa_year_tab, path = "./output/text/GenBank_all_taxa_year_tab.csv", col_names = TRUE)
+
+### pass table to accumulation
+all_taxa_year_tab_acc <- GB_accumulate(year_tab = all_taxa_year_tab, first_column = 2)
+
+# # bind taxa names to the columns
+taxa_vect <- c("plant", "fungi", "amphibian", "reptile", "bird", "mammal", "fish", "sponge", "crustacea", "coleoptera", "papilionoidea", "lumbricina", "tree")
+all_taxa_year_tab <- cbind(taxa = taxa_vect, all_taxa_year_tab)
+all_taxa_year_tab <- as.data.frame(all_taxa_year_tab)
+
+all_taxa_year_tab_acc <- cbind(taxa = taxa_vect, all_taxa_year_tab_acc)
+all_taxa_year_tab_acc <- as.data.frame(all_taxa_year_tab_acc)
+
+# save tables
+write_csv2(all_taxa_year_tab, path = "./output/text/GenBank_all_taxa_year_tab.csv", col_names = TRUE)
+write_csv2(all_taxa_year_tab_acc, path = "./output/text/GenBank_all_taxa_year_tab_acc.csv", col_names = TRUE)
+
+
 ### recap tables for number of sequences for each gene in med region
 # load gene name list
 gene_list <- read_delim("./data/name_list_all_genes.csv", delim = ";", col_names = FALSE)
@@ -454,20 +496,19 @@ write_csv2(fish_year_tab, path = "./output/text/GenBank_fish_year_tab.csv", col_
 write_csv2(tree_year_tab, path = "./output/text/GenBank_tree_year_tab.csv", col_names = TRUE)
 
 ### same table but for accumulation curve
-
-plant_year_tab_acc <- GB_accumulate_over_years(year_tab = plant_year_tab)
-fungi_year_tab_acc <- GB_accumulate_over_years(year_tab = fungi_year_tab)
-amph_year_tab_acc <- GB_accumulate_over_years(year_tab = amph_year_tab)
-rept_year_tab_acc <- GB_accumulate_over_years(year_tab = rept_year_tab)
-bird_year_tab_acc <- GB_accumulate_over_years(year_tab = bird_year_tab)
-mammal_year_tab_acc <- GB_accumulate_over_years(year_tab = mammal_year_tab)
-coleo_year_tab_acc <- GB_accumulate_over_years(year_tab = coleo_year_tab)
-lumbri_year_tab_acc <- GB_accumulate_over_years(year_tab = lumbri_year_tab)
-papilio_year_tab_acc <- GB_accumulate_over_years(year_tab = papilio_year_tab)
-sponge_year_tab_acc <- GB_accumulate_over_years(year_tab = sponge_year_tab)
-crusta_year_tab_acc <- GB_accumulate_over_years(year_tab = crusta_year_tab)
-fish_year_tab_acc <- GB_accumulate_over_years(year_tab = fish_year_tab)
-tree_year_tab_acc <- GB_accumulate_over_years(year_tab = tree_year_tab)
+plant_year_tab_acc <- GB_accumulate(year_tab = plant_year_tab, first_column = 2)
+fungi_year_tab_acc <- GB_accumulate(year_tab = fungi_year_tab, first_column = 2)
+amph_year_tab_acc <- GB_accumulate(year_tab = amph_year_tab, first_column = 2)
+rept_year_tab_acc <- GB_accumulate(year_tab = rept_year_tab, first_column = 2)
+bird_year_tab_acc <- GB_accumulate(year_tab = bird_year_tab, first_column = 2)
+mammal_year_tab_acc <- GB_accumulate(year_tab = mammal_year_tab, first_column = 2)
+coleo_year_tab_acc <- GB_accumulate(year_tab = coleo_year_tab, first_column = 2)
+lumbri_year_tab_acc <- GB_accumulate(year_tab = lumbri_year_tab, first_column = 2)
+papilio_year_tab_acc <- GB_accumulate(year_tab = papilio_year_tab, first_column = 2)
+sponge_year_tab_acc <- GB_accumulate(year_tab = sponge_year_tab, first_column = 2)
+crusta_year_tab_acc <- GB_accumulate(year_tab = crusta_year_tab, first_column = 2)
+fish_year_tab_acc <- GB_accumulate(year_tab = fish_year_tab, first_column = 2)
+tree_year_tab_acc <- GB_accumulate(year_tab = tree_year_tab, first_column = 2)
 
 # save tables
 write_csv2(plant_year_tab_acc, path = "./output/text/GenBank_plant_year_tab_acc.csv", col_names = TRUE)

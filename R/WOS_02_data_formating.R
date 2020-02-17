@@ -141,7 +141,7 @@ taxa_year_table[12,] <- as.data.frame(table(lumbri_df$year))$Freq
 taxa_year_table[13,] <- as.data.frame(table(tree_df$year))$Freq
 
 # bind taxa name column
-taxa_year_table <- cbind(taxa_vect, taxa_year_table)
+taxa_year_table <- cbind(taxa = taxa_vect, taxa_year_table)
 
 # save table
 write_csv2(taxa_year_table, path = "./output/text/WOS_recap_table_articles_per_year.csv", col_names = TRUE)
@@ -534,7 +534,7 @@ taxa_region_table[,3] <- as.data.frame(table(crusta_region_df$marine_region))$Fr
 taxa_region_table <- cbind(marine_region = c(paste0(region_list), "NA"), taxa_region_table)
 
 # save table
-write_csv2(taxa_region_table, path = "./output/text/WOS_recap_table_articles_per_marine_region.csv", col_names = TRUE)
+write_csv2(taxa_region_table, path = "./output/text/WOS_recap_articles_per_marine_region.csv", col_names = TRUE)
 
 
 ### number of articles per year per marine region for each taxa (l.236)
