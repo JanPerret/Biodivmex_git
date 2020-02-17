@@ -48,7 +48,7 @@ GB_loop_over_years <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name
   
   # initiaze table to store the 6 general descriptive informations
   general_table <- setNames(data.frame(matrix(ncol = 8, nrow = 0)),
-                            c("taxa", "n_seq", "taxa_n_seq", "loc_rate", "n_seq_med", "sp_level_rate_med", "n_sp_med", "year"))
+                            c("year", "taxa", "n_seq", "taxa_n_seq", "loc_rate", "n_seq_med", "sp_level_rate_med", "n_sp_med"))
   
   # list years since the first sequence was deposited in GenBank (for our taxa + genes conditions)
   vect_year <- as.integer(c(1987:2019)) # first sequences is from 1987 in our data
@@ -66,7 +66,7 @@ GB_loop_over_years <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name
     tab_given_year <- GB_extract_general_info(kingdom_data = kingdom_data_year, taxa_data = taxa_data_year, taxa_data_med = taxa_data_med_year, taxa_name = taxa_name)
     
     # binding extracted informations to the output table
-    tab_given_year <- cbind(tab_given_year, year = given_year)
+    tab_given_year <- cbind(year = given_year, tab_given_year)
     general_table <- rbind(general_table, tab_given_year)
   }
   
@@ -119,7 +119,7 @@ GB_gene_recap_loop_over_years <- function(taxa_data_med, taxa_name) {
     tab_given_year <- GB_extract_gene(taxa_data_med = taxa_data_med_year, taxa_name = taxa_name)
     
     # binding extracted informations to the output table
-    tab_given_year <- cbind(tab_given_year, year = given_year)
+    tab_given_year <- cbind(year = given_year, tab_given_year)
     gene_table <- rbind(gene_table, tab_given_year)
   }
   
@@ -152,12 +152,12 @@ GB_generate_sequencer_loc <- function(kingdom_data_med) {
 }
 
 
-### extract the same information than GB_extract_gene() but for each year
-GB_recap_species_level_rate <- function(taxa_data_med, taxa_name) {
+### make recap tables with rate of sequences assigned at species level and number of different species (or species names)
+GB_recap_species_level <- function(taxa_data_med, taxa_name) {
   
   # initiaze table
-  sp_level_table <- setNames(data.frame(matrix(ncol = 4, nrow = 27)),
-                             c("country", "taxa", "sp_level_rate", "n_seq"))
+  sp_level_table <- setNames(data.frame(matrix(ncol = 5, nrow = 27)),
+                             c("country", "taxa", "sp_level_rate", "n_seq", "n_sp"))
   sp_level_table$country <- sample_origin_med_levels
   sp_level_table$taxa <- taxa_name
   
@@ -172,32 +172,10 @@ GB_recap_species_level_rate <- function(taxa_data_med, taxa_name) {
     # species level rate
     a = sum(!is.na(inter_tab$species_level)) - length(which(inter_tab$species_level == "hybrid")) # total number of sequences without hybrids
     sp_level_table$sp_level_rate[i] <- round((a/length(inter_tab$species_level))*100, 2) # in percentage
-  }
-  
-  return(sp_level_table)
-}
-
-
-### make recap tables with number of different species (or species names)
-GB_recap_number_species <- function(taxa_data_med, taxa_name) {
-  
-  # initiaze table
-  sp_level_table <- setNames(data.frame(matrix(ncol = 4, nrow = 27)),
-                             c("country", "taxa", "n_sp", "n_seq"))
-  sp_level_table$country <- sample_origin_med_levels
-  sp_level_table$taxa <- taxa_name
-  
-  # loop to fill the table
-  for (i in 1:length(sp_level_table$country)) {
-    country = sp_level_table$country[i]
-    inter_tab <- subset(taxa_data_med, taxa_data_med$sample_origin == country)
-    
-    # country number of sequences
-    sp_level_table$n_seq[i] <- length(inter_tab$species_level)
     
     # number of species
     sp_level_table$n_sp[i] <- length(levels(as.factor(inter_tab$species_level))) # here levels() if better than unique() because it don't count NA as a value
-
+    
   }
   
   return(sp_level_table)

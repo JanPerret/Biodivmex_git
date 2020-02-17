@@ -208,40 +208,39 @@ all_taxa_desc_tab <- rbind(plant_desc_tab, fungi_desc_tab, amph_desc_tab, rept_d
                            coleo_desc_tab, lumbri_desc_tab, papilio_desc_tab, sponge_desc_tab, crusta_desc_tab, fish_desc_tab,
                            tree_desc_tab)
 # save table
-write_csv2(all_taxa_desc_tab, path = "./output/text/GenBank_all_taxa_descriptive_mesures.csv", col_names = TRUE)
+write_csv2(all_taxa_desc_tab, path = "./output/text/GenBank_all_taxa_desc_tab.csv", col_names = TRUE)
 
 
 ### extract these general information per year
-plant_year_tab <- GB_loop_over_years(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = plant_data_med, taxa_name = "plant")
-fungi_year_tab <- GB_loop_over_years(kingdom_data = fungi_data, taxa_data = fungi_data, taxa_data_med = fungi_data_med, taxa_name = "fungi")
-amph_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = amph_data, taxa_data_med = amph_data_med, taxa_name = "amphibian")
-rept_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = rept_data, taxa_data_med = rept_data_med, taxa_name = "reptile")
-bird_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = bird_data, taxa_data_med = bird_data_med, taxa_name = "bird")
-mammal_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = mammal_data, taxa_data_med = mammal_data_med, taxa_name = "mammal")
-coleo_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = coleo_data, taxa_data_med = coleo_data_med, taxa_name = "coleoptera")
-lumbri_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = lumbri_data, taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
-papilio_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = papilio_data, taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
-sponge_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = sponge_data, taxa_data_med = sponge_data_med, taxa_name = "porifera")
-crusta_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
-fish_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = fish_data, taxa_data_med = fish_data_med, taxa_name = "fish")
-tree_year_tab <- GB_loop_over_years(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = tree_data_med, taxa_name = "tree")
-tree_year_tab[,3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
-
+plant_desc_year_tab <- GB_loop_over_years(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = plant_data_med, taxa_name = "plant")
+fungi_desc_year_tab <- GB_loop_over_years(kingdom_data = fungi_data, taxa_data = fungi_data, taxa_data_med = fungi_data_med, taxa_name = "fungi")
+amph_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = amph_data, taxa_data_med = amph_data_med, taxa_name = "amphibian")
+rept_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = rept_data, taxa_data_med = rept_data_med, taxa_name = "reptile")
+bird_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = bird_data, taxa_data_med = bird_data_med, taxa_name = "bird")
+mammal_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = mammal_data, taxa_data_med = mammal_data_med, taxa_name = "mammal")
+coleo_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = coleo_data, taxa_data_med = coleo_data_med, taxa_name = "coleoptera")
+lumbri_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = lumbri_data, taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
+papilio_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = papilio_data, taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
+sponge_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = sponge_data, taxa_data_med = sponge_data_med, taxa_name = "porifera")
+crusta_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
+fish_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = fish_data, taxa_data_med = fish_data_med, taxa_name = "fish")
+tree_desc_year_tab <- GB_loop_over_years(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = tree_data_med, taxa_name = "tree")
+tree_desc_year_tab[,3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
 
 # save tables
-write_csv2(plant_year_tab, path = "./output/text/GenBank_plant_year_tab.csv", col_names = TRUE)
-write_csv2(fungi_year_tab, path = "./output/text/GenBank_fungi_year_tab.csv", col_names = TRUE)
-write_csv2(amph_year_tab, path = "./output/text/GenBank_amph_year_tab.csv", col_names = TRUE)
-write_csv2(rept_year_tab, path = "./output/text/GenBank_rept_year_tab.csv", col_names = TRUE)
-write_csv2(bird_year_tab, path = "./output/text/GenBank_bird_year_tab.csv", col_names = TRUE)
-write_csv2(mammal_year_tab, path = "./output/text/GenBank_mammal_year_tab.csv", col_names = TRUE)
-write_csv2(coleo_year_tab, path = "./output/text/GenBank_coleo_year_tab.csv", col_names = TRUE)
-write_csv2(lumbri_year_tab, path = "./output/text/GenBank_lumbri_year_tab.csv", col_names = TRUE)
-write_csv2(papilio_year_tab, path = "./output/text/GenBank_papilio_year_tab.csv", col_names = TRUE)
-write_csv2(sponge_year_tab, path = "./output/text/GenBank_sponge_year_tab.csv", col_names = TRUE)
-write_csv2(crusta_year_tab, path = "./output/text/GenBank_crusta_year_tab.csv", col_names = TRUE)
-write_csv2(fish_year_tab, path = "./output/text/GenBank_fish_year_tab.csv", col_names = TRUE)
-write_csv2(tree_year_tab, path = "./output/text/GenBank_tree_year_tab.csv", col_names = TRUE)
+write_csv2(plant_desc_year_tab, path = "./output/text/GenBank_plant_desc_year_tab.csv", col_names = TRUE)
+write_csv2(fungi_desc_year_tab, path = "./output/text/GenBank_fungi_desc_year_tab.csv", col_names = TRUE)
+write_csv2(amph_desc_year_tab, path = "./output/text/GenBank_amph_desc_year_tab.csv", col_names = TRUE)
+write_csv2(rept_desc_year_tab, path = "./output/text/GenBank_rept_desc_year_tab.csv", col_names = TRUE)
+write_csv2(bird_desc_year_tab, path = "./output/text/GenBank_bird_desc_year_tab.csv", col_names = TRUE)
+write_csv2(mammal_desc_year_tab, path = "./output/text/GenBank_mammal_desc_year_tab.csv", col_names = TRUE)
+write_csv2(coleo_desc_year_tab, path = "./output/text/GenBank_coleo_desc_year_tab.csv", col_names = TRUE)
+write_csv2(lumbri_desc_year_tab, path = "./output/text/GenBank_lumbri_desc_year_tab.csv", col_names = TRUE)
+write_csv2(papilio_desc_year_tab, path = "./output/text/GenBank_papilio_desc_year_tab.csv", col_names = TRUE)
+write_csv2(sponge_desc_year_tab, path = "./output/text/GenBank_sponge_desc_year_tab.csv", col_names = TRUE)
+write_csv2(crusta_desc_year_tab, path = "./output/text/GenBank_crusta_desc_year_tab.csv", col_names = TRUE)
+write_csv2(fish_desc_year_tab, path = "./output/text/GenBank_fish_desc_year_tab.csv", col_names = TRUE)
+write_csv2(tree_desc_year_tab, path = "./output/text/GenBank_tree_desc_year_tab.csv", col_names = TRUE)
 
 
 ### recap tables for number of sequences for each gene in med region
@@ -377,19 +376,19 @@ write_csv2(tree_seq_loc_tab, path = "./output/text/GenBank_tree_seq_loc_tab.csv"
 
 
 ### recap tables with proportion of sequences assigned at least at species level per country for each taxa
-plant_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = plant_data_med, taxa_name = "plant")
-fungi_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = fungi_data_med, taxa_name = "fungi")
-amph_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = amph_data_med, taxa_name = "amphibian")
-rept_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = rept_data_med, taxa_name = "reptile")
-bird_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = bird_data_med, taxa_name = "bird")
-mammal_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = mammal_data_med, taxa_name = "mammal")
-coleo_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = coleo_data_med, taxa_name = "coleoptera")
-lumbri_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
-papilio_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
-sponge_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = sponge_data_med, taxa_name = "porifera")
-crusta_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = crusta_data_med, taxa_name = "crustacea")
-fish_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = fish_data_med, taxa_name = "fish")
-tree_species_level_tab <- GB_recap_species_level_rate(taxa_data_med = tree_data_med, taxa_name = "tree")
+plant_species_level_tab <- GB_recap_species_level(taxa_data_med = plant_data_med, taxa_name = "plant")
+fungi_species_level_tab <- GB_recap_species_level(taxa_data_med = fungi_data_med, taxa_name = "fungi")
+amph_species_level_tab <- GB_recap_species_level(taxa_data_med = amph_data_med, taxa_name = "amphibian")
+rept_species_level_tab <- GB_recap_species_level(taxa_data_med = rept_data_med, taxa_name = "reptile")
+bird_species_level_tab <- GB_recap_species_level(taxa_data_med = bird_data_med, taxa_name = "bird")
+mammal_species_level_tab <- GB_recap_species_level(taxa_data_med = mammal_data_med, taxa_name = "mammal")
+coleo_species_level_tab <- GB_recap_species_level(taxa_data_med = coleo_data_med, taxa_name = "coleoptera")
+lumbri_species_level_tab <- GB_recap_species_level(taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
+papilio_species_level_tab <- GB_recap_species_level(taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
+sponge_species_level_tab <- GB_recap_species_level(taxa_data_med = sponge_data_med, taxa_name = "porifera")
+crusta_species_level_tab <- GB_recap_species_level(taxa_data_med = crusta_data_med, taxa_name = "crustacea")
+fish_species_level_tab <- GB_recap_species_level(taxa_data_med = fish_data_med, taxa_name = "fish")
+tree_species_level_tab <- GB_recap_species_level(taxa_data_med = tree_data_med, taxa_name = "tree")
 
 # save tables
 write_csv2(plant_species_level_tab, path = "./output/text/GenBank_plant_species_level_tab.csv", col_names = TRUE)
@@ -407,38 +406,7 @@ write_csv2(fish_species_level_tab, path = "./output/text/GenBank_fish_species_le
 write_csv2(tree_species_level_tab, path = "./output/text/GenBank_tree_species_level_tab.csv", col_names = TRUE)
 
 
-### recap tables with number of different species (or species names) per country for each taxa
-plant_number_species_tab <- GB_recap_number_species(taxa_data_med = plant_data_med, taxa_name = "plant")
-fungi_number_species_tab <- GB_recap_number_species(taxa_data_med = fungi_data_med, taxa_name = "fungi")
-amph_number_species_tab <- GB_recap_number_species(taxa_data_med = amph_data_med, taxa_name = "amphibian")
-rept_number_species_tab <- GB_recap_number_species(taxa_data_med = rept_data_med, taxa_name = "reptile")
-bird_number_species_tab <- GB_recap_number_species(taxa_data_med = bird_data_med, taxa_name = "bird")
-mammal_number_species_tab <- GB_recap_number_species(taxa_data_med = mammal_data_med, taxa_name = "mammal")
-coleo_number_species_tab <- GB_recap_number_species(taxa_data_med = coleo_data_med, taxa_name = "coleoptera")
-lumbri_number_species_tab <- GB_recap_number_species(taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
-papilio_number_species_tab <- GB_recap_number_species(taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
-sponge_number_species_tab <- GB_recap_number_species(taxa_data_med = sponge_data_med, taxa_name = "porifera")
-crusta_number_species_tab <- GB_recap_number_species(taxa_data_med = crusta_data_med, taxa_name = "crustacea")
-fish_number_species_tab <- GB_recap_number_species(taxa_data_med = fish_data_med, taxa_name = "fish")
-tree_number_species_tab <- GB_recap_number_species(taxa_data_med = tree_data_med, taxa_name = "tree")
-
-# save tables
-write_csv2(plant_number_species_tab, path = "./output/text/GenBank_plant_number_species_tab.csv", col_names = TRUE)
-write_csv2(fungi_number_species_tab, path = "./output/text/GenBank_fungi_number_species_tab.csv", col_names = TRUE)
-write_csv2(amph_number_species_tab, path = "./output/text/GenBank_amph_number_species_tab.csv", col_names = TRUE)
-write_csv2(rept_number_species_tab, path = "./output/text/GenBank_rept_number_species_tab.csv", col_names = TRUE)
-write_csv2(bird_number_species_tab, path = "./output/text/GenBank_bird_number_species_tab.csv", col_names = TRUE)
-write_csv2(mammal_number_species_tab, path = "./output/text/GenBank_mammal_number_species_tab.csv", col_names = TRUE)
-write_csv2(coleo_number_species_tab, path = "./output/text/GenBank_coleo_number_species_tab.csv", col_names = TRUE)
-write_csv2(lumbri_number_species_tab, path = "./output/text/GenBank_lumbri_number_species_tab.csv", col_names = TRUE)
-write_csv2(papilio_number_species_tab, path = "./output/text/GenBank_papilio_number_species_tab.csv", col_names = TRUE)
-write_csv2(sponge_number_species_tab, path = "./output/text/GenBank_sponge_number_species_tab.csv", col_names = TRUE)
-write_csv2(crusta_number_species_tab, path = "./output/text/GenBank_crusta_number_species_tab.csv", col_names = TRUE)
-write_csv2(fish_number_species_tab, path = "./output/text/GenBank_fish_number_species_tab.csv", col_names = TRUE)
-write_csv2(tree_number_species_tab, path = "./output/text/GenBank_tree_number_species_tab.csv", col_names = TRUE)
-
-
-### recap tables number of sequences per year per country for each taxa
+### recap tables with number of sequences per year per country for each taxa
 # fix year factor levels for all taxa
 year_list <- c(1987:2019)
 
