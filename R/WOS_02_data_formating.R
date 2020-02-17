@@ -383,6 +383,21 @@ crusta_article_loc_tab <- crusta_loc_df %>% group_by(fieldwork_country, author_l
 fish_article_loc_tab <- fish_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 tree_article_loc_tab <- tree_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 
+# add column with total number of sequences
+plant_article_loc_tab <- cbind(plant_article_loc_tab, n_articles = plant_article_loc_tab$from_country + plant_article_loc_tab$inside_med + plant_article_loc_tab$outside_med + plant_article_loc_tab$`(Missing)`)
+fungi_article_loc_tab <- cbind(fungi_article_loc_tab, n_articles = fungi_article_loc_tab$from_country + fungi_article_loc_tab$inside_med + fungi_article_loc_tab$outside_med + fungi_article_loc_tab$`(Missing)`)
+amph_article_loc_tab <- cbind(amph_article_loc_tab, n_articles = amph_article_loc_tab$from_country + amph_article_loc_tab$inside_med + amph_article_loc_tab$outside_med + amph_article_loc_tab$`(Missing)`)
+rept_article_loc_tab <- cbind(rept_article_loc_tab, n_articles = rept_article_loc_tab$from_country + rept_article_loc_tab$inside_med + rept_article_loc_tab$outside_med + rept_article_loc_tab$`(Missing)`)
+bird_article_loc_tab <- cbind(bird_article_loc_tab, n_articles = bird_article_loc_tab$from_country + bird_article_loc_tab$inside_med + bird_article_loc_tab$outside_med + bird_article_loc_tab$`(Missing)`)
+mammal_article_loc_tab <- cbind(mammal_article_loc_tab, n_articles = mammal_article_loc_tab$from_country + mammal_article_loc_tab$inside_med + mammal_article_loc_tab$outside_med + mammal_article_loc_tab$`(Missing)`)
+coleo_article_loc_tab <- cbind(coleo_article_loc_tab, n_articles = coleo_article_loc_tab$from_country + coleo_article_loc_tab$inside_med + coleo_article_loc_tab$outside_med + coleo_article_loc_tab$`(Missing)`)
+papilio_article_loc_tab <- cbind(papilio_article_loc_tab, n_articles = papilio_article_loc_tab$from_country + papilio_article_loc_tab$inside_med + papilio_article_loc_tab$outside_med + papilio_article_loc_tab$`(Missing)`)
+lumbri_article_loc_tab <- cbind(lumbri_article_loc_tab, n_articles = lumbri_article_loc_tab$from_country + lumbri_article_loc_tab$inside_med + lumbri_article_loc_tab$outside_med + lumbri_article_loc_tab$`(Missing)`)
+fish_article_loc_tab <- cbind(fish_article_loc_tab, n_articles = fish_article_loc_tab$from_country + fish_article_loc_tab$inside_med + fish_article_loc_tab$outside_med + fish_article_loc_tab$`(Missing)`)
+sponge_article_loc_tab <- cbind(sponge_article_loc_tab, n_articles = sponge_article_loc_tab$from_country + sponge_article_loc_tab$inside_med + sponge_article_loc_tab$outside_med + sponge_article_loc_tab$`(Missing)`)
+crusta_article_loc_tab <- cbind(crusta_article_loc_tab, n_articles = crusta_article_loc_tab$from_country + crusta_article_loc_tab$inside_med + crusta_article_loc_tab$outside_med + crusta_article_loc_tab$`(Missing)`)
+tree_article_loc_tab <- cbind(tree_article_loc_tab, n_articles = tree_article_loc_tab$from_country + tree_article_loc_tab$inside_med + tree_article_loc_tab$outside_med + tree_article_loc_tab$`(Missing)`)
+
 # save tables
 write_csv2(plant_article_loc_tab, path = "./output/text/WOS_plant_article_loc_tab.csv", col_names = TRUE)
 write_csv2(fungi_article_loc_tab, path = "./output/text/WOS_fungi_article_loc_tab.csv", col_names = TRUE)
