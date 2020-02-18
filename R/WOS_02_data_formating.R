@@ -494,7 +494,7 @@ write_csv2(taxa_journals_table, path = "./output/text/WOS_taxa_journals_table.cs
 
 ### number of articles per marine region for each taxa
 # first multiply rows with multiple assignations in marine_region
-# work on separate dataframe 
+# work on separate dataframe
 wos_data_div_marine <- wos_data
 
 # initiate variables
@@ -572,5 +572,76 @@ crusta_year_tab_per_region_acc <- WOS_accumulate(year_tab = crusta_year_tab_per_
 write_csv2(fish_year_tab_per_region_acc, path = "./output/text/WOS_fish_year_tab_per_region_acc.csv", col_names = TRUE)
 write_csv2(sponge_year_tab_per_region_acc, path = "./output/text/WOS_sponge_year_tab_per_region_acc.csv", col_names = TRUE)
 write_csv2(crusta_year_tab_per_region_acc, path = "./output/text/WOS_crusta_year_tab_per_region_acc.csv", col_names = TRUE)
+
+
+### number of articles per marine region with inside_med / outside_med corresponding author information (l.298)
+# add empty column "author_loc"
+wos_data_div_marine["author_loc"] <- NA
+wos_data_div_marine <- wos_data_div_marine %>% mutate(author_loc = as.character(author_loc))
+
+# fix factor levels for author_nationality
+wos_data_div_marine$author_nationality <- factor(wos_data_div_marine$author_nationality, levels = unique(wos_data_div_marine$author_nationality), ordered = FALSE)
+
+# give missing values an explicit factor level to ensure that they appear in summaries and plots
+wos_data_div_marine$author_nationality <- fct_explicit_na(wos_data_div_marine$author_nationality)
+
+# loop to fill the column
+# initialize variables
+mar_region = ""
+author_natio = ""
+region_detection = FALSE
+
+for (i in 1:length(wos_data_div_marine$access_num)) {
+  mar_region = as.character(wos_data_div_marine$marine_region[i])
+  author_natio = as.character(wos_data_div_marine$author_nationality[i])
+  
+  # detect if there is mediterranean country in author_natio
+  for (coun_name in country_list) {
+    if (str_detect(author_natio, coun_name)) {region_detection <- TRUE}
+  }
+  
+  # to avoid bug in case of missing value
+  if (author_natio == "(Missing)") {author_natio <- "XXXXXXXXXXXXXXXX"}
+  if (mar_region == "(Missing)") {mar_region <- "ZZZZZZZZZZZZZZZZ"} # as NAs have an explicit value in wos_data_div_marine$marine_region we can't use is.na() 
+  
+  # for inside_med authors
+  if (region_detection == TRUE) {wos_data_div_marine$author_loc[i] <- "inside_med"}
+  
+  # for outside_med authors
+  else if (author_natio != "XXXXXXXXXXXXXXXX") {wos_data_div_marine$author_loc[i] <- "outside_med"}
+  
+  # at the end of the loop set region_detection to FALSE again before next iteration
+  region_detection <- FALSE
+}
+
+# fix factor levels
+wos_data_div_marine$author_loc <- factor(wos_data_div_marine$author_loc, levels = c("outside_med", "inside_med"), ordered = FALSE)
+
+# give missing values an explicit factor level to ensure that they appear in summaries and plots
+wos_data_div_marine$author_loc <- fct_explicit_na(wos_data_div_marine$author_loc)
+
+# # test if missing values are still missing
+# table(wos_data_div_marine$author_nationality, useNA = "always")
+# table(wos_data_div_marine$author_loc, useNA = "always")
+
+# sub data frames per taxa
+fish_loc_df <- subset(wos_data_div_marine, wos_data_div_marine$fish == "fish")
+sponge_loc_df <- subset(wos_data_div_marine, wos_data_div_marine$sponge == "sponge")
+crusta_loc_df <- subset(wos_data_div_marine, wos_data_div_marine$crustacea == "crustacea")
+
+# make recap tables
+sponge_article_loc_tab <- sponge_loc_df %>% group_by(marine_region, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
+crusta_article_loc_tab <- crusta_loc_df %>% group_by(marine_region, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
+fish_article_loc_tab <- fish_loc_df %>% group_by(marine_region, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
+
+# add column with total number of sequences
+fish_article_loc_tab <- cbind(fish_article_loc_tab, n_articles = fish_article_loc_tab$inside_med + fish_article_loc_tab$outside_med + fish_article_loc_tab$`(Missing)`)
+sponge_article_loc_tab <- cbind(sponge_article_loc_tab, n_articles = sponge_article_loc_tab$inside_med + sponge_article_loc_tab$outside_med + sponge_article_loc_tab$`(Missing)`)
+crusta_article_loc_tab <- cbind(crusta_article_loc_tab, n_articles = crusta_article_loc_tab$inside_med + crusta_article_loc_tab$outside_med + crusta_article_loc_tab$`(Missing)`)
+
+# save tables
+write_csv2(sponge_article_loc_tab, path = "./output/text/WOS_sponge_article_loc_tab.csv", col_names = TRUE)
+write_csv2(crusta_article_loc_tab, path = "./output/text/WOS_crusta_article_loc_tab.csv", col_names = TRUE)
+write_csv2(fish_article_loc_tab, path = "./output/text/WOS_fish_article_loc_tab.csv", col_names = TRUE)
 
 
