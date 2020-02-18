@@ -200,7 +200,7 @@ GB_accumulate <- function(year_tab, first_column) {
 }
 
 
-### make 
+### make sequence accumulation curve for a given taxa with one curve per country
 GB_acc_curve_per_country <- function(taxa_acc_data, taxa_name) {
   
   # pass data from wide to long format
@@ -229,5 +229,4 @@ GB_acc_curve_per_country <- function(taxa_acc_data, taxa_name) {
   print(GenBank_curve_seq_acc_country)
   dev.off()
   
-  # return(GenBank_curve_seq_acc_country)
 }

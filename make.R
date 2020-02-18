@@ -45,3 +45,13 @@ source("R/GenBank_02_data_formating.R")
 ##################
 source("R/WOS_02_data_formating.R")
 
+##################
+# curves for GenBank
+##################
+source("R/GenBank_03_curves.R")
+
+##################
+# curves for WOS
+##################
+source("R/WOS_03_curves.R")
+
