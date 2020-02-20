@@ -230,3 +230,206 @@ GB_acc_curve_per_country <- function(taxa_acc_data, taxa_name) {
   dev.off()
   
 }
+
+
+### make map subtitle text
+GenBank_make_map_subtitle <- function(taxa_table, kingdom_name, taxa_name) {
+  
+  text_reign_n_seq <- paste("Total number of sequences in GenBank for ", kingdom_name, " : ", taxa_table$n_seq[which(taxa_table$taxa == taxa_name)], sep="")
+  text_taxa_n_seq <- paste("Number of sequences for the taxa : ", taxa_table$taxa_n_seq[which(taxa_table$taxa == taxa_name)], sep="")
+  text_loc_rate <- paste("Sample origin fill rate : ", taxa_table$loc_rate[which(taxa_table$taxa == taxa_name)], " %", sep="")
+  text_taxa_med_n_seq <- paste("Number of sequences for the taxa : ", taxa_table$n_seq_med[which(taxa_table$taxa == taxa_name)], sep="")
+  text_n_species <- paste("Number of species with at least one sequence : ", taxa_table$n_sp_med[which(taxa_table$taxa == taxa_name)], sep="")
+  
+  text_subtitle <- paste("At world scale : ", text_reign_n_seq, " ; ", text_taxa_n_seq, " ; ", text_loc_rate, "\n",
+                         "In the mediterranean basin : ", text_taxa_med_n_seq, " ; ", text_n_species, sep="")
+  return(text_subtitle)
+}
+
+
+### store the legend for the pie charts with 3 categories
+GenBank_store_pie_chart_legend <- function() {
+  # make a small tibble containing just the 3 lines from_country / inside_med / outside_med
+  tibble_for_pie_legend <- tibble(author_loc = c("from_country", "inside_med", "outside_med"), sum_n_articles = c(457,143,130))
+  
+  # make a pie chart from the small tibble
+  pie_for_legend <- ggplot(tibble_for_pie_legend, aes(x=1, y = sum_n_articles, fill = author_loc)) +
+    geom_bar(width = 1, stat = "identity", colour = "black") +
+    coord_polar("y", start=0) +
+    geom_text(aes(label = tibble_for_pie_legend$sum_n_articles, group = tibble_for_pie_legend$author_loc),
+              position = position_stack(vjust = 0.5, reverse = FALSE), size = 2.5) +
+    scale_fill_manual(values = c("#636363", "#bdbdbd", "#FFFFFF")) + # labels = c("from the country", "mediterranean country", "outside med"), 
+    labs(fill='Sequencer identity') +
+    theme(legend.background=element_blank(), legend.position="right")
+  # pie_for_legend
+  
+  # function to extract legend 
+  g_legend <- function(a.gplot){ 
+    tmp <- ggplot_gtable(ggplot_build(a.gplot)) 
+    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box") 
+    legend <- tmp$grobs[[leg]] 
+    return(legend)} 
+  
+  # extract legend
+  legend_pie_3_categories <- g_legend(pie_for_legend)
+  legend_pie_3_categories <- ggpubr::ggarrange(legend_pie_3_categories, ncol = 1, nrow = 1)
+  
+  return(legend_pie_3_categories)
+}
+
+
+
+### make map with country filling by number of sequences and pie-charts indicating sequencer locality
+# this function requires values for the folowing objects not present in the arguments :
+# med_clipped
+# med_countries_islands
+# med_centroids
+# point_grid
+# palette
+GenBank_map_number_sequence <- function(locality_table, subtitle_text, taxa_name) {
+  
+  # add information to plot to med_countries_islands
+  # plant_article_loc_tab
+  tab_for_join <- locality_table[,c(1,6)]
+  
+  # join information to MULTIPOLYGON object
+  med_countries_islands_joined <- left_join(med_countries_islands, tab_for_join, by = c("country" = "sample_origin"))
+  
+  # plot the map
+  map <- ggplot(NULL) + 
+    geom_point(data = point_grid, aes(x = point_grid$X, y = point_grid$Y), color = "grey83", size = 0.2) + # point grid to make the sea filling
+    geom_sf(data = med_clipped, mapping = aes(), fill = "white") +                                         # countries background with white filling
+    geom_sf(data = med_countries_islands_joined, aes(fill = n_seq)) +                                      # countries and islands layer with the colour filling
+    scale_fill_gradientn(name="Number of sequences", colours=palette, na.value="white")+
+    theme_minimal() +
+    theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+    theme(axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    ggtitle(paste("Number of sequences in GenBank for", taxa_name), subtitle = subtitle_text) +
+    theme(plot.title = element_text(size = 24, hjust = 0.5), plot.subtitle=element_text(hjust=0.5)) +
+    labs(x=NULL, y=NULL) +
+    theme(plot.margin=unit(c(0,0,0,0),"mm")) +
+    theme(legend.position="right",
+          legend.justification="left",
+          legend.margin=margin(0,0,0,0),
+          legend.box.margin=margin(10,10,10,10)) +
+    geom_segment(aes(x = 19.342929, y = 44.248783, xend = 24.27514, yend = 47.11614), size = 0.5) + # segment for Bosnia
+    geom_segment(aes(x = 19.712831, y = 43.170238, xend = 24.27514, yend = 43.58586), size = 0.5) + # segment for Montenegro
+    geom_segment(aes(x = 36.154312, y = 33.837813, xend = 38.89619, yend = 32.015), size = 0.5) +   # segment for Lebanon
+    geom_segment(aes(x = 35.541040, y = 31.967576, xend = 38.89619, yend = 27.615), size = 0.5) +   # segment for Palestine
+    geom_segment(aes(x = 17.256789, y = 46.039755, xend = 18.6, yend = 47.1), size = 0.5)           # segment for Croatia
+  
+  ### make pie charts with from_country / outside_med / inside_med information
+  # data for the pie charts
+  locality_table <- locality_table[,c(1:4)]
+  loc_tab_long <- as_tibble(pivot_longer(locality_table, 
+                                         cols = colnames(locality_table)[2]:colnames(locality_table)[ncol(locality_table)], 
+                                         names_to = "author_loc",
+                                         values_to = "n_seq"))
+  
+  # join the informations to plot to med_centroids
+  med_centroids_joined <- left_join(med_centroids, locality_table, by = c("country" = "sample_origin"))
+  
+  # countries' FID list
+  centroids_ID_list <- unique(as.integer(med_centroids_joined$FID))
+  
+  # make a list with the pie-charts objects
+  pie_chart_list <- 
+    lapply( (centroids_ID_list), function(n){
+      
+      # title of the future pie chart
+      coun_name <- med_centroids_joined[med_centroids_joined$FID == as.character(n),]$country
+      
+      # make a small tibble containing just the 3 summary lines from_country / inside_med / outside_med
+      wos_totals_country <- loc_tab_long[loc_tab_long$sample_origin == coun_name,]
+      wos_totals_country <- wos_totals_country %>% 
+        group_by(author_loc) %>% 
+        summarise (sum_n_articles = sum(n_seq))
+      
+      gt_plot <- ggplotGrob(
+        
+        # make the pie-charts
+        ggplot(wos_totals_country, aes(x=1, y = sum_n_articles, fill = author_loc)) +
+          geom_bar(width = 1, stat = "identity", colour = "black") +
+          coord_polar("y", start=0) +
+          geom_text(aes(label = wos_totals_country$sum_n_articles, group = wos_totals_country$author_loc),
+                    position = position_stack(vjust = 0.5, reverse = FALSE), size = 2.5) +
+          scale_fill_manual(values = c("#636363", "#bdbdbd", "#FFFFFF")) +
+          theme_minimal()+
+          ggtitle(coun_name)+
+          theme(plot.title = element_text(size = 9, face = "bold", hjust = 0.5, vjust = -0.5,margin=margin(b = 2, unit = "pt")))+
+          theme(axis.line=element_blank(),
+                axis.text.x=element_blank(),
+                axis.text.y=element_blank(),
+                axis.ticks=element_blank(),
+                axis.title.x=element_blank(),
+                axis.title.y=element_blank(),
+                legend.position="none",
+                panel.background=element_blank(),
+                panel.border=element_blank(),
+                panel.grid.major=element_blank(),
+                panel.grid.minor=element_blank(),
+                plot.background=element_blank())+
+          theme(plot.margin = unit(c(0,0,0,0), "cm"))
+        
+      )
+    } )
+  
+  ### insert the pie-charts on the map
+  pie_charts_annotation_list <- vector(mode = "list", length = length(pie_chart_list))
+  pie_half_width = 1.3
+  pie_half_height = 1.3
+  
+  for (i in 1:length(pie_chart_list)) {
+    value <- annotation_custom(grob = pie_chart_list[[i]],
+                               xmin = med_centroids$x[[i]] - pie_half_width,
+                               xmax = med_centroids$x[[i]] + pie_half_width,
+                               ymin = med_centroids$y[[i]] - pie_half_height,
+                               ymax = med_centroids$y[[i]] + pie_half_height)
+    pie_charts_annotation_list[[i]] <- value
+  }
+  
+  result_plot <- Reduce('+', pie_charts_annotation_list, map)
+  
+  return(result_plot)
+}
+
+
+### make map with country filling by number of species
+# this function requires values for the folowing objects not present in the arguments :
+# med_clipped
+# med_countries_islands
+# med_centroids
+# point_grid
+# palette
+GenBank_map_number_species <- function(species_level_tab, subtitle_text, taxa_name) {
+  
+  # add the information to plot to med_countries_islands
+  tab_for_join <- species_level_tab[,c(1,5)]
+  
+  # join information to MULTIPOLYGON object
+  med_countries_islands_joined <- left_join(med_countries_islands, tab_for_join, by = c("country" = "country"))
+  
+  # plot the map
+  map <- ggplot(NULL) + 
+    geom_point(data = point_grid, aes(x = point_grid$X, y = point_grid$Y), color = "grey83", size = 0.2) +  # point grid to make the sea filling
+    geom_sf(data = med_clipped, mapping = aes(), fill = "white") +                                          # countries background with white filling
+    geom_sf(data = med_countries_islands_joined, aes(fill = n_sp)) +                                        # countries and islands layer with the colour filling
+    scale_fill_gradientn(name="Number of species", colours=palette, na.value="white")+
+    theme_minimal() +
+    theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+    theme(axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    ggtitle(paste("Number of species with at least one sequence in GenBank for", taxa_name), subtitle = subtitle_text) +
+    theme(plot.title = element_text(size = 24, hjust = 0.5), plot.subtitle=element_text(hjust=0.5)) +
+    labs(x=NULL, y=NULL) +
+    theme(plot.margin=unit(c(0,0,0,0),"mm")) +
+    theme(legend.position="right",
+          legend.justification="left",
+          legend.margin=margin(0,0,0,0),
+          legend.box.margin=margin(10,10,10,10))
+  
+  return(map)
+}
+
+

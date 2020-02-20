@@ -46,17 +46,16 @@ lumbri_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "l
 tree_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "tree")
 
 
-
 ### store the legend for the pie charts
 legend_pie_3_categories <- WOS_store_pie_chart_legend()
 
 
 ### load shapefiles
 # layer with separated countries and islands
-med_countries_islands <- read_sf("./data/med_countries_islands/med_countries_islands.shp")
+med_countries_islands <- read_sf("./data/med_countries_islands_WOS/med_countries_islands.shp")
 
 # set all Chyprus polygons to the same country name
-med_countries_islands$country[med_countries_islands$country == "Cyprus_Norther Cyprus"] <- "Cyprus"
+med_countries_islands$country[med_countries_islands$country == "Cyprus_Northern Cyprus"] <- "Cyprus"
 med_countries_islands$country[med_countries_islands$country == "Cyprus_Southern Cyprus"] <- "Cyprus"
 med_countries_islands$country[med_countries_islands$country == "Cyprus_Green Zone"] <- "Cyprus"
 med_countries_islands$country[med_countries_islands$country == "Cyprus_Dhekelia"] <- "Cyprus"
@@ -103,7 +102,6 @@ colnames(point_grid) <- c("X","Y")
 
 # create colour palette for the country filling
 palette <- RColorBrewer::brewer.pal(9, "YlOrRd")
-# palette <- RColorBrewer::brewer.pal(9, "PuBu") # for number of species
 
 
 ### make maps with country filling by number of articles and pie-charts indicationg corresponding author locality

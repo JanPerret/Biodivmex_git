@@ -104,8 +104,8 @@ WOS_make_map_subtitle <- function(taxa_table, taxa_name) {
 }
 
 
+### store the legend for the pie charts with 3 categories
 WOS_store_pie_chart_legend <- function() {
-  ### store the legend for the pie charts with 3 categories
   # make a small tibble containing just the 3 lines from_country / inside_med / outside_med
   tibble_for_pie_legend <- tibble(author_loc = c("from_country", "inside_med", "outside_med"), sum_n_articles = c(457,143,130))
   
@@ -136,7 +136,7 @@ WOS_store_pie_chart_legend <- function() {
 
 
 ### make map with country filling by number of articles and pie-charts indicationg corresponding author locality
-# this function requires values for the folowing  objects not present in the arguments :
+# this function requires values for the folowing objects not present in the arguments :
 # med_clipped
 # med_countries_islands
 # med_area_bounderies

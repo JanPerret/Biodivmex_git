@@ -398,6 +398,21 @@ sponge_article_loc_tab <- cbind(sponge_article_loc_tab, n_articles = sponge_arti
 crusta_article_loc_tab <- cbind(crusta_article_loc_tab, n_articles = crusta_article_loc_tab$from_country + crusta_article_loc_tab$inside_med + crusta_article_loc_tab$outside_med + crusta_article_loc_tab$`(Missing)`)
 tree_article_loc_tab <- cbind(tree_article_loc_tab, n_articles = tree_article_loc_tab$from_country + tree_article_loc_tab$inside_med + tree_article_loc_tab$outside_med + tree_article_loc_tab$`(Missing)`)
 
+# remove Macedonia
+plant_article_loc_tab <- subset(plant_article_loc_tab, plant_article_loc_tab$fieldwork_country != "Macedonia")
+fungi_article_loc_tab <- subset(fungi_article_loc_tab, fungi_article_loc_tab$fieldwork_country != "Macedonia")
+amph_article_loc_tab <- subset(amph_article_loc_tab,amph_article_loc_tab $fieldwork_country != "Macedonia")
+rept_article_loc_tab <- subset(rept_article_loc_tab, rept_article_loc_tab$fieldwork_country != "Macedonia")
+bird_article_loc_tab <- subset(bird_article_loc_tab, bird_article_loc_tab$fieldwork_country != "Macedonia")
+mammal_article_loc_tab <- subset(mammal_article_loc_tab, mammal_article_loc_tab$fieldwork_country != "Macedonia")
+coleo_article_loc_tab <- subset(coleo_article_loc_tab, coleo_article_loc_tab$fieldwork_country != "Macedonia")
+papilio_article_loc_tab <- subset(papilio_article_loc_tab, papilio_article_loc_tab$fieldwork_country != "Macedonia")
+lumbri_article_loc_tab <- subset(lumbri_article_loc_tab, lumbri_article_loc_tab$fieldwork_country != "Macedonia")
+fish_article_loc_tab <- subset(fish_article_loc_tab, fish_article_loc_tab$fieldwork_country != "Macedonia")
+sponge_article_loc_tab <- subset(sponge_article_loc_tab, sponge_article_loc_tab$fieldwork_country != "Macedonia")
+crusta_article_loc_tab <- subset(crusta_article_loc_tab, crusta_article_loc_tab$fieldwork_country != "Macedonia")
+tree_article_loc_tab <- subset(tree_article_loc_tab, tree_article_loc_tab$fieldwork_country != "Macedonia")
+
 # save tables
 write_csv2(plant_article_loc_tab, path = "./output/text/WOS_plant_article_loc_tab.csv", col_names = TRUE)
 write_csv2(fungi_article_loc_tab, path = "./output/text/WOS_fungi_article_loc_tab.csv", col_names = TRUE)
