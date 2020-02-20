@@ -225,10 +225,7 @@ GB_acc_curve_per_country <- function(taxa_acc_data, taxa_name) {
                                       theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
                                       scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year)
   
-  pdf(file = paste0("./output/plots/GenBank_curve_seq_acc_country_",taxa_name,".pdf"), width = 20, height = 12)
-  print(GenBank_curve_seq_acc_country)
-  dev.off()
-  
+  return(GenBank_curve_seq_acc_country)
 }
 
 
