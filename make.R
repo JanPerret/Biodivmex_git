@@ -55,3 +55,13 @@ source("R/GenBank_03_curves.R")
 ##################
 source("R/WOS_03_curves.R")
 
+##################
+# maps for GenBank
+##################
+source("R/GenBank_04_maps.R")
+
+##################
+# maps for WOS
+##################
+source("R/WOS_04_maps.R")
+

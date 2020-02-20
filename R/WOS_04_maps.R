@@ -31,19 +31,19 @@
 
 
 ### make texts with general informations to add as subtitles to the maps
-plant_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "plant")
-fungi_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "fungi")
-amph_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "amphibian")
-rept_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "reptile")
-bird_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "bird")
-mammal_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "mammal")
-fish_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "fish")
-sponge_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "sponge")
-crusta_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "crustacea")
-coleo_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "coleoptera")
-papilio_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "papilionoidea")
-lumbri_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "lumbricina")
-tree_subtitle <- WOS_make_map_subtitle(taxa_table = taxa_table, taxa_name = "tree")
+plant_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "plant")
+fungi_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "fungi")
+amph_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "amphibian")
+rept_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "reptile")
+bird_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "bird")
+mammal_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "mammal")
+fish_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "fish")
+sponge_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "sponge")
+crusta_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "crustacea")
+coleo_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "coleoptera")
+papilio_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "papilionoidea")
+lumbri_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "lumbricina")
+tree_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "tree")
 
 
 ### store the legend for the pie charts

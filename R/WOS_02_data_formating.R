@@ -67,11 +67,11 @@ wos_data$year <- factor(wos_data$year, levels = year_list, ordered = TRUE)
 taxa_vect <- c("plant", "fungi", "amphibian", "reptile", "bird", "mammal", "fish", "sponge", "crustacea", "coleoptera", "papilionoidea", "lumbricina", "tree")
 
 # initiaze table
-taxa_table <- setNames(data.frame(matrix(ncol = 3, nrow = 13)), c("taxa", "n_articles", "loc_rate"))
-taxa_table$taxa <- taxa_vect
+WOS_taxa_table <- setNames(data.frame(matrix(ncol = 3, nrow = 13)), c("taxa", "n_articles", "loc_rate"))
+WOS_taxa_table$taxa <- taxa_vect
 
 # total number of articles in the corpus assigned to each taxonomic group
-taxa_table$n_articles <- c(sum(wos_data$plant == "plant", na.rm = TRUE), 
+WOS_taxa_table$n_articles <- c(sum(wos_data$plant == "plant", na.rm = TRUE), 
                            sum(wos_data$fungi == "fungi", na.rm = TRUE),
                            sum(wos_data$amphibian == "amphibian", na.rm = TRUE),
                            sum(wos_data$reptile == "reptile", na.rm = TRUE),
@@ -102,7 +102,7 @@ lumbri_df <- subset(wos_data, wos_data$lumbricina == "lumbricina")
 tree_df <- subset(wos_data, wos_data$tree == "tree")
 
 # fieldwork_country assignation rate (or same for marine_region for marine taxa)
-taxa_table$loc_rate <- c(round((sum(!is.na(plant_df$fieldwork_country))/length(plant_df$access_num))*100, 2),
+WOS_taxa_table$loc_rate <- c(round((sum(!is.na(plant_df$fieldwork_country))/length(plant_df$access_num))*100, 2),
                          round((sum(!is.na(fungi_df$fieldwork_country))/length(fungi_df$access_num))*100, 2),
                          round((sum(!is.na(amph_df$fieldwork_country))/length(amph_df$access_num))*100, 2),
                          round((sum(!is.na(rept_df$fieldwork_country))/length(rept_df$access_num))*100, 2),
@@ -118,7 +118,7 @@ taxa_table$loc_rate <- c(round((sum(!is.na(plant_df$fieldwork_country))/length(p
                          )
 
 # save table
-write_csv2(taxa_table, path = "./output/text/WOS_recap_table_per_taxa.csv", col_names = TRUE)
+write_csv2(WOS_taxa_table, path = "./output/text/WOS_recap_table_per_taxa.csv", col_names = TRUE)
 
 
 ### number of articles per year for each taxa
