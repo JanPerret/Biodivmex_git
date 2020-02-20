@@ -30,11 +30,11 @@ vignettes/*.pdf
 *.Rproj
 # Data folder
 data/*.csv
-data/med_area_melted_final/*.dbf
-data/med_area_melted_final/*.prj
-data/med_area_melted_final/*.qpj
-data/med_area_melted_final/*.shp
-data/med_area_melted_final/*.shx
+data/*.dbf
+data/*.prj
+data/*.qpj
+data/*.shp
+data/*.shx
 # Figure output folder
 output/plots/*.pdf
 output/plots/*.png
