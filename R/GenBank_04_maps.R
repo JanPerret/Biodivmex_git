@@ -80,11 +80,6 @@ world <- countriesHigh
 # convert to sf format
 world_sf <- st_as_sf(world)
 
-####################
-# export pour faire la nouvelle couche des pays :
-# st_write(world_sf, "C:/Users/Perret/Desktop/world_sf.shp", driver="ESRI Shapefile")  # create to a shapefile 
-####################
-
 # crop world_sf polygons to keep only polygons inside a bounding box centered on the mediterranean sea
 box = c(xmin = -15.8519, ymin = 24.550494, xmax = 43.261471, ymax = 49.651575)
 med_clipped <- st_crop(world_sf, box)
@@ -116,7 +111,6 @@ tree_result_map <- GenBank_map_number_sequence(locality_table = tree_seq_loc_tab
 fish_result_map <- GenBank_map_number_sequence(locality_table = fish_seq_loc_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
 sponge_result_map <- GenBank_map_number_sequence(locality_table = sponge_seq_loc_tab, subtitle_text = sponge_subtitle, taxa_name = "Porifera")
 crusta_result_map <- GenBank_map_number_sequence(locality_table = crusta_seq_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
-
 
 
 ### compose and save the final maps (map + pie-charts + pie chart legend)
@@ -249,7 +243,6 @@ vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y
 print(crusta_result_map, vp = vplayout(1:12, 1:12))
 print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
-
 
 
 ### make maps with country filling by NUMBER OF SPECIES
@@ -392,18 +385,4 @@ grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(crusta_species_map, vp = vplayout(1:12, 1:12))
 dev.off()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
