@@ -30,21 +30,8 @@ vignettes/*.pdf
 *.Rproj
 # Data folder
 data/*.csv
-data/med_area_melted_final/*.dbf
-data/med_area_melted_final/*.prj
-data/med_area_melted_final/*.qpj
-data/med_area_melted_final/*.shp
-data/med_area_melted_final/*.shx
-data/med_countries_islands_WOS/*.dbf
-data/med_countries_islands_WOS/*.prj
-data/med_countries_islands_WOS/*.qpj
-data/med_countries_islands_WOS/*.shp
-data/med_countries_islands_WOS/*.shx
-data/med_countries_islands_GenBank/*.dbf
-data/med_countries_islands_GenBank/*.prj
-data/med_countries_islands_GenBank/*.qpj
-data/med_countries_islands_GenBank/*.shp
-data/med_countries_islands_GenBank/*.shx
+# Exclude everything in the folder data/shapefiles
+data/shapefiles/*
 # Figure output folder
 output/plots/*.pdf
 output/plots/*.png
