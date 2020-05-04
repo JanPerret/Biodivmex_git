@@ -52,7 +52,7 @@ legend_pie_3_categories <- WOS_store_pie_chart_legend()
 
 ### load shapefiles
 # layer with separated countries and islands
-med_countries_islands <- read_sf("./data/med_countries_islands_WOS/med_countries_islands.shp")
+med_countries_islands <- read_sf("./data/shapefiles/med_countries_islands_WOS/med_countries_islands.shp")
 
 # set all Chyprus polygons to the same country name
 med_countries_islands$country[med_countries_islands$country == "Cyprus_Northern Cyprus"] <- "Cyprus"
@@ -73,7 +73,7 @@ med_countries_islands <- subset(med_countries_islands, med_countries_islands$cou
                                       med_countries_islands$country != "Jordan")
 
 # load layer with the outline of the mediterranean region sensu Quezel & Medail (2003)
-med_area_bounderies <- read_sf("./data/med_area_melted_final/med_area_melted_final.shp")
+med_area_bounderies <- read_sf("./data/shapefiles/med_area_melted_final/med_area_melted_final.shp")
 
 # set coordinates system
 st_crs(med_area_bounderies) <- st_crs(med_countries_islands)

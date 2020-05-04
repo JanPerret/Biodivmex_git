@@ -49,7 +49,7 @@ legend_pie_3_categories <- GenBank_store_pie_chart_legend()
 
 ### load shapefiles
 # layer with separated countries and islands
-med_countries_islands <- read_sf("./data/med_countries_islands_GenBank/med_countries_islands_GenBank.shp") ################### "./data/med_countries_islands_GenBank/med_countries_islands.shp"
+med_countries_islands <- read_sf("./data/shapefiles/med_countries_islands_GenBank/med_countries_islands_GenBank.shp") ################### "./data/shapefiles/med_countries_islands_GenBank/med_countries_islands.shp"
 
 # crop world_sf polygons to keep only polygons inside a bounding box centered on the mediterranean sea
 box = c(xmin = -15.8519, ymin = 24.550494, xmax = 43.261471, ymax = 49.651575)
