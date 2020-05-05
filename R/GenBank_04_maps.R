@@ -49,7 +49,7 @@ legend_pie_3_categories <- GenBank_store_pie_chart_legend()
 
 ### load shapefiles
 # layer with separated countries and islands
-med_countries_islands <- read_sf("./data/shapefiles/med_countries_islands_GenBank/med_countries_islands_GenBank.shp") ################### "./data/shapefiles/med_countries_islands_GenBank/med_countries_islands.shp"
+med_countries_islands <- read_sf("./data/shapefiles/med_countries_islands_GenBank/med_countries_islands_GenBank.shp")
 
 # crop world_sf polygons to keep only polygons inside a bounding box centered on the mediterranean sea
 box = c(xmin = -15.8519, ymin = 24.550494, xmax = 43.261471, ymax = 49.651575)
@@ -95,7 +95,7 @@ colnames(point_grid) <- c("X","Y")
 palette <- RColorBrewer::brewer.pal(9, "YlOrRd")
 
 
-### make maps with country filling by number of articles and pie-charts indicationg corresponding author locality
+### make maps with country filling by number of sequences and pie-charts indicationg sequencer nationality
 plant_result_map <- GenBank_map_number_sequence(locality_table = plant_seq_loc_tab, subtitle_text = plant_subtitle, taxa_name = "Embryophyta")
 fungi_result_map <- GenBank_map_number_sequence(locality_table = fungi_seq_loc_tab, subtitle_text = fungi_subtitle, taxa_name = "Fungi")
 amph_result_map <- GenBank_map_number_sequence(locality_table = amph_seq_loc_tab, subtitle_text = amph_subtitle, taxa_name = "Amphibians")
@@ -107,10 +107,26 @@ papilio_result_map <- GenBank_map_number_sequence(locality_table = papilio_seq_l
 lumbri_result_map <- GenBank_map_number_sequence(locality_table = lumbri_seq_loc_tab, subtitle_text = lumbri_subtitle, taxa_name = "Lumbricina")
 tree_result_map <- GenBank_map_number_sequence(locality_table = tree_seq_loc_tab, subtitle_text = tree_subtitle, taxa_name = "Trees")
 
-# marine taxa ################### I keep it like that for the moment but I will have to replace the layer with the countries by a layer with each country's ZEE
-fish_result_map <- GenBank_map_number_sequence(locality_table = fish_seq_loc_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
-sponge_result_map <- GenBank_map_number_sequence(locality_table = sponge_seq_loc_tab, subtitle_text = sponge_subtitle, taxa_name = "Porifera")
-crusta_result_map <- GenBank_map_number_sequence(locality_table = crusta_seq_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
+
+### maps for MARINE TAXA :
+# crop world_sf polygons to keep only polygons inside a bounding box centered on the mediterranean sea
+box = c(xmin = -10.5, ymin = 27.5, xmax = 41.5, ymax = 49)
+med_clipped_marine <- st_crop(world_sf, box)
+
+# generate coordinates for the point grid which will make the sea background
+point_grid_marine <- expand.grid(seq(from = -10.5, to = 41.5, by = 0.55), seq(from = 27.5, to = 49, by = 0.5))
+colnames(point_grid_marine) <- c("X","Y")
+
+# layer with mediterranean countries EEZ
+med_EEZ <- read_sf("./data/shapefiles/marine_EEZ/EEZ_med_3.shp")
+
+# table with the cendroids to plot the pie charts to
+EEZ_centroids <- read_csv2("./data/EEZ_centroids_for_maps.csv")
+
+# make the maps
+fish_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = fish_seq_loc_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
+sponge_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = sponge_seq_loc_tab, subtitle_text = sponge_subtitle, taxa_name = "Porifera")
+crusta_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = crusta_seq_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
 
 
 ### compose and save the final maps (map + pie-charts + pie chart legend)
@@ -262,10 +278,10 @@ papilio_species_map <- GenBank_map_number_species(species_level_tab = papilio_sp
 lumbri_species_map <- GenBank_map_number_species(species_level_tab = lumbri_species_level_tab, subtitle_text = lumbri_subtitle, taxa_name = "Lumbricina")
 tree_species_map <- GenBank_map_number_species(species_level_tab = tree_species_level_tab, subtitle_text = tree_subtitle, taxa_name = "Trees")
 
-# marine taxa ################### I keep it like that for the moment but I will have to replace the layer with the countries by a layer with each country's ZEE
-fish_species_map <- GenBank_map_number_species(species_level_tab = fish_species_level_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
-sponge_species_map <- GenBank_map_number_species(species_level_tab = sponge_species_level_tab, subtitle_text = sponge_subtitle, taxa_name = "Porifera")
-crusta_species_map <- GenBank_map_number_species(species_level_tab = crusta_species_level_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
+# marine taxa 
+fish_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = fish_species_level_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
+sponge_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = sponge_species_level_tab, subtitle_text = sponge_subtitle, taxa_name = "Porifera")
+crusta_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = crusta_species_level_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
 
 
 ### save the maps
