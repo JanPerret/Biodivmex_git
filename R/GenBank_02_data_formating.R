@@ -348,10 +348,39 @@ write_csv2(tree_gene_year_tab, path = "./output/text/GenBank_tree_gene_year_tab.
 
 
 ### recap tables with sequencer localisation per taxa per country
+# for marine taxa replace islands by their sovereign country
+fish_data_med$sample_origin[fish_data_med$sample_origin == "Balearic Islands"] <- "Spain"
+fish_data_med$sample_origin[fish_data_med$sample_origin == "Corsica"] <- "France"
+fish_data_med$sample_origin[fish_data_med$sample_origin == "Crete"] <- "Greece"
+fish_data_med$sample_origin[fish_data_med$sample_origin == "Sardinia"] <- "Italy"
+fish_data_med$sample_origin[fish_data_med$sample_origin == "Sicily"] <- "Italy"
+
+sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Balearic Islands"] <- "Spain"
+sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Corsica"] <- "France"
+sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Crete"] <- "Greece"
+sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Sardinia"] <- "Italy"
+sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Sicily"] <- "Italy"
+
+crusta_data_med$sample_origin[crusta_data_med$sample_origin == "Balearic Islands"] <- "Spain"
+crusta_data_med$sample_origin[crusta_data_med$sample_origin == "Corsica"] <- "France"
+crusta_data_med$sample_origin[crusta_data_med$sample_origin == "Crete"] <- "Greece"
+crusta_data_med$sample_origin[crusta_data_med$sample_origin == "Sardinia"] <- "Italy"
+crusta_data_med$sample_origin[crusta_data_med$sample_origin == "Sicily"] <- "Italy"
+
+# for marine taxa remove countries without any part of their ZEE in the med sea and the islands
+countries_to_remove <- c("Bosnia and Herzegovina", "Palestine", "Portugal")
+fish_data_med <- fish_data_med %>% filter(!sample_origin %in% countries_to_remove)
+sponge_data_med <- sponge_data_med %>% filter(!sample_origin %in% countries_to_remove)
+crusta_data_med <- crusta_data_med %>% filter(!sample_origin %in% countries_to_remove)
+
 # fix sample_origin factor levels for all taxa and give an explicit factor level to missing values to ensure that they appear in summaries and plots
 sample_origin_med_levels <- c("Albania", "Algeria", "Balearic Islands", "Bosnia and Herzegovina", "Corsica", "Crete", "Croatia", "Cyprus", "Egypt", "France", 
                               "Greece", "Israel", "Italy", "Lebanon", "Libya", "Malta", "Montenegro", "Morocco", "Palestine", "Portugal", 
                               "Sardinia", "Sicily", "Slovenia", "Spain", "Syria", "Tunisia", "Turkey")
+
+sample_origin_med_levels_marine_taxa <- c("Albania", "Algeria", "Croatia", "Cyprus", "Egypt", "France",
+                                          "Greece", "Israel", "Italy", "Lebanon", "Libya", "Malta", "Montenegro",
+                                          "Morocco", "Slovenia", "Spain", "Syria", "Tunisia", "Turkey")
 
 plant_data_med$sample_origin <- factor(plant_data_med$sample_origin, levels = sample_origin_med_levels, ordered = FALSE)
 plant_data_med$sequencer_loc <- fct_explicit_na(plant_data_med$sequencer_loc)
@@ -371,14 +400,15 @@ papilio_data_med$sample_origin <- factor(papilio_data_med$sample_origin, levels 
 papilio_data_med$sequencer_loc <- fct_explicit_na(papilio_data_med$sequencer_loc)
 lumbri_data_med$sample_origin <- factor(lumbri_data_med$sample_origin, levels = sample_origin_med_levels, ordered = FALSE)
 lumbri_data_med$sequencer_loc <- fct_explicit_na(lumbri_data_med$sequencer_loc)
-fish_data_med$sample_origin <- factor(fish_data_med$sample_origin, levels = sample_origin_med_levels, ordered = FALSE)
+fish_data_med$sample_origin <- factor(fish_data_med$sample_origin, levels = sample_origin_med_levels_marine_taxa, ordered = FALSE)
 fish_data_med$sequencer_loc <- fct_explicit_na(fish_data_med$sequencer_loc)
-sponge_data_med$sample_origin <- factor(sponge_data_med$sample_origin, levels = sample_origin_med_levels, ordered = FALSE)
+sponge_data_med$sample_origin <- factor(sponge_data_med$sample_origin, levels = sample_origin_med_levels_marine_taxa, ordered = FALSE)
 sponge_data_med$sequencer_loc <- fct_explicit_na(sponge_data_med$sequencer_loc)
-crusta_data_med$sample_origin <- factor(crusta_data_med$sample_origin, levels = sample_origin_med_levels, ordered = FALSE)
+crusta_data_med$sample_origin <- factor(crusta_data_med$sample_origin, levels = sample_origin_med_levels_marine_taxa, ordered = FALSE)
 crusta_data_med$sequencer_loc <- fct_explicit_na(crusta_data_med$sequencer_loc)
 tree_data_med$sample_origin <- factor(tree_data_med$sample_origin, levels = sample_origin_med_levels, ordered = FALSE)
 tree_data_med$sequencer_loc <- fct_explicit_na(tree_data_med$sequencer_loc)
+
 
 # make recap tables
 plant_seq_loc_tab <- plant_data_med %>% group_by(sample_origin, sequencer_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = sequencer_loc, values_from = n)
@@ -441,6 +471,13 @@ fish_species_level_tab <- GB_recap_species_level(taxa_data_med = fish_data_med, 
 sponge_species_level_tab <- GB_recap_species_level(taxa_data_med = sponge_data_med, taxa_name = "porifera")
 crusta_species_level_tab <- GB_recap_species_level(taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 tree_species_level_tab <- GB_recap_species_level(taxa_data_med = tree_data_med, taxa_name = "tree")
+
+# for marine taxa remove countries without any part of their ZEE in the med sea and islands (empty rows anyway)
+sample_origin_to_remove <- c("Bosnia and Herzegovina", "Palestine", "Portugal",
+                             "Balearic Islands", "Corsica", "Crete", "Sardinia", "Sicily")
+fish_species_level_tab <- fish_species_level_tab %>% filter(!country %in% sample_origin_to_remove)
+sponge_species_level_tab <- sponge_species_level_tab %>% filter(!country %in% sample_origin_to_remove)
+crusta_species_level_tab <- crusta_species_level_tab %>% filter(!country %in% sample_origin_to_remove)
 
 # save tables
 write_csv2(plant_species_level_tab, path = "./output/text/GenBank_plant_species_level_tab.csv", col_names = TRUE)
