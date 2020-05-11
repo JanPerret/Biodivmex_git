@@ -178,25 +178,26 @@ wos_data %>% count(fieldwork_country, sort = TRUE) %>% print(n=100)
 
 # count marine_region
 wos_data %>% count(marine_region, sort = TRUE) %>% print(n=50)
-# # A tibble: 275 x 2
-# marine_region                                                                       n
-# <chr>                                                                           <int>
-# 1 NA                                                                            55134
-# 2 Western Mediterranean Sea                                                      1116
-# 3 Adriatic Sea                                                                    861
-# 4 Aegean Sea                                                                      787
-# 5 Levantine Sea                                                                   767
-# 6 Northwestern Mediterranean Sea                                                  612
-# 7 Tyrrhenian Sea                                                                  399
-# 8 Strait of Gibraltar                                                             342
-# 9 Ionian Sea                                                                      321
-# 10 Ligurian Sea                                                                   300
-# 11 Alboran Sea                                                                    255
-# 12 Gulf of lions                                                                  255
-# 13 Balearic Sea                                                                   176
-# 14 Libyan Sea                                                                     175
-# 15 Strait of Sicily                                                               147
-# 16 Levantine Sea // Aegean Sea                                                    142
+# # A tibble: 281 x 2
+# marine_region                                                                      n
+# <chr>                                                                          <int>
+# 1 NA                                                                           55133
+# 2 Western Mediterranean Sea                                                     1116
+# 3 Adriatic Sea                                                                   861
+# 4 Aegean Sea                                                                     787
+# 5 Levantine Sea                                                                  767
+# 6 Northwestern Mediterranean Sea                                                 612
+# 7 Tyrrhenian Sea                                                                 399
+# 8 Strait of Gibraltar                                                            342
+# 9 Ionian Sea                                                                     321
+# 10 Ligurian Sea                                                                  300
+# 11 Alboran Sea                                                                   255
+# 12 Gulf of lion                                                                  255
+# 13 Balearic Sea                                                                  176
+# 14 Gulf of Gabes                                                                 172
+# 15 Strait of Sicily                                                              147
+# 16 Levantine Sea // Aegean Sea                                                   142
+
 
 # seems good ! Lots of double or triple assignations after the 15 first simple assignations in the ranking
 
@@ -204,7 +205,7 @@ wos_data %>% count(marine_region, sort = TRUE) %>% print(n=50)
 wos_data %>% count(marine_region, fieldwork_country, sort = TRUE) %>% print(n=200)
 
 # seems good ! most articles assigned to a marine region don't have an identified fieldwork country
-# and the first crossings are logical (Aegean Sea + Greece, Libyan Sea + Tunisia, Western Mediterranean Sea + Spain, Adriatic Sea + Italy, ...)
+# and the first crossings are logical (Aegean Sea + Greece, Gulf of Gabes + Tunisia, Western Mediterranean Sea + Spain, Adriatic Sea + Italy, ...)
 
 
 ### counting number of articles for the 13 taxonomic groups
