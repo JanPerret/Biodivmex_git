@@ -41,24 +41,24 @@ source("R/00_functions_WOS.R")
 source("R/GenBank_02_data_formating.R")
 
 ##################
-# data formating for WOS
-##################
-source("R/WOS_02_data_formating.R")
-
-##################
 # curves for GenBank
 ##################
 source("R/GenBank_03_curves.R")
 
 ##################
-# curves for WOS
-##################
-source("R/WOS_03_curves.R")
-
-##################
 # maps for GenBank
 ##################
 source("R/GenBank_04_maps.R")
+
+##################
+# data formating for WOS
+##################
+source("R/WOS_02_data_formating.R")
+
+##################
+# curves for WOS
+##################
+source("R/WOS_03_curves.R")
 
 ##################
 # maps for WOS
