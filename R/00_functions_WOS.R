@@ -210,7 +210,7 @@ WOS_map_number_articles <- function(locality_table, subtitle_text, taxa_name) {
         ggplot(wos_totals_country, aes(x=1, y = sum_n_articles, fill = author_loc)) +
           geom_bar(width = 1, stat = "identity", colour = "black") +
           coord_polar("y", start=0) +
-          geom_text(aes(label = wos_totals_country$sum_n_articles, group = wos_totals_country$author_loc),
+          geom_text(aes(label = sum_n_articles, group = author_loc),
                     position = position_stack(vjust = 0.5, reverse = FALSE), size = 2.5) +
           scale_fill_manual(values = c("#636363", "#bdbdbd", "#FFFFFF")) +
           theme_minimal()+
@@ -253,4 +253,60 @@ WOS_map_number_articles <- function(locality_table, subtitle_text, taxa_name) {
 }
 
 
+### make map with marine region filling by number of articles
+# this function requires values for the folowing objects not present in the arguments :
+# med_clipped_marine
+# med_marine_region
+# point_grid_marine
+# palette
+# circle_centroid
+# western_med
+# eastern_med
+
+WOS_map_number_articles_marine <- function(locality_table, subtitle_text, taxa_name) {
+  
+  # add the information to plot to med_marine_region
+  tab_for_join <- locality_table[,c(1,5)]
+  
+  # join information to MULTIPOLYGON object
+  med_marine_region_joined <- left_join(med_marine_region, tab_for_join, by = c("marine_reg" ="marine_region"))
+  
+  med_marine_region_joined_under_layer <- subset(med_marine_region_joined, 
+                                                 med_marine_region_joined$marine_reg == "Northwestern Mediterranean Sea" |
+                                                 med_marine_region_joined$marine_reg == "Tunisian Plateau")
+  
+  med_marine_region_joined <- subset(med_marine_region_joined,
+                                     med_marine_region_joined$marine_reg != "Northwestern Mediterranean Sea" &
+                                     med_marine_region_joined$marine_reg != "Tunisian Plateau")
+  
+  # join information for filling the circles
+  circle_centroid_joined <- left_join(circle_centroid, tab_for_join, by = c("marine_reg" ="marine_region"))
+  
+  # plot the map
+  map <- ggplot(NULL) + 
+    geom_point(data = point_grid_marine, aes(x = point_grid_marine$X, y = point_grid_marine$Y), color = "grey83", size = 0.2) +  # point grid to make the sea
+    geom_sf(data = med_clipped_marine, mapping = aes(), fill = "white") +  # countries background with white filling
+    geom_sf(data = med_marine_region_joined_under_layer, aes(fill = n_articles)) +  # layer with NW med and Tunisian Plateau to avoid overlap
+    geom_sf(data = med_marine_region_joined, aes(fill = n_articles)) +  # layer with the other marine regions
+    geom_segment(aes(x = 5.165294, y = 36.667825, xend = -0.26, yend = 32.33), size = 0.7, colour = "green2") + # segment for western med
+    geom_segment(aes(x = 30.824110, y = 36.848481, xend = 36.422313, yend = 42), size = 0.7, colour = "royalblue1") + # segment for eastern med
+    geom_point(data = circle_centroid_joined, aes(x = x, y = y, fill = n_articles), shape=21, size = 70, stroke = 1, col = c("green2", "royalblue1")) + # circles with the filling for the 2 big regions
+    scale_fill_gradientn(name="Number of articles", colours=palette, na.value="white") +
+    geom_sf(data = western_med, fill = NA, colour = "green2", size = 0.5, inherit.aes = FALSE) +  # western med bounder
+    geom_sf(data = eastern_med, fill = NA, colour = "royalblue1", size = 0.5, inherit.aes = FALSE) +  # eastern med bounder
+    theme_minimal() +
+    theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+    theme(axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+    ggtitle(paste("Number of articles in Web of Science about", taxa_name), subtitle = subtitle_text) +
+    theme(plot.title = element_text(size = 24, hjust = 0.5), plot.subtitle=element_text(hjust=0.5)) +
+    labs(x=NULL, y=NULL) +
+    theme(plot.margin=unit(c(0,0,0,0),"mm")) +
+    theme(legend.position="right",
+          legend.justification="left",
+          legend.margin=margin(0,0,0,0),
+          legend.box.margin=margin(10,10,10,10))
+
+  return(map)
+}
 

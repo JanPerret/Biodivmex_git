@@ -117,6 +117,57 @@ lumbri_result_map <- WOS_map_number_articles(locality_table = lumbri_article_loc
 tree_result_map <- WOS_map_number_articles(locality_table = tree_article_loc_tab, subtitle_text = tree_subtitle, taxa_name = "Trees")
 
 
+
+### maps for MARINE TAXA :
+# crop world_sf polygons to keep only polygons inside a bounding box centered on the mediterranean sea
+box = c(xmin = -10.5, ymin = 27.5, xmax = 41.5, ymax = 49)
+med_clipped_marine <- st_crop(world_sf, box)
+
+# generate coordinates for the point grid which will make the sea background
+point_grid_marine <- expand.grid(seq(from = -10.5, to = 41.5, by = 0.55), seq(from = 27.5, to = 49, by = 0.5))
+colnames(point_grid_marine) <- c("X","Y")
+
+# layer with the mediterranean marine regions
+med_marine_region <- read_sf("./data/shapefiles/marine_regions/med_marine_regions.shp")
+
+# layers with the borders of the 2 big regions
+med_marine_big_region <- read_sf("./data/shapefiles/marine_regions/med_marine_big_regions.shp")
+western_med <- subset(med_marine_big_region, med_marine_big_region$marine_reg == "Western Mediterranean Sea")
+eastern_med <- subset(med_marine_big_region, med_marine_big_region$marine_reg == "Eastern Mediterranean Sea")
+
+# information to draw the circles for the 2 big regions
+circle_centroid <- data.frame(marine_reg = c("Western Mediterranean Sea","Eastern Mediterranean Sea"), x = c(0.02,35.5), y = c(31.7,40.3))
+
+# # table with the coordinates to plot the pie charts
+# EEZ_centroids <- read_csv2("./data/EEZ_centroids_for_maps.csv")
+
+# make the maps
+fish_result_map <- WOS_map_number_articles_marine(locality_table = fish_article_loc_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
+sponge_result_map <- WOS_map_number_articles_marine(locality_table = sponge_article_loc_tab, subtitle_text = sponge_subtitle, taxa_name = "Porifera")
+crusta_result_map <- WOS_map_number_articles_marine(locality_table = crusta_article_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
+
+### save final maps for marine taxa
+# fish
+file_path = "./output/plots/WOS_map_fish.pdf"
+pdf(file=file_path, width = 20, height = 12)
+fish_result_map
+dev.off()
+
+# sponge
+file_path = "./output/plots/WOS_map_sponge.pdf"
+pdf(file=file_path, width = 20, height = 12)
+sponge_result_map
+dev.off()
+
+# crustacea
+file_path = "./output/plots/WOS_map_crusta.pdf"
+pdf(file=file_path, width = 20, height = 12)
+crusta_result_map
+dev.off()
+
+
+
+
 ### compose and save the final maps (map + pie-charts + pie chart legend)
 # plant
 file_path = "./output/plots/WOS_map_plant.pdf"
