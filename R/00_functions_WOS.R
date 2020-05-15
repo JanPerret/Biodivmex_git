@@ -105,7 +105,7 @@ WOS_make_map_subtitle <- function(taxa_table, taxa_name) {
 
 
 ### store the legend for the pie charts with 3 categories
-WOS_store_pie_chart_legend <- function() {
+WOS_store_pie_chart_legend_3 <- function() {
   # make a small tibble containing just the 3 lines from_country / inside_med / outside_med
   tibble_for_pie_legend <- tibble(author_loc = c("from_country", "inside_med", "outside_med"), sum_n_articles = c(457,143,130))
   
@@ -134,6 +134,36 @@ WOS_store_pie_chart_legend <- function() {
   return(legend_pie_3_categories)
 }
 
+
+### store the legend for the pie charts with 2 categories
+WOS_store_pie_chart_legend_2 <- function() {
+  # make a small tibble containing just the 2 lines inside_med / outside_med
+  tibble_for_pie_legend <- tibble(author_loc = c("inside_med", "outside_med"), sum_n_articles = c(143,130))
+  
+  # make a pie chart from the small tibble
+  pie_for_legend <- ggplot(tibble_for_pie_legend, aes(x=1, y = sum_n_articles, fill = author_loc)) +
+    geom_bar(width = 1, stat = "identity", colour = "black") +
+    coord_polar("y", start=0) +
+    geom_text(aes(label = sum_n_articles, group = author_loc),
+              position = position_stack(vjust = 0.5, reverse = FALSE), size = 2.5) +
+    scale_fill_manual(values = c("#bdbdbd", "#FFFFFF")) + # labels = c("from the country", "mediterranean country", "outside med"), 
+    labs(fill='Corresponding author') +
+    theme(legend.background=element_blank(), legend.position="right")
+  # pie_for_legend
+  
+  # function to extract legend 
+  g_legend <- function(a.gplot){ 
+    tmp <- ggplot_gtable(ggplot_build(a.gplot)) 
+    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box") 
+    legend <- tmp$grobs[[leg]] 
+    return(legend)} 
+  
+  # extract legend
+  legend_pie_2_categories <- g_legend(pie_for_legend)
+  legend_pie_2_categories <- ggpubr::ggarrange(legend_pie_2_categories, ncol = 1, nrow = 1)
+  
+  return(legend_pie_2_categories)
+}
 
 ### make map with country filling by number of articles and pie-charts indicationg corresponding author locality
 # this function requires values for the folowing objects not present in the arguments :
@@ -262,6 +292,7 @@ WOS_map_number_articles <- function(locality_table, subtitle_text, taxa_name) {
 # circle_centroid
 # western_med
 # eastern_med
+# marine_region_centroids
 
 WOS_map_number_articles_marine <- function(locality_table, subtitle_text, taxa_name) {
   
@@ -307,6 +338,78 @@ WOS_map_number_articles_marine <- function(locality_table, subtitle_text, taxa_n
           legend.margin=margin(0,0,0,0),
           legend.box.margin=margin(10,10,10,10))
 
-  return(map)
+  ### make pie charts with from_country / outside_med / inside_med information
+  # data for the pie charts
+  locality_table <- locality_table[,c(1:3)]
+  loc_tab_long <- as_tibble(pivot_longer(locality_table, 
+                                         cols = colnames(locality_table)[2]:colnames(locality_table)[ncol(locality_table)], 
+                                         names_to = "author_loc",
+                                         values_to = "n_articles"))
+  
+  # join the informations to plot to marine_region_centroids
+  marine_region_centroids_joined <- left_join(marine_region_centroids, locality_table, by = c("marine_reg" = "marine_region"))
+  
+  # countries' FID list
+  centroids_ID_list <- unique(as.integer(marine_region_centroids_joined$FID))
+  
+  # make a list with the pie-charts objects
+  pie_chart_list <- 
+    lapply( (centroids_ID_list), function(n){
+      
+      # title of the future pie chart
+      coun_name <- marine_region_centroids_joined[marine_region_centroids_joined$FID == as.character(n),]$marine_reg
+      
+      # make a small tibble containing just the 2 summary lines inside_med / outside_med
+      wos_totals_marine_region <- loc_tab_long[loc_tab_long$marine_region == coun_name,]
+      wos_totals_marine_region <- wos_totals_marine_region %>% 
+                                         group_by(author_loc) %>% 
+                                         summarise (sum_n_articles = sum(n_articles))
+      
+      gt_plot <- ggplotGrob(
+        
+        # make the pie-charts
+        ggplot(wos_totals_marine_region, aes(x=1, y = sum_n_articles, fill = author_loc)) +
+          geom_bar(width = 1, stat = "identity", colour = "black") +
+          coord_polar("y", start=0) +
+          geom_text(aes(label = sum_n_articles, group = author_loc),
+                    position = position_stack(vjust = 0.5, reverse = FALSE), size = 2.5) +
+          scale_fill_manual(values = c("#bdbdbd", "#FFFFFF")) +
+          theme_minimal()+
+          ggtitle(coun_name)+
+          theme(plot.title = element_text(size = 9, face = "bold", hjust = 0.5, vjust = -0.5,margin=margin(b = 2, unit = "pt")))+
+          theme(axis.line=element_blank(),
+                axis.text.x=element_blank(),
+                axis.text.y=element_blank(),
+                axis.ticks=element_blank(),
+                axis.title.x=element_blank(),
+                axis.title.y=element_blank(),
+                legend.position="none",
+                panel.background=element_blank(),
+                panel.border=element_blank(),
+                panel.grid.major=element_blank(),
+                panel.grid.minor=element_blank(),
+                plot.background=element_blank())+
+          theme(plot.margin = unit(c(0,0,0,0), "cm"))
+        
+      )
+    } )
+  
+  ### insert the pie-charts on the map
+  pie_charts_annotation_list <- vector(mode = "list", length = length(pie_chart_list))
+  pie_half_width = 1.3
+  pie_half_height = 1.3
+  
+  for (i in 1:length(pie_chart_list)) {
+    value <- annotation_custom(grob = pie_chart_list[[i]],
+                               xmin = marine_region_centroids$x[[i]] - pie_half_width,
+                               xmax = marine_region_centroids$x[[i]] + pie_half_width,
+                               ymin = marine_region_centroids$y[[i]] - pie_half_height,
+                               ymax = marine_region_centroids$y[[i]] + pie_half_height)
+    pie_charts_annotation_list[[i]] <- value
+  }
+  
+  result_plot <- Reduce('+', pie_charts_annotation_list, map)
+  
+  return(result_plot)
 }
 
