@@ -113,7 +113,7 @@ WOS_store_pie_chart_legend_3 <- function() {
   pie_for_legend <- ggplot(tibble_for_pie_legend, aes(x=1, y = sum_n_articles, fill = author_loc)) +
     geom_bar(width = 1, stat = "identity", colour = "black") +
     coord_polar("y", start=0) +
-    geom_text(aes(label = tibble_for_pie_legend$sum_n_articles, group = tibble_for_pie_legend$author_loc),
+    geom_text(aes(label = sum_n_articles, group = author_loc),
               position = position_stack(vjust = 0.5, reverse = FALSE), size = 2.5) +
     scale_fill_manual(values = c("#636363", "#bdbdbd", "#FFFFFF")) + # labels = c("from the country", "mediterranean country", "outside med"), 
     labs(fill='Corresponding author') +

@@ -35,7 +35,7 @@ rept_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingd
 bird_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "bird")
 mammal_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "mammal")
 fish_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "fish")
-sponge_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "sponge")
+sponge_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "porifera")
 crusta_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "crustacea")
 coleo_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "coleoptera")
 papilio_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "papilionoidea")
