@@ -62,36 +62,33 @@ WOS_acc_curve_per_country <- function(taxa_acc_data, taxa_name, marine) {
   
   # convert year from character to numeric
   taxa_acc_data_long$year <- as.numeric(taxa_acc_data_long$year)
-  # taxa_acc_data_long$n_article <- as.numeric(levels(taxa_acc_data_long$n_article))[taxa_acc_data_long$n_article]
-  
+
   # test if marine or terrestrial taxa
   if(marine == FALSE) {
     # curve with colour per country and linear y axis
-    WOS_curve_art_acc_country <- ggplot(taxa_acc_data_long, aes(x = year, y = n_article, group = fieldwork_country, colour = fieldwork_country)) +
+    WOS_curve_art_acc <- ggplot(taxa_acc_data_long, aes(x = year, y = n_article, group = fieldwork_country, colour = fieldwork_country)) +
       geom_line(size=1.2) +
-      labs(title = paste0("Number of publications for ", taxa_name, " per country")) +
+      labs(title = paste0("Number of publications per country for ", taxa_name)) +
       xlab("Year") + ylab("Number of publications") +
+      labs(colour = "Fieldwork country") +
       theme_bw() +
       theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
       scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year)
     
-    pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_", taxa_name, ".pdf"), width = 20, height = 12)
-    print(WOS_curve_art_acc_country)
-    dev.off()
+
   } else {
     # curve with colour per marine region and linear y axis
-    WOS_curve_art_acc_marine_region <- ggplot(taxa_acc_data_long, aes(x = year, y = n_article, group = marine_region, colour = marine_region)) +
+    WOS_curve_art_acc <- ggplot(taxa_acc_data_long, aes(x = year, y = n_article, group = marine_region, colour = marine_region)) +
       geom_line(size=1.2) +
-      labs(title = paste0("Number of publications for ", taxa_name, " per marine region")) +
+      labs(title = paste0("Number of publications per marine region for ", taxa_name)) +
       xlab("Year") + ylab("Number of publications") +
+      labs(colour = "Marine region") +
       theme_bw() +
       theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
       scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year)
     
-    pdf(file = paste0("./output/plots/WOS_curve_art_acc_marine_region_", taxa_name, ".pdf"), width = 20, height = 12)
-    print(WOS_curve_art_acc_marine_region)
-    dev.off()
   }
+  return(WOS_curve_art_acc)
 }
 
 

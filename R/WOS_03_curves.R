@@ -87,19 +87,86 @@ dev.off()
 
 
 ### accumulation curve of number of publications per country (one figure per taxa)
-WOS_acc_curve_per_country(taxa_acc_data = plant_year_tab_per_country_acc, taxa_name = "Plant", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = fungi_year_tab_per_country_acc, taxa_name = "Fungi", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = amph_year_tab_per_country_acc, taxa_name = "Amphibian", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = rept_year_tab_per_country_acc, taxa_name = "Reptile", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = bird_year_tab_per_country_acc, taxa_name = "Bird", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = mammal_year_tab_per_country_acc, taxa_name = "Mammals", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = coleo_year_tab_per_country_acc, taxa_name = "Coleoptera", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = papilio_year_tab_per_country_acc, taxa_name = "Papilionoidea", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = lumbri_year_tab_per_country_acc, taxa_name = "Lumbricina", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = tree_year_tab_per_country_acc, taxa_name = "Tree", marine = FALSE)
-WOS_acc_curve_per_country(taxa_acc_data = fish_year_tab_per_region_acc, taxa_name = "Fish", marine = TRUE)
-WOS_acc_curve_per_country(taxa_acc_data = sponge_year_tab_per_region_acc, taxa_name = "Porifera", marine = TRUE)
-WOS_acc_curve_per_country(taxa_acc_data = crusta_year_tab_per_region_acc, taxa_name = "Crustacea", marine = TRUE)
+WOS_curve_art_acc_country_plant <- WOS_acc_curve_per_country(taxa_acc_data = plant_year_tab_per_country_acc, taxa_name = "Plant", marine = FALSE)
+WOS_curve_art_acc_country_fungi <- WOS_acc_curve_per_country(taxa_acc_data = fungi_year_tab_per_country_acc, taxa_name = "Fungi", marine = FALSE)
+WOS_curve_art_acc_country_amphibian <- WOS_acc_curve_per_country(taxa_acc_data = amph_year_tab_per_country_acc, taxa_name = "Amphibian", marine = FALSE)
+WOS_curve_art_acc_country_reptile <- WOS_acc_curve_per_country(taxa_acc_data = rept_year_tab_per_country_acc, taxa_name = "Reptile", marine = FALSE)
+WOS_curve_art_acc_country_bird <- WOS_acc_curve_per_country(taxa_acc_data = bird_year_tab_per_country_acc, taxa_name = "Bird", marine = FALSE)
+WOS_curve_art_acc_country_mammal <- WOS_acc_curve_per_country(taxa_acc_data = mammal_year_tab_per_country_acc, taxa_name = "Mammals", marine = FALSE)
+WOS_curve_art_acc_country_coleo <- WOS_acc_curve_per_country(taxa_acc_data = coleo_year_tab_per_country_acc, taxa_name = "Coleoptera", marine = FALSE)
+WOS_curve_art_acc_country_papilio <- WOS_acc_curve_per_country(taxa_acc_data = papilio_year_tab_per_country_acc, taxa_name = "Papilionoidea", marine = FALSE)
+WOS_curve_art_acc_country_lumbri <- WOS_acc_curve_per_country(taxa_acc_data = lumbri_year_tab_per_country_acc, taxa_name = "Lumbricina", marine = FALSE)
+WOS_curve_art_acc_country_tree <- WOS_acc_curve_per_country(taxa_acc_data = tree_year_tab_per_country_acc, taxa_name = "Tree", marine = FALSE)
+WOS_curve_art_acc_marine_region_fish <- WOS_acc_curve_per_country(taxa_acc_data = fish_year_tab_per_region_acc, taxa_name = "Fish", marine = TRUE)
+WOS_curve_art_acc_marine_region_porifera <- WOS_acc_curve_per_country(taxa_acc_data = sponge_year_tab_per_region_acc, taxa_name = "Porifera", marine = TRUE)
+WOS_curve_art_acc_marine_region_crustacea <- WOS_acc_curve_per_country(taxa_acc_data = crusta_year_tab_per_region_acc, taxa_name = "Crustacea", marine = TRUE)
+
+
+### save curves
+# plant
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_plant.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_plant
+dev.off()
+
+# fungi
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_fungi.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_fungi
+dev.off()
+
+# amphibian
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_amphibian.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_amphibian
+dev.off()
+
+# reptile
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_reptile.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_reptile
+dev.off()
+
+# bird
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_bird.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_bird
+dev.off()
+
+# mammal
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_mammal.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_mammal
+dev.off()
+
+# coleoptera
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_coleoptera.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_coleo
+dev.off()
+
+# papilionoidea
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_papilionoidea.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_papilio
+dev.off()
+
+# lumbricina
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_lumbricina.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_lumbri
+dev.off()
+
+# tree
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_country_tree.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_country_tree
+dev.off()
+
+# fish
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_marine_region_fish.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_marine_region_fish
+dev.off()
+
+# porifera
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_marine_region_porifera.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_marine_region_porifera
+dev.off()
+
+# crustacea
+pdf(file = paste0("./output/plots/WOS_curve_art_acc_marine_region_crustacea.pdf"), width = 20, height = 12)
+WOS_curve_art_acc_marine_region_crustacea
+dev.off()
 
 
 ### accumulation curve of the number of scientific journals for each taxa at med basin scale (no subdivision per country)
