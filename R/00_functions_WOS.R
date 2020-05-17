@@ -92,7 +92,7 @@ WOS_acc_curve_per_country <- function(taxa_acc_data, taxa_name, marine) {
       directlabels::geom_dl(aes(label = marine_region), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
       coord_cartesian(clip = 'off') +
       theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
-      expand_limits(x = c(2021.5))
+      expand_limits(x = c(2022))
     
   }
   return(WOS_curve_art_acc)

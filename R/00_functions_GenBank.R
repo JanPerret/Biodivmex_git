@@ -201,15 +201,15 @@ GB_acc_curve_per_country <- function(taxa_acc_data, taxa_name) {
   # curve with colour per country and linear y axis
   GenBank_curve_seq_acc_country <- ggplot(taxa_acc_data_long, aes(x = year, y = n_seq, group = sample_origin, colour = sample_origin)) +
                                       geom_line(size=1.2) +
-                                      labs(title = paste0("Number of sequences for ", taxa_name, " per country")) +
+                                      labs(title = paste0("Number of sequences per country for ", taxa_name)) +
                                       xlab("Year") + ylab("Number of sequences") +
                                       theme_bw() +
                                       theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-                                      scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year)
+                                      scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year) +
                                       directlabels::geom_dl(aes(label = sample_origin), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
                                       coord_cartesian(clip = 'off') +
                                       theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
-                                      expand_limits(x = c(2021.5))
+                                      expand_limits(x = c(2021))
   
   return(GenBank_curve_seq_acc_country)
 }

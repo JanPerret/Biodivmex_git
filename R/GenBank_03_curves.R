@@ -29,7 +29,11 @@ GenBank_curve_seq_acc_taxa_linear <- ggplot(all_taxa_year_tab_acc_long, aes(x = 
                                         xlab("Year") + ylab("Number of sequences") +
                                         theme_bw() +
                                         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-                                        scale_x_continuous("Year", labels = as.character(all_taxa_year_tab_acc_long$year), breaks = all_taxa_year_tab_acc_long$year)
+                                        scale_x_continuous("Year", labels = as.character(all_taxa_year_tab_acc_long$year), breaks = all_taxa_year_tab_acc_long$year) +
+                                        directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
+                                        coord_cartesian(clip = 'off') +
+                                        theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
+                                        expand_limits(x = c(2020))
 
 # curve with colour per taxa log10 y axis
 GenBank_curve_seq_acc_taxa_log10 <- ggplot(all_taxa_year_tab_acc_long, aes(x = year, y = (n_seq+1), group = taxa, colour = taxa)) + ###### log10(y+1) pour que ca ne bug pas
@@ -39,7 +43,11 @@ GenBank_curve_seq_acc_taxa_log10 <- ggplot(all_taxa_year_tab_acc_long, aes(x = y
                                         theme_bw() +
                                         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
                                         scale_x_continuous("Year", labels = as.character(all_taxa_year_tab_acc_long$year), breaks = all_taxa_year_tab_acc_long$year) +
-                                        scale_y_continuous(trans='log10')
+                                        scale_y_continuous(trans='log10') +
+                                        directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
+                                        coord_cartesian(clip = 'off') +
+                                        theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
+                                        expand_limits(x = c(2020))
 
 # make difference between myers taxa and others
 # create a myers/non-myers column
@@ -59,7 +67,11 @@ GenBank_curve_seq_acc_myers_linear <- ggplot(all_taxa_year_tab_acc_long, aes(x =
                                           xlab("Year") + ylab("Number of sequences") +
                                           theme_bw() +
                                           theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-                                          scale_x_continuous("Year", labels = as.character(all_taxa_year_tab_acc_long$year), breaks = all_taxa_year_tab_acc_long$year)
+                                          scale_x_continuous("Year", labels = as.character(all_taxa_year_tab_acc_long$year), breaks = all_taxa_year_tab_acc_long$year) +
+                                          directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
+                                          coord_cartesian(clip = 'off') +
+                                          theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
+                                          expand_limits(x = c(2020))
 
 # curve with colour per myers_non-myers log10 y axis
 GenBank_curve_seq_acc_myers_log10 <- ggplot(all_taxa_year_tab_acc_long, aes(x = year, y = (n_seq+1), group = taxa, colour = myers)) + ###### log10(y+1) pour que ca ne bug pas
@@ -69,7 +81,11 @@ GenBank_curve_seq_acc_myers_log10 <- ggplot(all_taxa_year_tab_acc_long, aes(x = 
                                           theme_bw() +
                                           theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
                                           scale_x_continuous("Year", labels = as.character(all_taxa_year_tab_acc_long$year), breaks = all_taxa_year_tab_acc_long$year) +
-                                          scale_y_continuous(trans='log10')
+                                          scale_y_continuous(trans='log10') +
+                                          directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
+                                          coord_cartesian(clip = 'off') +
+                                          theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
+                                          expand_limits(x = c(2020))
 
 # save figures in PDF
 pdf(file = "./output/plots/GenBank_curve_seq_acc_taxa_linear.pdf", width = 11.69, height = 8.27)
