@@ -45,6 +45,15 @@ WOS_count_journals <- function(taxa_journals_data) {
 
 
 ### make publication accumulation curve for a given taxa with one curve per country
+
+taxa_acc_data = plant_year_tab_per_country_acc
+taxa_name = "Plant"
+marine = FALSE
+
+taxa_acc_data = fish_year_tab_per_region_acc
+taxa_name = "Fish"
+marine = TRUE
+
 WOS_acc_curve_per_country <- function(taxa_acc_data, taxa_name, marine) {
   
   # exclude missing data
@@ -73,8 +82,11 @@ WOS_acc_curve_per_country <- function(taxa_acc_data, taxa_name, marine) {
       labs(colour = "Fieldwork country") +
       theme_bw() +
       theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-      scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year)
-    
+      scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year) +
+      directlabels::geom_dl(aes(label = fieldwork_country), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
+      coord_cartesian(clip = 'off') + # allow labels to go past the canvas boundaries
+      theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) + # remove legend and adjust margins (margins are t-r-b-l)
+      expand_limits(x = c(2021.5)) # expand plot window x limit to ensure it includes 2021.5 (space needed for the longest label)
 
   } else {
     # curve with colour per marine region and linear y axis
@@ -85,7 +97,11 @@ WOS_acc_curve_per_country <- function(taxa_acc_data, taxa_name, marine) {
       labs(colour = "Marine region") +
       theme_bw() +
       theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-      scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year)
+      scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year) +
+      directlabels::geom_dl(aes(label = marine_region), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
+      coord_cartesian(clip = 'off') +
+      theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
+      expand_limits(x = c(2021.5))
     
   }
   return(WOS_curve_art_acc)

@@ -170,8 +170,6 @@ dev.off()
 
 
 ### accumulation curve of the number of scientific journals for each taxa at med basin scale (no subdivision per country)
-taxa_journals_table
-
 # pass data from wide to long format
 taxa_journals_table_long <- as_tibble(pivot_longer(taxa_journals_table, 
                                                    cols = colnames(taxa_journals_table)[5]:colnames(taxa_journals_table)[ncol(taxa_journals_table)], 
@@ -180,7 +178,6 @@ taxa_journals_table_long <- as_tibble(pivot_longer(taxa_journals_table,
 
 # convert from factor to numeric
 taxa_journals_table_long$year <- as.numeric(taxa_journals_table_long$year)
-# taxa_journals_table_long$n_journal <- as.numeric(levels(taxa_journals_table_long$n_journal))[taxa_journals_table_long$n_journal]
 
 # curve with colour per taxa linear y axis
 WOS_curve_journal_acc_taxa_linear <- ggplot(taxa_journals_table_long, aes(x = year, y = n_journal, group = taxa, colour = taxa)) +
@@ -189,7 +186,12 @@ WOS_curve_journal_acc_taxa_linear <- ggplot(taxa_journals_table_long, aes(x = ye
                                         xlab("Year") + ylab("Number of scientific journals") +
                                         theme_bw() +
                                         theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-                                        scale_x_continuous("Year", labels = as.character(taxa_journals_table_long$year), breaks = taxa_journals_table_long$year)
+                                        scale_x_continuous("Year", labels = as.character(taxa_journals_table_long$year), breaks = taxa_journals_table_long$year) +
+                                        directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
+                                        coord_cartesian(clip = 'off') +
+                                        theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
+                                        expand_limits(x = c(2021.5))
+  
   
 # create a myers/non-myers column
 taxa_journals_table_long["myers"] <- NA
@@ -208,7 +210,11 @@ WOS_curve_journal_acc_myers_linear <- ggplot(taxa_journals_table_long, aes(x = y
                                           xlab("Year") + ylab("Number of scientific journals") +
                                           theme_bw() +
                                           theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
-                                          scale_x_continuous("Year", labels = as.character(taxa_journals_table_long$year), breaks = taxa_journals_table_long$year)
+                                          scale_x_continuous("Year", labels = as.character(taxa_journals_table_long$year), breaks = taxa_journals_table_long$year) +
+                                          directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
+                                          coord_cartesian(clip = 'off') +
+                                          theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
+                                          expand_limits(x = c(2021.5))
 
 # save figures in PDF
 pdf(file = "./output/plots/WOS_curve_journal_acc_taxa_linear.pdf", width = 11.69, height = 8.27)
