@@ -267,7 +267,7 @@ all_taxa_year_tab <- rbind(plant_desc_year_tab$n_seq_med,
 colnames(all_taxa_year_tab) <- c(as.character(paste0(year_list)))
 
 # pass table to accumulation
-all_taxa_year_tab_acc <- GB_accumulate(year_tab = all_taxa_year_tab, first_column = 2)
+all_taxa_year_tab_acc <- table_accumulate(year_tab = all_taxa_year_tab, first_column = 2)
 
 # bind taxa names column to the tables
 taxa_vect <- c("plant", "fungi", "amphibian", "reptile", "bird", "mammal", "coleoptera", "papilionoidea", "lumbricina", "fish", "sponge", "crustacea", "tree")
@@ -543,19 +543,19 @@ write_csv2(crusta_country_year_tab, path = "./output/text/GenBank_crusta_country
 write_csv2(tree_country_year_tab, path = "./output/text/GenBank_tree_country_year_tab.csv", col_names = TRUE)
 
 ### same table but for accumulation curve
-plant_country_year_tab_acc <- GB_accumulate(year_tab = plant_country_year_tab, first_column = 2)
-fungi_country_year_tab_acc <- GB_accumulate(year_tab = fungi_country_year_tab, first_column = 2)
-amph_country_year_tab_acc <- GB_accumulate(year_tab = amph_country_year_tab, first_column = 2)
-rept_country_year_tab_acc <- GB_accumulate(year_tab = rept_country_year_tab, first_column = 2)
-bird_country_year_tab_acc <- GB_accumulate(year_tab = bird_country_year_tab, first_column = 2)
-mammal_country_year_tab_acc <- GB_accumulate(year_tab = mammal_country_year_tab, first_column = 2)
-coleo_country_year_tab_acc <- GB_accumulate(year_tab = coleo_country_year_tab, first_column = 2)
-papilio_country_year_tab_acc <- GB_accumulate(year_tab = papilio_country_year_tab, first_column = 2)
-lumbri_country_year_tab_acc <- GB_accumulate(year_tab = lumbri_country_year_tab, first_column = 2)
-fish_country_year_tab_acc <- GB_accumulate(year_tab = fish_country_year_tab, first_column = 2)
-sponge_country_year_tab_acc <- GB_accumulate(year_tab = sponge_country_year_tab, first_column = 2)
-crusta_country_year_tab_acc <- GB_accumulate(year_tab = crusta_country_year_tab, first_column = 2)
-tree_country_year_tab_acc <- GB_accumulate(year_tab = tree_country_year_tab, first_column = 2)
+plant_country_year_tab_acc <- table_accumulate(year_tab = plant_country_year_tab, first_column = 2)
+fungi_country_year_tab_acc <- table_accumulate(year_tab = fungi_country_year_tab, first_column = 2)
+amph_country_year_tab_acc <- table_accumulate(year_tab = amph_country_year_tab, first_column = 2)
+rept_country_year_tab_acc <- table_accumulate(year_tab = rept_country_year_tab, first_column = 2)
+bird_country_year_tab_acc <- table_accumulate(year_tab = bird_country_year_tab, first_column = 2)
+mammal_country_year_tab_acc <- table_accumulate(year_tab = mammal_country_year_tab, first_column = 2)
+coleo_country_year_tab_acc <- table_accumulate(year_tab = coleo_country_year_tab, first_column = 2)
+papilio_country_year_tab_acc <- table_accumulate(year_tab = papilio_country_year_tab, first_column = 2)
+lumbri_country_year_tab_acc <- table_accumulate(year_tab = lumbri_country_year_tab, first_column = 2)
+fish_country_year_tab_acc <- table_accumulate(year_tab = fish_country_year_tab, first_column = 2)
+sponge_country_year_tab_acc <- table_accumulate(year_tab = sponge_country_year_tab, first_column = 2)
+crusta_country_year_tab_acc <- table_accumulate(year_tab = crusta_country_year_tab, first_column = 2)
+tree_country_year_tab_acc <- table_accumulate(year_tab = tree_country_year_tab, first_column = 2)
 
 # save tables
 write_csv2(plant_country_year_tab_acc, path = "./output/text/GenBank_plant_country_year_tab_acc.csv", col_names = TRUE)

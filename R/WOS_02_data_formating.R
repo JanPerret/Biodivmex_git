@@ -147,7 +147,7 @@ taxa_year_table <- cbind(taxa = taxa_vect, taxa_year_table)
 write_csv2(taxa_year_table, path = "./output/text/WOS_recap_table_articles_per_year.csv", col_names = TRUE)
 
 # passing from raw counts to accumulation
-taxa_year_table_acc <- WOS_accumulate(year_tab = taxa_year_table, first_column = 2)
+taxa_year_table_acc <- table_accumulate(year_tab = taxa_year_table, first_column = 2)
 
 # save table
 write_csv2(taxa_year_table_acc, path = "./output/text/WOS_recap_table_articles_per_year_acc.csv", col_names = TRUE)
@@ -265,19 +265,19 @@ write_csv2(fish_year_tab_per_country, path = "./output/text/WOS_fish_year_tab_pe
 write_csv2(tree_year_tab_per_country, path = "./output/text/WOS_tree_year_tab_per_country.csv", col_names = TRUE)
 
 # passing from raw counts to accumulation tables
-plant_year_tab_per_country_acc <- WOS_accumulate(year_tab = plant_year_tab_per_country, first_column = 2)
-fungi_year_tab_per_country_acc <- WOS_accumulate(year_tab = fungi_year_tab_per_country, first_column = 2)
-amph_year_tab_per_country_acc <- WOS_accumulate(year_tab = amph_year_tab_per_country, first_column = 2)
-rept_year_tab_per_country_acc <- WOS_accumulate(year_tab = rept_year_tab_per_country, first_column = 2)
-bird_year_tab_per_country_acc <- WOS_accumulate(year_tab = bird_year_tab_per_country, first_column = 2)
-mammal_year_tab_per_country_acc <- WOS_accumulate(year_tab = mammal_year_tab_per_country, first_column = 2)
-coleo_year_tab_per_country_acc <- WOS_accumulate(year_tab = coleo_year_tab_per_country, first_column = 2)
-lumbri_year_tab_per_country_acc <- WOS_accumulate(year_tab = lumbri_year_tab_per_country, first_column = 2)
-papilio_year_tab_per_country_acc <- WOS_accumulate(year_tab = papilio_year_tab_per_country, first_column = 2)
-sponge_year_tab_per_country_acc <- WOS_accumulate(year_tab = sponge_year_tab_per_country, first_column = 2)
-crusta_year_tab_per_country_acc <- WOS_accumulate(year_tab = crusta_year_tab_per_country, first_column = 2)
-fish_year_tab_per_country_acc <- WOS_accumulate(year_tab = fish_year_tab_per_country, first_column = 2)
-tree_year_tab_per_country_acc <- WOS_accumulate(year_tab = tree_year_tab_per_country, first_column = 2)
+plant_year_tab_per_country_acc <- table_accumulate(year_tab = plant_year_tab_per_country, first_column = 2)
+fungi_year_tab_per_country_acc <- table_accumulate(year_tab = fungi_year_tab_per_country, first_column = 2)
+amph_year_tab_per_country_acc <- table_accumulate(year_tab = amph_year_tab_per_country, first_column = 2)
+rept_year_tab_per_country_acc <- table_accumulate(year_tab = rept_year_tab_per_country, first_column = 2)
+bird_year_tab_per_country_acc <- table_accumulate(year_tab = bird_year_tab_per_country, first_column = 2)
+mammal_year_tab_per_country_acc <- table_accumulate(year_tab = mammal_year_tab_per_country, first_column = 2)
+coleo_year_tab_per_country_acc <- table_accumulate(year_tab = coleo_year_tab_per_country, first_column = 2)
+lumbri_year_tab_per_country_acc <- table_accumulate(year_tab = lumbri_year_tab_per_country, first_column = 2)
+papilio_year_tab_per_country_acc <- table_accumulate(year_tab = papilio_year_tab_per_country, first_column = 2)
+sponge_year_tab_per_country_acc <- table_accumulate(year_tab = sponge_year_tab_per_country, first_column = 2)
+crusta_year_tab_per_country_acc <- table_accumulate(year_tab = crusta_year_tab_per_country, first_column = 2)
+fish_year_tab_per_country_acc <- table_accumulate(year_tab = fish_year_tab_per_country, first_column = 2)
+tree_year_tab_per_country_acc <- table_accumulate(year_tab = tree_year_tab_per_country, first_column = 2)
 
 # save tables
 write_csv2(plant_year_tab_per_country_acc, path = "./output/text/WOS_plant_year_tab_per_country_acc.csv", col_names = TRUE)
@@ -579,9 +579,9 @@ write_csv2(sponge_year_tab_per_region, path = "./output/text/WOS_sponge_year_tab
 write_csv2(crusta_year_tab_per_region, path = "./output/text/WOS_crusta_year_tab_per_region.csv", col_names = TRUE)
 
 # passing from raw counts to accumulation tables
-fish_year_tab_per_region_acc <- WOS_accumulate(year_tab = fish_year_tab_per_region, first_column = 2)
-sponge_year_tab_per_region_acc <- WOS_accumulate(year_tab = sponge_year_tab_per_region, first_column = 2)
-crusta_year_tab_per_region_acc <- WOS_accumulate(year_tab = crusta_year_tab_per_region, first_column = 2)
+fish_year_tab_per_region_acc <- table_accumulate(year_tab = fish_year_tab_per_region, first_column = 2)
+sponge_year_tab_per_region_acc <- table_accumulate(year_tab = sponge_year_tab_per_region, first_column = 2)
+crusta_year_tab_per_region_acc <- table_accumulate(year_tab = crusta_year_tab_per_region, first_column = 2)
 
 # save tables
 write_csv2(fish_year_tab_per_region_acc, path = "./output/text/WOS_fish_year_tab_per_region_acc.csv", col_names = TRUE)

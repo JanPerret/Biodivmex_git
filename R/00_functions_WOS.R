@@ -9,7 +9,7 @@
 
 
 ### transform table with number of sequences in GenBank per country (rows) and years (columns) for accumulation curve
-WOS_accumulate <- function(year_tab, first_column) {
+table_accumulate <- function(year_tab, first_column) {
   
   len <- c(1:nrow(year_tab))
   large <- c((first_column+1):ncol(year_tab))
@@ -45,15 +45,6 @@ WOS_count_journals <- function(taxa_journals_data) {
 
 
 ### make publication accumulation curve for a given taxa with one curve per country
-
-taxa_acc_data = plant_year_tab_per_country_acc
-taxa_name = "Plant"
-marine = FALSE
-
-taxa_acc_data = fish_year_tab_per_region_acc
-taxa_name = "Fish"
-marine = TRUE
-
 WOS_acc_curve_per_country <- function(taxa_acc_data, taxa_name, marine) {
   
   # exclude missing data

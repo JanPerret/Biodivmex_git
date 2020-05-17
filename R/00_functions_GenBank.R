@@ -182,24 +182,6 @@ GB_recap_species_level <- function(taxa_data_med, taxa_name) {
 }
 
 
-### transform table with number of sequences in GenBank per country (rows) and years (columns) for accumulation curve
-GB_accumulate <- function(year_tab, first_column) {
-  
-  len <- c(1:nrow(year_tab))
-  large <- c((first_column+1):ncol(year_tab))
-  
-  for (i in len){ # loop over rows
-    for (n in large){ # loop over columns
-      
-      year_tab[i,n] <- year_tab[i,n] + year_tab[i,n-1]
-      
-    }
-  }
-  
-  return(year_tab)
-}
-
-
 ### make sequence accumulation curve for a given taxa with one curve per country
 GB_acc_curve_per_country <- function(taxa_acc_data, taxa_name) {
   
@@ -224,6 +206,10 @@ GB_acc_curve_per_country <- function(taxa_acc_data, taxa_name) {
                                       theme_bw() +
                                       theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
                                       scale_x_continuous("Year", labels = as.character(taxa_acc_data_long$year), breaks = taxa_acc_data_long$year)
+                                      directlabels::geom_dl(aes(label = sample_origin), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
+                                      coord_cartesian(clip = 'off') +
+                                      theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
+                                      expand_limits(x = c(2021.5))
   
   return(GenBank_curve_seq_acc_country)
 }
