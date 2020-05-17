@@ -52,10 +52,10 @@ wos_data <- wos_data %>%
   filter(year != 2020)
 
 ### corpus time truncation condition
-truncation_year = 1979
+truncation_year = 1989
 
 wos_data <- wos_data %>%
-  filter(year > truncation_year) # all articles published from 1980 to 2019
+  filter(year > truncation_year) # all articles published from 1990 to 2019
 # NB : there was no article with year = NA anyway in the dataframe
 
 # fix year factor levels for all taxa
