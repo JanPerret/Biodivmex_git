@@ -53,7 +53,7 @@ GenBank_curve_seq_acc_taxa_log10 <- ggplot(all_taxa_year_tab_acc_long, aes(x = y
 # create a myers/non-myers column
 all_taxa_year_tab_acc_long["myers"] <- NA
 myers_taxa <- c("amphibian", "bird", "mammal", "plant", "reptile")
-non_myers_taxa <- c("coleoptera", "crustacea", "fish", "fungi", "lumbricina", "papilionoidea", "sponge", "tree")
+non_myers_taxa <- c("coleoptera", "crustacea", "fish", "fungi", "lumbricina", "papilionoidea", "porifera", "tree")
 
 for (i in 1:length(all_taxa_year_tab_acc_long$taxa)) {
   if (all_taxa_year_tab_acc_long$taxa[i] %in% myers_taxa) {all_taxa_year_tab_acc_long$myers[i] <- "myers_taxa"}
@@ -115,7 +115,7 @@ GenBank_curve_seq_acc_country_coleo <- GB_acc_curve_per_country(taxa_acc_data = 
 GenBank_curve_seq_acc_country_papilio <- GB_acc_curve_per_country(taxa_acc_data = papilio_country_year_tab_acc, taxa_name = "Papilionoidea")
 GenBank_curve_seq_acc_country_lumbri <- GB_acc_curve_per_country(taxa_acc_data = lumbri_country_year_tab_acc, taxa_name = "Lumbricina")
 GenBank_curve_seq_acc_country_fish <- GB_acc_curve_per_country(taxa_acc_data = fish_country_year_tab_acc, taxa_name = "Fish")
-GenBank_curve_seq_acc_country_sponge <- GB_acc_curve_per_country(taxa_acc_data = sponge_country_year_tab_acc, taxa_name = "Porifera")
+GenBank_curve_seq_acc_country_porifera <- GB_acc_curve_per_country(taxa_acc_data = porifera_country_year_tab_acc, taxa_name = "Porifera")
 GenBank_curve_seq_acc_country_crusta <- GB_acc_curve_per_country(taxa_acc_data = crusta_country_year_tab_acc, taxa_name = "Crustacea")
 GenBank_curve_seq_acc_country_tree <- GB_acc_curve_per_country(taxa_acc_data = tree_country_year_tab_acc, taxa_name = "Tree")
 
@@ -170,9 +170,9 @@ pdf(file = paste0("./output/plots/GenBank_curve_seq_acc_country_fish.pdf"), widt
 print(GenBank_curve_seq_acc_country_fish)
 dev.off()
 
-# sponge
-pdf(file = paste0("./output/plots/GenBank_curve_seq_acc_country_sponge.pdf"), width = 20, height = 12)
-print(GenBank_curve_seq_acc_country_sponge)
+# porifera
+pdf(file = paste0("./output/plots/GenBank_curve_seq_acc_country_porifera.pdf"), width = 20, height = 12)
+print(GenBank_curve_seq_acc_country_porifera)
 dev.off()
 
 # crustacea

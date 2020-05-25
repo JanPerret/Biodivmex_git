@@ -27,7 +27,7 @@ wos_data <- read_delim("./data/TEST_SIMPLE_v15_RESULT_WOS_files_merged.csv", del
                          bird = col_character(),
                          mammal = col_character(),
                          fish = col_character(),
-                         sponge = col_character(),
+                         porifera = col_character(),
                          crustacea = col_character(),
                          coleoptera = col_character(),
                          papilionoidea = col_character(),
@@ -64,7 +64,7 @@ wos_data$year <- factor(wos_data$year, levels = year_list, ordered = TRUE)
 
 
 ### total number of articles on each taxonomic group
-taxa_vect <- c("plant", "fungi", "amphibian", "reptile", "bird", "mammal", "fish", "sponge", "crustacea", "coleoptera", "papilionoidea", "lumbricina", "tree")
+taxa_vect <- c("plant", "fungi", "amphibian", "reptile", "bird", "mammal", "fish", "porifera", "crustacea", "coleoptera", "papilionoidea", "lumbricina", "tree")
 
 # initiaze table
 WOS_taxa_table <- setNames(data.frame(matrix(ncol = 3, nrow = 13)), c("taxa", "n_articles", "loc_rate"))
@@ -78,7 +78,7 @@ WOS_taxa_table$n_articles <- c(sum(wos_data$plant == "plant", na.rm = TRUE),
                            sum(wos_data$bird == "bird", na.rm = TRUE),
                            sum(wos_data$mammal == "mammal", na.rm = TRUE),
                            sum(wos_data$fish == "fish", na.rm = TRUE),
-                           sum(wos_data$sponge == "sponge", na.rm = TRUE),
+                           sum(wos_data$porifera == "porifera", na.rm = TRUE),
                            sum(wos_data$crustacea == "crustacea", na.rm = TRUE),
                            sum(wos_data$coleoptera == "coleoptera", na.rm = TRUE),
                            sum(wos_data$papilionoidea == "papilionoidea", na.rm = TRUE),
@@ -94,7 +94,7 @@ rept_df <- subset(wos_data, wos_data$reptile == "reptile")
 bird_df <- subset(wos_data, wos_data$bird == "bird")
 mammal_df <- subset(wos_data, wos_data$mammal == "mammal")
 fish_df <- subset(wos_data, wos_data$fish == "fish")
-sponge_df <- subset(wos_data, wos_data$sponge == "sponge")
+porifera_df <- subset(wos_data, wos_data$porifera == "porifera")
 crusta_df <- subset(wos_data, wos_data$crustacea == "crustacea")
 coleo_df <- subset(wos_data, wos_data$coleoptera == "coleoptera")
 papilio_df <- subset(wos_data, wos_data$papilionoidea == "papilionoidea")
@@ -109,7 +109,7 @@ WOS_taxa_table$loc_rate <- c(round((sum(!is.na(plant_df$fieldwork_country))/leng
                          round((sum(!is.na(bird_df$fieldwork_country))/length(bird_df$access_num))*100, 2),
                          round((sum(!is.na(mammal_df$fieldwork_country))/length(mammal_df$access_num))*100, 2),
                          round((sum(!is.na(fish_df$marine_region))/length(fish_df$access_num))*100, 2),
-                         round((sum(!is.na(sponge_df$marine_region))/length(sponge_df$access_num))*100, 2),
+                         round((sum(!is.na(porifera_df$marine_region))/length(porifera_df$access_num))*100, 2),
                          round((sum(!is.na(crusta_df$marine_region))/length(crusta_df$access_num))*100, 2),
                          round((sum(!is.na(coleo_df$fieldwork_country))/length(coleo_df$access_num))*100, 2),
                          round((sum(!is.na(papilio_df$fieldwork_country))/length(papilio_df$access_num))*100, 2),
@@ -133,7 +133,7 @@ taxa_year_table[4,] <- as.data.frame(table(rept_df$year))$Freq
 taxa_year_table[5,] <- as.data.frame(table(bird_df$year))$Freq
 taxa_year_table[6,] <- as.data.frame(table(mammal_df$year))$Freq
 taxa_year_table[7,] <- as.data.frame(table(fish_df$year))$Freq
-taxa_year_table[8,] <- as.data.frame(table(sponge_df$year))$Freq
+taxa_year_table[8,] <- as.data.frame(table(porifera_df$year))$Freq
 taxa_year_table[9,] <- as.data.frame(table(crusta_df$year))$Freq
 taxa_year_table[10,] <- as.data.frame(table(coleo_df$year))$Freq
 taxa_year_table[11,] <- as.data.frame(table(papilio_df$year))$Freq
@@ -200,7 +200,7 @@ rept_country_df <- subset(wos_data_div, wos_data_div$reptile == "reptile")
 bird_country_df <- subset(wos_data_div, wos_data_div$bird == "bird")
 mammal_country_df <- subset(wos_data_div, wos_data_div$mammal == "mammal")
 fish_country_df <- subset(wos_data_div, wos_data_div$fish == "fish")
-sponge_country_df <- subset(wos_data_div, wos_data_div$sponge == "sponge")
+porifera_country_df <- subset(wos_data_div, wos_data_div$porifera == "porifera")
 crusta_country_df <- subset(wos_data_div, wos_data_div$crustacea == "crustacea")
 coleo_country_df <- subset(wos_data_div, wos_data_div$coleoptera == "coleoptera")
 papilio_country_df <- subset(wos_data_div, wos_data_div$papilionoidea == "papilionoidea")
@@ -219,7 +219,7 @@ taxa_country_table[,4] <- as.data.frame(table(rept_country_df$fieldwork_country)
 taxa_country_table[,5] <- as.data.frame(table(bird_country_df$fieldwork_country))$Freq
 taxa_country_table[,6] <- as.data.frame(table(mammal_country_df$fieldwork_country))$Freq
 taxa_country_table[,7] <- as.data.frame(table(fish_country_df$fieldwork_country))$Freq
-taxa_country_table[,8] <- as.data.frame(table(sponge_country_df$fieldwork_country))$Freq
+taxa_country_table[,8] <- as.data.frame(table(porifera_country_df$fieldwork_country))$Freq
 taxa_country_table[,9] <- as.data.frame(table(crusta_country_df$fieldwork_country))$Freq
 taxa_country_table[,10] <- as.data.frame(table(coleo_country_df$fieldwork_country))$Freq
 taxa_country_table[,11] <- as.data.frame(table(papilio_country_df$fieldwork_country))$Freq
@@ -244,7 +244,7 @@ mammal_year_tab_per_country <- mammal_country_df %>% group_by(fieldwork_country,
 coleo_year_tab_per_country <- coleo_country_df %>% group_by(fieldwork_country, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 lumbri_year_tab_per_country <- lumbri_country_df %>% group_by(fieldwork_country, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 papilio_year_tab_per_country <- papilio_country_df %>% group_by(fieldwork_country, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
-sponge_year_tab_per_country <- sponge_country_df %>% group_by(fieldwork_country, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
+porifera_year_tab_per_country <- porifera_country_df %>% group_by(fieldwork_country, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 crusta_year_tab_per_country <- crusta_country_df %>% group_by(fieldwork_country, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 fish_year_tab_per_country <- fish_country_df %>% group_by(fieldwork_country, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 tree_year_tab_per_country <- tree_country_df %>% group_by(fieldwork_country, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
@@ -259,7 +259,7 @@ write_csv2(mammal_year_tab_per_country, path = "./output/text/WOS_mammal_year_ta
 write_csv2(coleo_year_tab_per_country, path = "./output/text/WOS_coleo_year_tab_per_country.csv", col_names = TRUE)
 write_csv2(lumbri_year_tab_per_country, path = "./output/text/WOS_lumbri_year_tab_per_country.csv", col_names = TRUE)
 write_csv2(papilio_year_tab_per_country, path = "./output/text/WOS_papilio_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(sponge_year_tab_per_country, path = "./output/text/WOS_sponge_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(porifera_year_tab_per_country, path = "./output/text/WOS_porifera_year_tab_per_country.csv", col_names = TRUE)
 write_csv2(crusta_year_tab_per_country, path = "./output/text/WOS_crusta_year_tab_per_country.csv", col_names = TRUE)
 write_csv2(fish_year_tab_per_country, path = "./output/text/WOS_fish_year_tab_per_country.csv", col_names = TRUE)
 write_csv2(tree_year_tab_per_country, path = "./output/text/WOS_tree_year_tab_per_country.csv", col_names = TRUE)
@@ -274,7 +274,7 @@ mammal_year_tab_per_country_acc <- table_accumulate(year_tab = mammal_year_tab_p
 coleo_year_tab_per_country_acc <- table_accumulate(year_tab = coleo_year_tab_per_country, first_column = 2)
 lumbri_year_tab_per_country_acc <- table_accumulate(year_tab = lumbri_year_tab_per_country, first_column = 2)
 papilio_year_tab_per_country_acc <- table_accumulate(year_tab = papilio_year_tab_per_country, first_column = 2)
-sponge_year_tab_per_country_acc <- table_accumulate(year_tab = sponge_year_tab_per_country, first_column = 2)
+porifera_year_tab_per_country_acc <- table_accumulate(year_tab = porifera_year_tab_per_country, first_column = 2)
 crusta_year_tab_per_country_acc <- table_accumulate(year_tab = crusta_year_tab_per_country, first_column = 2)
 fish_year_tab_per_country_acc <- table_accumulate(year_tab = fish_year_tab_per_country, first_column = 2)
 tree_year_tab_per_country_acc <- table_accumulate(year_tab = tree_year_tab_per_country, first_column = 2)
@@ -289,7 +289,7 @@ write_csv2(mammal_year_tab_per_country_acc, path = "./output/text/WOS_mammal_yea
 write_csv2(coleo_year_tab_per_country_acc, path = "./output/text/WOS_coleo_year_tab_per_country_acc.csv", col_names = TRUE)
 write_csv2(lumbri_year_tab_per_country_acc, path = "./output/text/WOS_lumbri_year_tab_per_country_acc.csv", col_names = TRUE)
 write_csv2(papilio_year_tab_per_country_acc, path = "./output/text/WOS_papilio_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(sponge_year_tab_per_country_acc, path = "./output/text/WOS_sponge_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(porifera_year_tab_per_country_acc, path = "./output/text/WOS_porifera_year_tab_per_country_acc.csv", col_names = TRUE)
 write_csv2(crusta_year_tab_per_country_acc, path = "./output/text/WOS_crusta_year_tab_per_country_acc.csv", col_names = TRUE)
 write_csv2(fish_year_tab_per_country_acc, path = "./output/text/WOS_fish_year_tab_per_country_acc.csv", col_names = TRUE)
 write_csv2(tree_year_tab_per_country_acc, path = "./output/text/WOS_tree_year_tab_per_country_acc.csv", col_names = TRUE)
@@ -361,7 +361,7 @@ rept_loc_df <- subset(wos_data_div, wos_data_div$reptile == "reptile")
 bird_loc_df <- subset(wos_data_div, wos_data_div$bird == "bird")
 mammal_loc_df <- subset(wos_data_div, wos_data_div$mammal == "mammal")
 fish_loc_df <- subset(wos_data_div, wos_data_div$fish == "fish")
-sponge_loc_df <- subset(wos_data_div, wos_data_div$sponge == "sponge")
+porifera_loc_df <- subset(wos_data_div, wos_data_div$porifera == "porifera")
 crusta_loc_df <- subset(wos_data_div, wos_data_div$crustacea == "crustacea")
 coleo_loc_df <- subset(wos_data_div, wos_data_div$coleoptera == "coleoptera")
 papilio_loc_df <- subset(wos_data_div, wos_data_div$papilionoidea == "papilionoidea")
@@ -378,7 +378,7 @@ mammal_article_loc_tab <- mammal_loc_df %>% group_by(fieldwork_country, author_l
 coleo_article_loc_tab <- coleo_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 lumbri_article_loc_tab <- lumbri_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 papilio_article_loc_tab <- papilio_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
-sponge_article_loc_tab <- sponge_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
+porifera_article_loc_tab <- porifera_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 crusta_article_loc_tab <- crusta_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 fish_article_loc_tab <- fish_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 tree_article_loc_tab <- tree_loc_df %>% group_by(fieldwork_country, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
@@ -394,7 +394,7 @@ coleo_article_loc_tab <- cbind(coleo_article_loc_tab, n_articles = coleo_article
 papilio_article_loc_tab <- cbind(papilio_article_loc_tab, n_articles = papilio_article_loc_tab$from_country + papilio_article_loc_tab$inside_med + papilio_article_loc_tab$outside_med + papilio_article_loc_tab$`(Missing)`)
 lumbri_article_loc_tab <- cbind(lumbri_article_loc_tab, n_articles = lumbri_article_loc_tab$from_country + lumbri_article_loc_tab$inside_med + lumbri_article_loc_tab$outside_med + lumbri_article_loc_tab$`(Missing)`)
 fish_article_loc_tab <- cbind(fish_article_loc_tab, n_articles = fish_article_loc_tab$from_country + fish_article_loc_tab$inside_med + fish_article_loc_tab$outside_med + fish_article_loc_tab$`(Missing)`)
-sponge_article_loc_tab <- cbind(sponge_article_loc_tab, n_articles = sponge_article_loc_tab$from_country + sponge_article_loc_tab$inside_med + sponge_article_loc_tab$outside_med + sponge_article_loc_tab$`(Missing)`)
+porifera_article_loc_tab <- cbind(porifera_article_loc_tab, n_articles = porifera_article_loc_tab$from_country + porifera_article_loc_tab$inside_med + porifera_article_loc_tab$outside_med + porifera_article_loc_tab$`(Missing)`)
 crusta_article_loc_tab <- cbind(crusta_article_loc_tab, n_articles = crusta_article_loc_tab$from_country + crusta_article_loc_tab$inside_med + crusta_article_loc_tab$outside_med + crusta_article_loc_tab$`(Missing)`)
 tree_article_loc_tab <- cbind(tree_article_loc_tab, n_articles = tree_article_loc_tab$from_country + tree_article_loc_tab$inside_med + tree_article_loc_tab$outside_med + tree_article_loc_tab$`(Missing)`)
 
@@ -409,7 +409,7 @@ coleo_article_loc_tab <- subset(coleo_article_loc_tab, coleo_article_loc_tab$fie
 papilio_article_loc_tab <- subset(papilio_article_loc_tab, papilio_article_loc_tab$fieldwork_country != "Macedonia")
 lumbri_article_loc_tab <- subset(lumbri_article_loc_tab, lumbri_article_loc_tab$fieldwork_country != "Macedonia")
 fish_article_loc_tab <- subset(fish_article_loc_tab, fish_article_loc_tab$fieldwork_country != "Macedonia")
-sponge_article_loc_tab <- subset(sponge_article_loc_tab, sponge_article_loc_tab$fieldwork_country != "Macedonia")
+porifera_article_loc_tab <- subset(porifera_article_loc_tab, porifera_article_loc_tab$fieldwork_country != "Macedonia")
 crusta_article_loc_tab <- subset(crusta_article_loc_tab, crusta_article_loc_tab$fieldwork_country != "Macedonia")
 tree_article_loc_tab <- subset(tree_article_loc_tab, tree_article_loc_tab$fieldwork_country != "Macedonia")
 
@@ -423,7 +423,7 @@ write_csv2(mammal_article_loc_tab, path = "./output/text/WOS_mammal_article_loc_
 write_csv2(coleo_article_loc_tab, path = "./output/text/WOS_coleo_article_loc_tab.csv", col_names = TRUE)
 write_csv2(lumbri_article_loc_tab, path = "./output/text/WOS_lumbri_article_loc_tab.csv", col_names = TRUE)
 write_csv2(papilio_article_loc_tab, path = "./output/text/WOS_papilio_article_loc_tab.csv", col_names = TRUE)
-write_csv2(sponge_article_loc_tab, path = "./output/text/WOS_sponge_article_loc_tab.csv", col_names = TRUE)
+write_csv2(porifera_article_loc_tab, path = "./output/text/WOS_porifera_article_loc_tab.csv", col_names = TRUE)
 write_csv2(crusta_article_loc_tab, path = "./output/text/WOS_crusta_article_loc_tab.csv", col_names = TRUE)
 write_csv2(fish_article_loc_tab, path = "./output/text/WOS_fish_article_loc_tab.csv", col_names = TRUE)
 write_csv2(tree_article_loc_tab, path = "./output/text/WOS_tree_article_loc_tab.csv", col_names = TRUE)
@@ -441,7 +441,7 @@ rept_journals_df <- subset(wos_data_journals, wos_data_journals$reptile == "rept
 bird_journals_df <- subset(wos_data_journals, wos_data_journals$bird == "bird")
 mammal_journals_df <- subset(wos_data_journals, wos_data_journals$mammal == "mammal")
 fish_journals_df <- subset(wos_data_journals, wos_data_journals$fish == "fish")
-sponge_journals_df <- subset(wos_data_journals, wos_data_journals$sponge == "sponge")
+porifera_journals_df <- subset(wos_data_journals, wos_data_journals$porifera == "porifera")
 crusta_journals_df <- subset(wos_data_journals, wos_data_journals$crustacea == "crustacea")
 coleo_journals_df <- subset(wos_data_journals, wos_data_journals$coleoptera == "coleoptera")
 papilio_journals_df <- subset(wos_data_journals, wos_data_journals$papilionoidea == "papilionoidea")
@@ -460,7 +460,7 @@ taxa_journals_table$tot_n_journals <- c(length(unique(plant_journals_df$publishe
                                         length(unique(bird_journals_df$publisher)),
                                         length(unique(mammal_journals_df$publisher)),
                                         length(unique(fish_journals_df$publisher)),
-                                        length(unique(sponge_journals_df$publisher)),
+                                        length(unique(porifera_journals_df$publisher)),
                                         length(unique(crusta_journals_df$publisher)),
                                         length(unique(coleo_journals_df$publisher)),
                                         length(unique(papilio_journals_df$publisher)),
@@ -476,7 +476,7 @@ taxa_journals_table$tot_articles <- c(length(plant_journals_df$access_num),
                                         length(bird_journals_df$access_num),
                                         length(mammal_journals_df$access_num),
                                         length(fish_journals_df$access_num),
-                                        length(sponge_journals_df$access_num),
+                                        length(porifera_journals_df$access_num),
                                         length(crusta_journals_df$access_num),
                                         length(coleo_journals_df$access_num),
                                         length(papilio_journals_df$access_num),
@@ -494,7 +494,7 @@ taxa_journals_table[which(taxa_journals_table$taxa == "reptile"),5:(4+length(yea
 taxa_journals_table[which(taxa_journals_table$taxa == "bird"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = bird_journals_df)
 taxa_journals_table[which(taxa_journals_table$taxa == "mammal"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = mammal_journals_df)
 taxa_journals_table[which(taxa_journals_table$taxa == "fish"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = fish_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "sponge"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = sponge_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "porifera"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = porifera_journals_df)
 taxa_journals_table[which(taxa_journals_table$taxa == "crustacea"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = crusta_journals_df)
 taxa_journals_table[which(taxa_journals_table$taxa == "coleoptera"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = coleo_journals_df)
 taxa_journals_table[which(taxa_journals_table$taxa == "papilionoidea"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = papilio_journals_df)
@@ -548,16 +548,16 @@ wos_data_div_marine$marine_region <- fct_explicit_na(wos_data_div_marine$marine_
 
 # sub data frames per taxa
 fish_region_df <- subset(wos_data_div_marine, wos_data_div_marine$fish == "fish")
-sponge_region_df <- subset(wos_data_div_marine, wos_data_div_marine$sponge == "sponge")
+porifera_region_df <- subset(wos_data_div_marine, wos_data_div_marine$porifera == "porifera")
 crusta_region_df <- subset(wos_data_div_marine, wos_data_div_marine$crustacea == "crustacea")
 
 # number of articles per region
 # initiaze table
-taxa_region_table <- setNames(data.frame(matrix(ncol = 3, nrow = length(region_list)+1)), c("fish", "sponge", "crustacea"))
+taxa_region_table <- setNames(data.frame(matrix(ncol = 3, nrow = length(region_list)+1)), c("fish", "porifera", "crustacea"))
 
 # number of articles per region
 taxa_region_table[,1] <- as.data.frame(table(fish_region_df$marine_region))$Freq
-taxa_region_table[,2] <- as.data.frame(table(sponge_region_df$marine_region))$Freq
+taxa_region_table[,2] <- as.data.frame(table(porifera_region_df$marine_region))$Freq
 taxa_region_table[,3] <- as.data.frame(table(crusta_region_df$marine_region))$Freq
 
 # bind region name column
@@ -570,22 +570,22 @@ write_csv2(taxa_region_table, path = "./output/text/WOS_recap_articles_per_marin
 ### number of articles per year per marine region for each taxa (l.236)
 # region/year contingency table
 fish_year_tab_per_region <- fish_region_df %>% group_by(marine_region, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
-sponge_year_tab_per_region <- sponge_region_df %>% group_by(marine_region, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
+porifera_year_tab_per_region <- porifera_region_df %>% group_by(marine_region, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 crusta_year_tab_per_region <- crusta_region_df %>% group_by(marine_region, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 
 # save tables
 write_csv2(fish_year_tab_per_region, path = "./output/text/WOS_fish_year_tab_per_region.csv", col_names = TRUE)
-write_csv2(sponge_year_tab_per_region, path = "./output/text/WOS_sponge_year_tab_per_region.csv", col_names = TRUE)
+write_csv2(porifera_year_tab_per_region, path = "./output/text/WOS_porifera_year_tab_per_region.csv", col_names = TRUE)
 write_csv2(crusta_year_tab_per_region, path = "./output/text/WOS_crusta_year_tab_per_region.csv", col_names = TRUE)
 
 # passing from raw counts to accumulation tables
 fish_year_tab_per_region_acc <- table_accumulate(year_tab = fish_year_tab_per_region, first_column = 2)
-sponge_year_tab_per_region_acc <- table_accumulate(year_tab = sponge_year_tab_per_region, first_column = 2)
+porifera_year_tab_per_region_acc <- table_accumulate(year_tab = porifera_year_tab_per_region, first_column = 2)
 crusta_year_tab_per_region_acc <- table_accumulate(year_tab = crusta_year_tab_per_region, first_column = 2)
 
 # save tables
 write_csv2(fish_year_tab_per_region_acc, path = "./output/text/WOS_fish_year_tab_per_region_acc.csv", col_names = TRUE)
-write_csv2(sponge_year_tab_per_region_acc, path = "./output/text/WOS_sponge_year_tab_per_region_acc.csv", col_names = TRUE)
+write_csv2(porifera_year_tab_per_region_acc, path = "./output/text/WOS_porifera_year_tab_per_region_acc.csv", col_names = TRUE)
 write_csv2(crusta_year_tab_per_region_acc, path = "./output/text/WOS_crusta_year_tab_per_region_acc.csv", col_names = TRUE)
 
 
@@ -641,21 +641,21 @@ wos_data_div_marine$author_loc <- fct_explicit_na(wos_data_div_marine$author_loc
 
 # sub data frames per taxa
 fish_loc_df <- subset(wos_data_div_marine, wos_data_div_marine$fish == "fish")
-sponge_loc_df <- subset(wos_data_div_marine, wos_data_div_marine$sponge == "sponge")
+porifera_loc_df <- subset(wos_data_div_marine, wos_data_div_marine$porifera == "porifera")
 crusta_loc_df <- subset(wos_data_div_marine, wos_data_div_marine$crustacea == "crustacea")
 
 # make recap tables
-sponge_article_loc_tab <- sponge_loc_df %>% group_by(marine_region, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
+porifera_article_loc_tab <- porifera_loc_df %>% group_by(marine_region, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 crusta_article_loc_tab <- crusta_loc_df %>% group_by(marine_region, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 fish_article_loc_tab <- fish_loc_df %>% group_by(marine_region, author_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = author_loc, values_from = n)
 
 # add column with total number of sequences
 fish_article_loc_tab <- cbind(fish_article_loc_tab, n_articles = fish_article_loc_tab$inside_med + fish_article_loc_tab$outside_med + fish_article_loc_tab$`(Missing)`)
-sponge_article_loc_tab <- cbind(sponge_article_loc_tab, n_articles = sponge_article_loc_tab$inside_med + sponge_article_loc_tab$outside_med + sponge_article_loc_tab$`(Missing)`)
+porifera_article_loc_tab <- cbind(porifera_article_loc_tab, n_articles = porifera_article_loc_tab$inside_med + porifera_article_loc_tab$outside_med + porifera_article_loc_tab$`(Missing)`)
 crusta_article_loc_tab <- cbind(crusta_article_loc_tab, n_articles = crusta_article_loc_tab$inside_med + crusta_article_loc_tab$outside_med + crusta_article_loc_tab$`(Missing)`)
 
 # save tables
-write_csv2(sponge_article_loc_tab, path = "./output/text/WOS_sponge_article_loc_tab.csv", col_names = TRUE)
+write_csv2(porifera_article_loc_tab, path = "./output/text/WOS_porifera_article_loc_tab.csv", col_names = TRUE)
 write_csv2(crusta_article_loc_tab, path = "./output/text/WOS_crusta_article_loc_tab.csv", col_names = TRUE)
 write_csv2(fish_article_loc_tab, path = "./output/text/WOS_fish_article_loc_tab.csv", col_names = TRUE)
 

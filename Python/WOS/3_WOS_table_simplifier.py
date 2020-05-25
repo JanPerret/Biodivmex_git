@@ -202,15 +202,15 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 	fish_length = len(fish_names)
 	fish = ""
 
-	# loading the SPONGE species name list
-	sponge = open("name_list_sponge_WPDB_v3_with_synonyms_marine_province_Grenier2018_and_keywords.txt", "r")
-	sponge_line = []
-	sponge_names = []
-	for line in sponge:
-		sponge_line = line
-		sponge_names.append(" " + sponge_line.lower().replace('\n','') + " ")
-	sponge_length = len(sponge_names)
-	sponge = ""
+	# loading the PORIFERA species name list
+	porifera = open("name_list_porifera_WPDB_v3_with_synonyms_marine_province_Grenier2018_and_keywords.txt", "r")
+	porifera_line = []
+	porifera_names = []
+	for line in porifera:
+		porifera_line = line
+		porifera_names.append(" " + porifera_line.lower().replace('\n','') + " ")
+	porifera_length = len(porifera_names)
+	porifera = ""
 
 	# loading the CRUSTACEA species name list
 	crustacea = open("name_list_crustacea_v4_WoRMS_IHO_sea_area_with_keywords.txt", "r")
@@ -271,7 +271,7 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 	mammal = ""
 	marine_mammal = ""
 	fish = ""
-	sponge = ""
+	porifera = ""
 	crustacea = ""
 	plant = ""
 	fungi = ""
@@ -443,13 +443,13 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 					fish += ' ' + name_final
 					fish = fish.strip()
 					
-		for n in range(0,sponge_length):
-			name = sponge_names[n]
-			name_final = "sponge"
+		for n in range(0,porifera_length):
+			name = porifera_names[n]
+			name_final = "porifera"
 			if name in search_mix:
-				if not name_final in sponge:
-					sponge += ' ' + name_final
-					sponge = sponge.strip()
+				if not name_final in porifera:
+					porifera += ' ' + name_final
+					porifera = porifera.strip()
 
 		for n in range(0,crustacea_length):
 			name = crustacea_names[n]
@@ -515,7 +515,7 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 								tree = tree.strip()
 
 
-		ref_infos = access_num+','+language+','+doc_type+','+publisher+','+year+','+author_nationality_tot+','+fw_country_tot+','+marine_region_tot+','+outside_med+','+plant+','+fungi+','+amphibian+','+reptile+','+bird+','+mammal+','+fish+','+sponge+','+crustacea+','+coleoptera+','+papilionoidea+','+lumbricina+','+tree
+		ref_infos = access_num+','+language+','+doc_type+','+publisher+','+year+','+author_nationality_tot+','+fw_country_tot+','+marine_region_tot+','+outside_med+','+plant+','+fungi+','+amphibian+','+reptile+','+bird+','+mammal+','+fish+','+porifera+','+crustacea+','+coleoptera+','+papilionoidea+','+lumbricina+','+tree
 
 		doc_type = ""
 		language = ""
@@ -546,7 +546,7 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 		mammal = ""
 		marine_mammal = ""
 		fish = ""
-		sponge = ""
+		porifera = ""
 		crustacea = ""
 		plant = ""
 		fungi = ""
@@ -560,7 +560,7 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 
 output_table = open('TEST_SIMPLE_v15_'+table_file_name,'w') # opening a file to write the output
 # write the column headers
-output_table.write('access_num'+','+'language'+','+'doc_type'+','+'publisher'+','+'year'+','+'author_nationality'+','+'fieldwork_country'+','+'marine_region'+','+'outside_med'+','+'plant'+','+'fungi'+','+'amphibian'+','+'reptile'+','+'bird'+','+'mammal'+','+'fish'+','+'sponge'+','+'crustacea'+','+'coleoptera'+','+'papilionoidea'+','+'lumbricina'+','+'tree')
+output_table.write('access_num'+','+'language'+','+'doc_type'+','+'publisher'+','+'year'+','+'author_nationality'+','+'fieldwork_country'+','+'marine_region'+','+'outside_med'+','+'plant'+','+'fungi'+','+'amphibian'+','+'reptile'+','+'bird'+','+'mammal'+','+'fish'+','+'porifera'+','+'crustacea'+','+'coleoptera'+','+'papilionoidea'+','+'lumbricina'+','+'tree')
 Simple_WOS_table_maker(table_file_name, output_table)
 output_table.close()
 

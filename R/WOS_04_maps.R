@@ -23,7 +23,7 @@
 # tree_article_loc_tab
 
 # fish_article_loc_tab
-# sponge_article_loc_tab
+# porifera_article_loc_tab
 # crusta_article_loc_tab
 
 ### and general informations for each taxa are in the following data frame :
@@ -38,7 +38,7 @@ rept_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = 
 bird_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "bird")
 mammal_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "mammal")
 fish_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "fish")
-sponge_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "sponge")
+porifera_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "porifera")
 crusta_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "crustacea")
 coleo_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "coleoptera")
 papilio_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = "papilionoidea")
@@ -249,7 +249,7 @@ marine_region_centroids <- read_csv2("./data/marine_region_centroid_for_maps.csv
 
 # make the maps
 fish_result_map <- WOS_map_number_articles_marine(locality_table = fish_article_loc_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
-sponge_result_map <- WOS_map_number_articles_marine(locality_table = sponge_article_loc_tab, subtitle_text = sponge_subtitle, taxa_name = "Porifera")
+porifera_result_map <- WOS_map_number_articles_marine(locality_table = porifera_article_loc_tab, subtitle_text = porifera_subtitle, taxa_name = "Porifera")
 crusta_result_map <- WOS_map_number_articles_marine(locality_table = crusta_article_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
 
 
@@ -264,13 +264,13 @@ print(fish_result_map, vp = vplayout(1:12, 1:12))
 print(legend_pie_2_categories, vp = vplayout(9, 12))
 dev.off()
 
-# sponge
-file_path = "./output/plots/WOS_map_sponge.pdf"
+# porifera
+file_path = "./output/plots/WOS_map_porifera.pdf"
 pdf(file=file_path, width = 20, height = 12)
 grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
-print(sponge_result_map, vp = vplayout(1:12, 1:12))
+print(porifera_result_map, vp = vplayout(1:12, 1:12))
 print(legend_pie_2_categories, vp = vplayout(9, 12))
 dev.off()
 

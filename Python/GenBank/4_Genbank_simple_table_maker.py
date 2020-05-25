@@ -109,15 +109,15 @@ def Simple_table_maker(table_file_name, output_table):
 	fish_length = len(fish_names)
 	fish = ""
 
-	# loading the SPONGE species name list
-	sponge = open("name_list_sponge_WPDB_v3_with_synonyms_marine_province_Grenier2018_without_keywords.txt", "r")
-	sponge_line = []
-	sponge_names = []
-	for line in sponge:
-		sponge_line = line
-		sponge_names.append(" " + sponge_line.lower().replace('\n','') + " ")
-	sponge_length = len(sponge_names)
-	sponge = ""
+	# loading the porifera species name list
+	porifera = open("name_list_porifera_WPDB_v3_with_synonyms_marine_province_Grenier2018_without_keywords.txt", "r")
+	porifera_line = []
+	porifera_names = []
+	for line in porifera:
+		porifera_line = line
+		porifera_names.append(" " + porifera_line.lower().replace('\n','') + " ")
+	porifera_length = len(porifera_names)
+	porifera = ""
 
 	# loading the CRUSTACEA species name list
 	crustacea = open("name_list_crustacea_v4_WoRMS_IHO_sea_area.txt", "r")
@@ -314,14 +314,16 @@ def Simple_table_maker(table_file_name, output_table):
 			elif "Embryophyta;" in organism:
 				taxa = "Terrestrial plant"
 			elif "Porifera;" in organism:
-				taxa = "Sponge"
+				taxa = "Porifera"
 			elif "Crustacea;" in organism:
 				taxa = "Crustacea"
 			elif "Chondrichthyes;" in organism: # cartilaginous fishes
 				taxa = "Fish"
 			elif "Actinopterygii;" in organism: # ray-finned fishes (included in the Osteichthyes, or "bony fishes")
 				taxa = "Fish"
-			elif "Sarcopterygii;" in organism: # lobe-finned fishes (included in the Osteichthyes, or "bony fishes")
+			elif "Dipnoi;" in organism: # lungfishes fishes (included in the Osteichthyes, or "bony fishes")
+				taxa = "Fish"
+			elif "Coelacanthimorpha;" in organism: # coelacanths
 				taxa = "Fish"
 		
 		if organism: # separate condition from the precedent in order to replace taxa="Mammal" by taxa="Marine mammal" if the sequence comes from a marine mammal
@@ -337,7 +339,7 @@ def Simple_table_maker(table_file_name, output_table):
 				taxa = "Marine mammal"
 		
 		# To eliminate the sequences collected in the Red Sea for marine taxa
-		if taxa == "Sponge" or taxa == "Crustacea" or taxa == "Fish":
+		if taxa == "Porifera" or taxa == "Crustacea" or taxa == "Fish":
 			if supp_geo_infos:
 				supp_geo_infos_search = supp_geo_infos.lower()
 				supp_geo_infos_search = supp_geo_infos_search.replace("."," ").replace(","," ").replace(";"," ").replace(":"," ").replace("'"," ").replace("("," ").replace(")"," ").replace("-"," ").replace("_"," ")
@@ -361,14 +363,14 @@ def Simple_table_maker(table_file_name, output_table):
 							fish += ' ' + name_final
 							fish = fish.strip()
 			
-			if taxa == "Sponge":
-				for n in range(0,sponge_length):
-					name = sponge_names[n]
-					name_final = "sponge"
+			if taxa == "Porifera":
+				for n in range(0,porifera_length):
+					name = porifera_names[n]
+					name_final = "porifera"
 					if name in species_search:
-						if not name_final in sponge:
-							sponge += ' ' + name_final
-							sponge = sponge.strip()
+						if not name_final in porifera:
+							porifera += ' ' + name_final
+							porifera = porifera.strip()
 			
 			if taxa == "Crustacea":
 				for n in range(0,crustacea_length):
@@ -437,7 +439,7 @@ def Simple_table_maker(table_file_name, output_table):
 
 
 
-		ref_infos = access_num+','+mol_type+','+taxa+','+species+','+gene+','+year+','+sequencer_nationality+','+country+','+supp_geo_infos+','+species_level+','+fish+','+sponge+','+crustacea+','+tree
+		ref_infos = access_num+','+mol_type+','+taxa+','+species+','+gene+','+year+','+sequencer_nationality+','+country+','+supp_geo_infos+','+species_level+','+fish+','+porifera+','+crustacea+','+tree
 		
 		access_num = ""
 		mol_type = ""
@@ -459,7 +461,7 @@ def Simple_table_maker(table_file_name, output_table):
 		
 		####################################
 		fish = ""
-		sponge = ""
+		porifera = ""
 		crustacea = ""
 		tree = ""
 		
@@ -468,7 +470,7 @@ def Simple_table_maker(table_file_name, output_table):
 
 
 output_table = open('TEST_v11_SIMPLE_'+table_file_name,'w') # opening a file to write the output
-output_table.write('access_num'+','+'mol_type'+','+'taxa'+','+'species'+','+'gene'+','+'year'+','+'sequencer_nationality'+','+'sample_origin'+','+'supp_origin_infos'+','+'species_level'+','+'fish'+','+'sponge'+','+'crustacea'+','+'tree')
+output_table.write('access_num'+','+'mol_type'+','+'taxa'+','+'species'+','+'gene'+','+'year'+','+'sequencer_nationality'+','+'sample_origin'+','+'supp_origin_infos'+','+'species_level'+','+'fish'+','+'porifera'+','+'crustacea'+','+'tree')
 Simple_table_maker(table_file_name, output_table)
 output_table.close()
 

@@ -27,7 +27,7 @@ wos_data <- read_delim("./data/TEST_SIMPLE_v15_RESULT_WOS_files_merged.csv", del
                             bird = col_character(),
                             mammal = col_character(),
                             fish = col_character(),
-                            sponge = col_character(),
+                            porifera = col_character(),
                             crustacea = col_character(),
                             coleoptera = col_character(),
                             papilionoidea = col_character(),
@@ -274,10 +274,10 @@ wos_data %>% count(fish, sort = TRUE) %>% print(n=50)
 # 1 NA    59147
 # 2 fish   3934
 
-# sponge
-wos_data %>% count(sponge, sort = TRUE) %>% print(n=50)
+# porifera
+wos_data %>% count(porifera, sort = TRUE) %>% print(n=50)
 # 1 NA     62462
-# 2 sponge   619
+# 2 porifera   619
 
 # crustacea
 wos_data %>% count(crustacea, sort = TRUE) %>% print(n=50)
@@ -291,7 +291,7 @@ wos_data %>% count(crustacea, sort = TRUE) %>% print(n=50)
 
 # count marine taxa and marine regions
 wos_data %>% count(marine_region, fish, sort = TRUE) %>% print(n=50)
-wos_data %>% count(marine_region, sponge, sort = TRUE) %>% print(n=50)
+wos_data %>% count(marine_region, porifera, sort = TRUE) %>% print(n=50)
 wos_data %>% count(marine_region, crustacea, sort = TRUE) %>% print(n=50)
 # seems good
 

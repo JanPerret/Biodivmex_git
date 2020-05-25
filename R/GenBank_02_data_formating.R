@@ -22,7 +22,7 @@ fungi_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_fungi_refere
                            supp_origin_infos = col_character(),
                            species_level = col_character(),
                            fish = col_character(),
-                           sponge = col_character(),
+                           porifera = col_character(),
                            crustacea = col_character(),
                            tree = col_character()
                          ))
@@ -40,7 +40,7 @@ plant_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_plant_refere
                            supp_origin_infos = col_character(),
                            species_level = col_character(),
                            fish = col_character(),
-                           sponge = col_character(),
+                           porifera = col_character(),
                            crustacea = col_character(),
                            tree = col_character()
                          ))
@@ -58,7 +58,7 @@ metazoa_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_animal_ref
                              supp_origin_infos = col_character(),
                              species_level = col_character(),
                              fish = col_character(),
-                             sponge = col_character(),
+                             porifera = col_character(),
                              crustacea = col_character(),
                              tree = col_character()
                            ))
@@ -70,9 +70,9 @@ med_countries_list <- med_countries_list$X1
 ### correct minor data errors
 # drop marine taxa columns for plants and fungi
 fungi_data <- fungi_data %>%
-  select(-fish, -sponge, -crustacea, -tree)
+  select(-fish, -porifera, -crustacea, -tree)
 plant_data <- plant_data %>%
-  select(-fish, -sponge, -crustacea)
+  select(-fish, -porifera, -crustacea)
 metazoa_data <- metazoa_data %>%
   select(-tree)
 
@@ -154,7 +154,7 @@ coleo_data <- metazoa_data %>% filter(taxa == "Coleoptera")
 papilio_data <- metazoa_data %>% filter(taxa == "Papilionoidea")
 lumbri_data <- metazoa_data %>% filter(taxa == "Lumbricina")
 fish_data <- metazoa_data_with_nuc %>% filter(taxa == "Fish")
-sponge_data <- metazoa_data_with_nuc %>% filter(taxa == "Sponge")
+porifera_data <- metazoa_data_with_nuc %>% filter(taxa == "porifera")
 crusta_data <- metazoa_data_with_nuc %>% filter(taxa == "Crustacea")
 
 # make a sub-data frame for each animal taxa in the MEDITERRANEAN BASIN
@@ -181,7 +181,7 @@ lumbri_data_med <- metazoa_data_med %>% filter(taxa == "Lumbricina")
 
 # for marine taxa we take sequences assignated to taxonomic group with mediterranean sea species list and not GenBank's taxonomical hierarchy
 fish_data_med <- metazoa_data_with_nuc_med %>% filter(fish == "fish")
-sponge_data_med <- metazoa_data_with_nuc_med %>% filter(sponge == "sponge")
+porifera_data_med <- metazoa_data_with_nuc_med %>% filter(porifera == "porifera")
 crusta_data_med <- metazoa_data_with_nuc_med %>% filter(crustacea == "crustacea")
 
 # same thing for trees (sequences assignation to this group is done with a species name list and not GenBank's taxonomical hierarchy)
@@ -198,14 +198,14 @@ coleo_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data
 papilio_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = papilio_data, taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
 lumbri_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data, taxa_data = lumbri_data, taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
 fish_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = fish_data, taxa_data_med = fish_data_med, taxa_name = "fish")
-sponge_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = sponge_data, taxa_data_med = sponge_data_med, taxa_name = "porifera")
+porifera_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = porifera_data, taxa_data_med = porifera_data_med, taxa_name = "porifera")
 crusta_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 tree_desc_tab <- GB_extract_general_info(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = tree_data_med, taxa_name = "tree")
 tree_desc_tab[,3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
 
 # make recap table
 all_taxa_desc_tab <- rbind(plant_desc_tab, fungi_desc_tab, amph_desc_tab, rept_desc_tab, bird_desc_tab, mammal_desc_tab,
-                           coleo_desc_tab, papilio_desc_tab, lumbri_desc_tab, fish_desc_tab, sponge_desc_tab, crusta_desc_tab,
+                           coleo_desc_tab, papilio_desc_tab, lumbri_desc_tab, fish_desc_tab, porifera_desc_tab, crusta_desc_tab,
                            tree_desc_tab)
 # save table
 write_csv2(all_taxa_desc_tab, path = "./output/text/GenBank_all_taxa_desc_tab.csv", col_names = TRUE)
@@ -222,7 +222,7 @@ coleo_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data
 papilio_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = papilio_data, taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
 lumbri_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data, taxa_data = lumbri_data, taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
 fish_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = fish_data, taxa_data_med = fish_data_med, taxa_name = "fish")
-sponge_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = sponge_data, taxa_data_med = sponge_data_med, taxa_name = "porifera")
+porifera_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = porifera_data, taxa_data_med = porifera_data_med, taxa_name = "porifera")
 crusta_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 tree_desc_year_tab <- GB_loop_over_years(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = tree_data_med, taxa_name = "tree")
 tree_desc_year_tab[,3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
@@ -238,7 +238,7 @@ write_csv2(coleo_desc_year_tab, path = "./output/text/GenBank_coleo_desc_year_ta
 write_csv2(papilio_desc_year_tab, path = "./output/text/GenBank_papilio_desc_year_tab.csv", col_names = TRUE)
 write_csv2(lumbri_desc_year_tab, path = "./output/text/GenBank_lumbri_desc_year_tab.csv", col_names = TRUE)
 write_csv2(fish_desc_year_tab, path = "./output/text/GenBank_fish_desc_year_tab.csv", col_names = TRUE)
-write_csv2(sponge_desc_year_tab, path = "./output/text/GenBank_sponge_desc_year_tab.csv", col_names = TRUE)
+write_csv2(porifera_desc_year_tab, path = "./output/text/GenBank_porifera_desc_year_tab.csv", col_names = TRUE)
 write_csv2(crusta_desc_year_tab, path = "./output/text/GenBank_crusta_desc_year_tab.csv", col_names = TRUE)
 write_csv2(tree_desc_year_tab, path = "./output/text/GenBank_tree_desc_year_tab.csv", col_names = TRUE)
 
@@ -259,7 +259,7 @@ all_taxa_year_tab <- rbind(plant_desc_year_tab$n_seq_med,
                            papilio_desc_year_tab$n_seq_med,
                            lumbri_desc_year_tab$n_seq_med,
                            fish_desc_year_tab$n_seq_med,
-                           sponge_desc_year_tab$n_seq_med,
+                           porifera_desc_year_tab$n_seq_med,
                            crusta_desc_year_tab$n_seq_med,
                            tree_desc_year_tab$n_seq_med
                            )
@@ -270,7 +270,7 @@ colnames(all_taxa_year_tab) <- c(as.character(paste0(year_list)))
 all_taxa_year_tab_acc <- table_accumulate(year_tab = all_taxa_year_tab, first_column = 2)
 
 # bind taxa names column to the tables
-taxa_vect <- c("plant", "fungi", "amphibian", "reptile", "bird", "mammal", "coleoptera", "papilionoidea", "lumbricina", "fish", "sponge", "crustacea", "tree")
+taxa_vect <- c("plant", "fungi", "amphibian", "reptile", "bird", "mammal", "coleoptera", "papilionoidea", "lumbricina", "fish", "porifera", "crustacea", "tree")
 all_taxa_year_tab <- cbind(taxa = taxa_vect, all_taxa_year_tab)
 all_taxa_year_tab <- as.data.frame(all_taxa_year_tab)
 all_taxa_year_tab_acc <- cbind(taxa = taxa_vect, all_taxa_year_tab_acc)
@@ -297,13 +297,13 @@ coleo_gene_tab <- GB_extract_gene(taxa_data_med = coleo_data_med, taxa_name = "c
 papilio_gene_tab <- GB_extract_gene(taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
 lumbri_gene_tab <- GB_extract_gene(taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
 fish_gene_tab <- GB_extract_gene(taxa_data_med = fish_data_med, taxa_name = "fish")
-sponge_gene_tab <- GB_extract_gene(taxa_data_med = sponge_data_med, taxa_name = "porifera")
+porifera_gene_tab <- GB_extract_gene(taxa_data_med = porifera_data_med, taxa_name = "porifera")
 crusta_gene_tab <- GB_extract_gene(taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 tree_gene_tab <- GB_extract_gene(taxa_data_med = tree_data_med, taxa_name = "tree")
 
 # make recap table in effectives
 all_taxa_gene_tab <- rbind(plant_gene_tab, fungi_gene_tab, amph_gene_tab, rept_gene_tab, bird_gene_tab, mammal_gene_tab,
-                           coleo_gene_tab, papilio_gene_tab, lumbri_gene_tab, fish_gene_tab, sponge_gene_tab, crusta_gene_tab,
+                           coleo_gene_tab, papilio_gene_tab, lumbri_gene_tab, fish_gene_tab, porifera_gene_tab, crusta_gene_tab,
                            tree_gene_tab)
 
 # recap table in percentage
@@ -327,7 +327,7 @@ coleo_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = coleo_data_
 papilio_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
 lumbri_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
 fish_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = fish_data_med, taxa_name = "fish")
-sponge_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = sponge_data_med, taxa_name = "porifera")
+porifera_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = porifera_data_med, taxa_name = "porifera")
 crusta_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 tree_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = tree_data_med, taxa_name = "tree")
 
@@ -342,7 +342,7 @@ write_csv2(coleo_gene_year_tab, path = "./output/text/GenBank_coleo_gene_year_ta
 write_csv2(papilio_gene_year_tab, path = "./output/text/GenBank_papilio_gene_year_tab.csv", col_names = TRUE)
 write_csv2(lumbri_gene_year_tab, path = "./output/text/GenBank_lumbri_gene_year_tab.csv", col_names = TRUE)
 write_csv2(fish_gene_year_tab, path = "./output/text/GenBank_fish_gene_year_tab.csv", col_names = TRUE)
-write_csv2(sponge_gene_year_tab, path = "./output/text/GenBank_sponge_gene_year_tab.csv", col_names = TRUE)
+write_csv2(porifera_gene_year_tab, path = "./output/text/GenBank_porifera_gene_year_tab.csv", col_names = TRUE)
 write_csv2(crusta_gene_year_tab, path = "./output/text/GenBank_crusta_gene_year_tab.csv", col_names = TRUE)
 write_csv2(tree_gene_year_tab, path = "./output/text/GenBank_tree_gene_year_tab.csv", col_names = TRUE)
 
@@ -355,11 +355,11 @@ fish_data_med$sample_origin[fish_data_med$sample_origin == "Crete"] <- "Greece"
 fish_data_med$sample_origin[fish_data_med$sample_origin == "Sardinia"] <- "Italy"
 fish_data_med$sample_origin[fish_data_med$sample_origin == "Sicily"] <- "Italy"
 
-sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Balearic Islands"] <- "Spain"
-sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Corsica"] <- "France"
-sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Crete"] <- "Greece"
-sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Sardinia"] <- "Italy"
-sponge_data_med$sample_origin[sponge_data_med$sample_origin == "Sicily"] <- "Italy"
+porifera_data_med$sample_origin[porifera_data_med$sample_origin == "Balearic Islands"] <- "Spain"
+porifera_data_med$sample_origin[porifera_data_med$sample_origin == "Corsica"] <- "France"
+porifera_data_med$sample_origin[porifera_data_med$sample_origin == "Crete"] <- "Greece"
+porifera_data_med$sample_origin[porifera_data_med$sample_origin == "Sardinia"] <- "Italy"
+porifera_data_med$sample_origin[porifera_data_med$sample_origin == "Sicily"] <- "Italy"
 
 crusta_data_med$sample_origin[crusta_data_med$sample_origin == "Balearic Islands"] <- "Spain"
 crusta_data_med$sample_origin[crusta_data_med$sample_origin == "Corsica"] <- "France"
@@ -370,7 +370,7 @@ crusta_data_med$sample_origin[crusta_data_med$sample_origin == "Sicily"] <- "Ita
 # for marine taxa remove countries without any part of their ZEE in the med sea and the islands
 countries_to_remove <- c("Bosnia and Herzegovina", "Palestine", "Portugal")
 fish_data_med <- fish_data_med %>% filter(!sample_origin %in% countries_to_remove)
-sponge_data_med <- sponge_data_med %>% filter(!sample_origin %in% countries_to_remove)
+porifera_data_med <- porifera_data_med %>% filter(!sample_origin %in% countries_to_remove)
 crusta_data_med <- crusta_data_med %>% filter(!sample_origin %in% countries_to_remove)
 
 # fix sample_origin factor levels for all taxa and give an explicit factor level to missing values to ensure that they appear in summaries and plots
@@ -402,8 +402,8 @@ lumbri_data_med$sample_origin <- factor(lumbri_data_med$sample_origin, levels = 
 lumbri_data_med$sequencer_loc <- fct_explicit_na(lumbri_data_med$sequencer_loc)
 fish_data_med$sample_origin <- factor(fish_data_med$sample_origin, levels = sample_origin_med_levels_marine_taxa, ordered = FALSE)
 fish_data_med$sequencer_loc <- fct_explicit_na(fish_data_med$sequencer_loc)
-sponge_data_med$sample_origin <- factor(sponge_data_med$sample_origin, levels = sample_origin_med_levels_marine_taxa, ordered = FALSE)
-sponge_data_med$sequencer_loc <- fct_explicit_na(sponge_data_med$sequencer_loc)
+porifera_data_med$sample_origin <- factor(porifera_data_med$sample_origin, levels = sample_origin_med_levels_marine_taxa, ordered = FALSE)
+porifera_data_med$sequencer_loc <- fct_explicit_na(porifera_data_med$sequencer_loc)
 crusta_data_med$sample_origin <- factor(crusta_data_med$sample_origin, levels = sample_origin_med_levels_marine_taxa, ordered = FALSE)
 crusta_data_med$sequencer_loc <- fct_explicit_na(crusta_data_med$sequencer_loc)
 tree_data_med$sample_origin <- factor(tree_data_med$sample_origin, levels = sample_origin_med_levels, ordered = FALSE)
@@ -421,7 +421,7 @@ coleo_seq_loc_tab <- coleo_data_med %>% group_by(sample_origin, sequencer_loc, .
 papilio_seq_loc_tab <- papilio_data_med %>% group_by(sample_origin, sequencer_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = sequencer_loc, values_from = n)
 lumbri_seq_loc_tab <- lumbri_data_med %>% group_by(sample_origin, sequencer_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = sequencer_loc, values_from = n)
 fish_seq_loc_tab <- fish_data_med %>% group_by(sample_origin, sequencer_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = sequencer_loc, values_from = n)
-sponge_seq_loc_tab <- sponge_data_med %>% group_by(sample_origin, sequencer_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = sequencer_loc, values_from = n)
+porifera_seq_loc_tab <- porifera_data_med %>% group_by(sample_origin, sequencer_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = sequencer_loc, values_from = n)
 crusta_seq_loc_tab <- crusta_data_med %>% group_by(sample_origin, sequencer_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = sequencer_loc, values_from = n)
 tree_seq_loc_tab <- tree_data_med %>% group_by(sample_origin, sequencer_loc, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = sequencer_loc, values_from = n)
 # Nb : missing values in sequencer_loc are the consequence of a NA in sequencer_nationality, eg resulting from a typing error in the sequencer address
@@ -437,7 +437,7 @@ coleo_seq_loc_tab <- cbind(coleo_seq_loc_tab, n_seq = coleo_seq_loc_tab$from_cou
 papilio_seq_loc_tab <- cbind(papilio_seq_loc_tab, n_seq = papilio_seq_loc_tab$from_country + papilio_seq_loc_tab$inside_med + papilio_seq_loc_tab$outside_med + papilio_seq_loc_tab$`(Missing)`)
 lumbri_seq_loc_tab <- cbind(lumbri_seq_loc_tab, n_seq = lumbri_seq_loc_tab$from_country + lumbri_seq_loc_tab$inside_med + lumbri_seq_loc_tab$outside_med + lumbri_seq_loc_tab$`(Missing)`)
 fish_seq_loc_tab <- cbind(fish_seq_loc_tab, n_seq = fish_seq_loc_tab$from_country + fish_seq_loc_tab$inside_med + fish_seq_loc_tab$outside_med + fish_seq_loc_tab$`(Missing)`)
-sponge_seq_loc_tab <- cbind(sponge_seq_loc_tab, n_seq = sponge_seq_loc_tab$from_country + sponge_seq_loc_tab$inside_med + sponge_seq_loc_tab$outside_med + sponge_seq_loc_tab$`(Missing)`)
+porifera_seq_loc_tab <- cbind(porifera_seq_loc_tab, n_seq = porifera_seq_loc_tab$from_country + porifera_seq_loc_tab$inside_med + porifera_seq_loc_tab$outside_med + porifera_seq_loc_tab$`(Missing)`)
 crusta_seq_loc_tab <- cbind(crusta_seq_loc_tab, n_seq = crusta_seq_loc_tab$from_country + crusta_seq_loc_tab$inside_med + crusta_seq_loc_tab$outside_med + crusta_seq_loc_tab$`(Missing)`)
 tree_seq_loc_tab <- cbind(tree_seq_loc_tab, n_seq = tree_seq_loc_tab$from_country + tree_seq_loc_tab$inside_med + tree_seq_loc_tab$outside_med + tree_seq_loc_tab$`(Missing)`)
 
@@ -452,7 +452,7 @@ write_csv2(coleo_seq_loc_tab, path = "./output/text/GenBank_coleo_seq_loc_tab.cs
 write_csv2(papilio_seq_loc_tab, path = "./output/text/GenBank_papilio_seq_loc_tab.csv", col_names = TRUE)
 write_csv2(lumbri_seq_loc_tab, path = "./output/text/GenBank_lumbri_seq_loc_tab.csv", col_names = TRUE)
 write_csv2(fish_seq_loc_tab, path = "./output/text/GenBank_fish_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(sponge_seq_loc_tab, path = "./output/text/GenBank_sponge_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(porifera_seq_loc_tab, path = "./output/text/GenBank_porifera_seq_loc_tab.csv", col_names = TRUE)
 write_csv2(crusta_seq_loc_tab, path = "./output/text/GenBank_crusta_seq_loc_tab.csv", col_names = TRUE)
 write_csv2(tree_seq_loc_tab, path = "./output/text/GenBank_tree_seq_loc_tab.csv", col_names = TRUE)
 
@@ -468,7 +468,7 @@ coleo_species_level_tab <- GB_recap_species_level(taxa_data_med = coleo_data_med
 papilio_species_level_tab <- GB_recap_species_level(taxa_data_med = papilio_data_med, taxa_name = "papilionoidea")
 lumbri_species_level_tab <- GB_recap_species_level(taxa_data_med = lumbri_data_med, taxa_name = "lumbricina")
 fish_species_level_tab <- GB_recap_species_level(taxa_data_med = fish_data_med, taxa_name = "fish")
-sponge_species_level_tab <- GB_recap_species_level(taxa_data_med = sponge_data_med, taxa_name = "porifera")
+porifera_species_level_tab <- GB_recap_species_level(taxa_data_med = porifera_data_med, taxa_name = "porifera")
 crusta_species_level_tab <- GB_recap_species_level(taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 tree_species_level_tab <- GB_recap_species_level(taxa_data_med = tree_data_med, taxa_name = "tree")
 
@@ -476,7 +476,7 @@ tree_species_level_tab <- GB_recap_species_level(taxa_data_med = tree_data_med, 
 sample_origin_to_remove <- c("Bosnia and Herzegovina", "Palestine", "Portugal",
                              "Balearic Islands", "Corsica", "Crete", "Sardinia", "Sicily")
 fish_species_level_tab <- fish_species_level_tab %>% filter(!country %in% sample_origin_to_remove)
-sponge_species_level_tab <- sponge_species_level_tab %>% filter(!country %in% sample_origin_to_remove)
+porifera_species_level_tab <- porifera_species_level_tab %>% filter(!country %in% sample_origin_to_remove)
 crusta_species_level_tab <- crusta_species_level_tab %>% filter(!country %in% sample_origin_to_remove)
 
 # save tables
@@ -490,7 +490,7 @@ write_csv2(coleo_species_level_tab, path = "./output/text/GenBank_coleo_species_
 write_csv2(papilio_species_level_tab, path = "./output/text/GenBank_papilio_species_level_tab.csv", col_names = TRUE)
 write_csv2(lumbri_species_level_tab, path = "./output/text/GenBank_lumbri_species_level_tab.csv", col_names = TRUE)
 write_csv2(fish_species_level_tab, path = "./output/text/GenBank_fish_species_level_tab.csv", col_names = TRUE)
-write_csv2(sponge_species_level_tab, path = "./output/text/GenBank_sponge_species_level_tab.csv", col_names = TRUE)
+write_csv2(porifera_species_level_tab, path = "./output/text/GenBank_porifera_species_level_tab.csv", col_names = TRUE)
 write_csv2(crusta_species_level_tab, path = "./output/text/GenBank_crusta_species_level_tab.csv", col_names = TRUE)
 write_csv2(tree_species_level_tab, path = "./output/text/GenBank_tree_species_level_tab.csv", col_names = TRUE)
 
@@ -509,7 +509,7 @@ coleo_data_med$year <- factor(coleo_data_med$year, levels = year_list, ordered =
 papilio_data_med$year <- factor(papilio_data_med$year, levels = year_list, ordered = TRUE)
 lumbri_data_med$year <- factor(lumbri_data_med$year, levels = year_list, ordered = TRUE)
 fish_data_med$year <- factor(fish_data_med$year, levels = year_list, ordered = TRUE)
-sponge_data_med$year <- factor(sponge_data_med$year, levels = year_list, ordered = TRUE)
+porifera_data_med$year <- factor(porifera_data_med$year, levels = year_list, ordered = TRUE)
 crusta_data_med$year <- factor(crusta_data_med$year, levels = year_list, ordered = TRUE)
 tree_data_med$year <- factor(tree_data_med$year, levels = year_list, ordered = TRUE)
 
@@ -523,7 +523,7 @@ coleo_country_year_tab <- coleo_data_med %>% group_by(sample_origin, year, .drop
 papilio_country_year_tab <- papilio_data_med %>% group_by(sample_origin, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 lumbri_country_year_tab <- lumbri_data_med %>% group_by(sample_origin, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 fish_country_year_tab <- fish_data_med %>% group_by(sample_origin, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
-sponge_country_year_tab <- sponge_data_med %>% group_by(sample_origin, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
+porifera_country_year_tab <- porifera_data_med %>% group_by(sample_origin, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 crusta_country_year_tab <- crusta_data_med %>% group_by(sample_origin, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 tree_country_year_tab <- tree_data_med %>% group_by(sample_origin, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 
@@ -538,7 +538,7 @@ write_csv2(coleo_country_year_tab, path = "./output/text/GenBank_coleo_country_y
 write_csv2(papilio_country_year_tab, path = "./output/text/GenBank_papilio_country_year_tab.csv", col_names = TRUE)
 write_csv2(lumbri_country_year_tab, path = "./output/text/GenBank_lumbri_country_year_tab.csv", col_names = TRUE)
 write_csv2(fish_country_year_tab, path = "./output/text/GenBank_fish_country_year_tab.csv", col_names = TRUE)
-write_csv2(sponge_country_year_tab, path = "./output/text/GenBank_sponge_country_year_tab.csv", col_names = TRUE)
+write_csv2(porifera_country_year_tab, path = "./output/text/GenBank_porifera_country_year_tab.csv", col_names = TRUE)
 write_csv2(crusta_country_year_tab, path = "./output/text/GenBank_crusta_country_year_tab.csv", col_names = TRUE)
 write_csv2(tree_country_year_tab, path = "./output/text/GenBank_tree_country_year_tab.csv", col_names = TRUE)
 
@@ -553,7 +553,7 @@ coleo_country_year_tab_acc <- table_accumulate(year_tab = coleo_country_year_tab
 papilio_country_year_tab_acc <- table_accumulate(year_tab = papilio_country_year_tab, first_column = 2)
 lumbri_country_year_tab_acc <- table_accumulate(year_tab = lumbri_country_year_tab, first_column = 2)
 fish_country_year_tab_acc <- table_accumulate(year_tab = fish_country_year_tab, first_column = 2)
-sponge_country_year_tab_acc <- table_accumulate(year_tab = sponge_country_year_tab, first_column = 2)
+porifera_country_year_tab_acc <- table_accumulate(year_tab = porifera_country_year_tab, first_column = 2)
 crusta_country_year_tab_acc <- table_accumulate(year_tab = crusta_country_year_tab, first_column = 2)
 tree_country_year_tab_acc <- table_accumulate(year_tab = tree_country_year_tab, first_column = 2)
 
@@ -568,7 +568,7 @@ write_csv2(coleo_country_year_tab_acc, path = "./output/text/GenBank_coleo_count
 write_csv2(papilio_country_year_tab_acc, path = "./output/text/GenBank_papilio_country_year_tab_acc.csv", col_names = TRUE)
 write_csv2(lumbri_country_year_tab_acc, path = "./output/text/GenBank_lumbri_country_year_tab_acc.csv", col_names = TRUE)
 write_csv2(fish_country_year_tab_acc, path = "./output/text/GenBank_fish_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(sponge_country_year_tab_acc, path = "./output/text/GenBank_sponge_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(porifera_country_year_tab_acc, path = "./output/text/GenBank_porifera_country_year_tab_acc.csv", col_names = TRUE)
 write_csv2(crusta_country_year_tab_acc, path = "./output/text/GenBank_crusta_country_year_tab_acc.csv", col_names = TRUE)
 write_csv2(tree_country_year_tab_acc, path = "./output/text/GenBank_tree_country_year_tab_acc.csv", col_names = TRUE)
 

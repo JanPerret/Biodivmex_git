@@ -22,7 +22,7 @@ fungi_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_fungi_refere
                            supp_origin_infos = col_character(),
                            species_level = col_character(),
                            fish = col_character(),
-                           sponge = col_character(),
+                           porifera = col_character(),
                            crustacea = col_character(),
                            tree = col_character()
                          ))
@@ -41,7 +41,7 @@ plant_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_plant_refere
                            supp_origin_infos = col_character(),
                            species_level = col_character(),
                            fish = col_character(),
-                           sponge = col_character(),
+                           porifera = col_character(),
                            crustacea = col_character(),
                            tree = col_character()
                          ))
@@ -59,17 +59,17 @@ metazoa_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_animal_ref
                              supp_origin_infos = col_character(),
                              species_level = col_character(),
                              fish = col_character(),
-                             sponge = col_character(),
+                             porifera = col_character(),
                              crustacea = col_character(),
                              tree = col_character()
                               ))
 
 # drop marine taxa columns for plants and fungi
 fungi_data <- fungi_data %>%
-  select(-fish, -sponge, -crustacea, -tree)
+  select(-fish, -porifera, -crustacea, -tree)
 
 plant_data <- plant_data %>%
-  select(-fish, -sponge, -crustacea)
+  select(-fish, -porifera, -crustacea)
 
 metazoa_data <- metazoa_data %>%
   select(-tree)

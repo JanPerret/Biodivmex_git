@@ -19,7 +19,7 @@
 # papilio_seq_loc_tab
 # lumbri_seq_loc_tab
 # fish_seq_loc_tab
-# sponge_seq_loc_tab
+# porifera_seq_loc_tab
 # crusta_seq_loc_tab
 # tree_seq_loc_tab
 
@@ -35,7 +35,7 @@ rept_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingd
 bird_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "bird")
 mammal_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "mammal")
 fish_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "fish")
-sponge_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "porifera")
+porifera_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "porifera")
 crusta_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "crustacea")
 coleo_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "coleoptera")
 papilio_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "papilionoidea")
@@ -125,7 +125,7 @@ EEZ_centroids <- read_csv2("./data/EEZ_centroids_for_maps.csv")
 
 # make the maps
 fish_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = fish_seq_loc_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
-sponge_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = sponge_seq_loc_tab, subtitle_text = sponge_subtitle, taxa_name = "Porifera")
+porifera_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = porifera_seq_loc_tab, subtitle_text = porifera_subtitle, taxa_name = "Porifera")
 crusta_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = crusta_seq_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
 
 
@@ -240,13 +240,13 @@ print(fish_result_map, vp = vplayout(1:12, 1:12))
 print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
-# sponge
-file_path = "./output/plots/GenBank_map_sequences_sponge.pdf"
+# porifera
+file_path = "./output/plots/GenBank_map_sequences_porifera.pdf"
 pdf(file=file_path, width = 20, height = 12)
 grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
-print(sponge_result_map, vp = vplayout(1:12, 1:12))
+print(porifera_result_map, vp = vplayout(1:12, 1:12))
 print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
@@ -280,7 +280,7 @@ tree_species_map <- GenBank_map_number_species(species_level_tab = tree_species_
 
 # marine taxa 
 fish_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = fish_species_level_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
-sponge_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = sponge_species_level_tab, subtitle_text = sponge_subtitle, taxa_name = "Porifera")
+porifera_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = porifera_species_level_tab, subtitle_text = porifera_subtitle, taxa_name = "Porifera")
 crusta_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = crusta_species_level_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
 
 
@@ -384,13 +384,13 @@ vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y
 print(fish_species_map, vp = vplayout(1:12, 1:12))
 dev.off()
 
-# sponge
-file_path = "./output/plots/GenBank_map_species_sponge.pdf"
+# porifera
+file_path = "./output/plots/GenBank_map_species_porifera.pdf"
 pdf(file=file_path, width = 20, height = 12)
 grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
-print(sponge_species_map, vp = vplayout(1:12, 1:12))
+print(porifera_species_map, vp = vplayout(1:12, 1:12))
 dev.off()
 
 # crustacea

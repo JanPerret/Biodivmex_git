@@ -42,7 +42,7 @@ WOS_curve_art_acc_taxa_log10 <- ggplot(taxa_year_table_acc_long, aes(x = year, y
 # create a myers/non-myers column
 taxa_year_table_acc_long["myers"] <- NA
 myers_taxa <- c("amphibian", "bird", "mammal", "plant", "reptile")
-non_myers_taxa <- c("coleoptera", "crustacea", "fish", "fungi", "lumbricina", "papilionoidea", "sponge", "tree")
+non_myers_taxa <- c("coleoptera", "crustacea", "fish", "fungi", "lumbricina", "papilionoidea", "porifera", "tree")
 
 for (i in 1:length(taxa_year_table_acc_long$taxa)) {
   if (taxa_year_table_acc_long$taxa[i] %in% myers_taxa) {taxa_year_table_acc_long$myers[i] <- "myers_taxa"}
@@ -98,7 +98,7 @@ WOS_curve_art_acc_country_papilio <- WOS_acc_curve_per_country(taxa_acc_data = p
 WOS_curve_art_acc_country_lumbri <- WOS_acc_curve_per_country(taxa_acc_data = lumbri_year_tab_per_country_acc, taxa_name = "Lumbricina", marine = FALSE)
 WOS_curve_art_acc_country_tree <- WOS_acc_curve_per_country(taxa_acc_data = tree_year_tab_per_country_acc, taxa_name = "Tree", marine = FALSE)
 WOS_curve_art_acc_marine_region_fish <- WOS_acc_curve_per_country(taxa_acc_data = fish_year_tab_per_region_acc, taxa_name = "Fish", marine = TRUE)
-WOS_curve_art_acc_marine_region_porifera <- WOS_acc_curve_per_country(taxa_acc_data = sponge_year_tab_per_region_acc, taxa_name = "Porifera", marine = TRUE)
+WOS_curve_art_acc_marine_region_porifera <- WOS_acc_curve_per_country(taxa_acc_data = porifera_year_tab_per_region_acc, taxa_name = "Porifera", marine = TRUE)
 WOS_curve_art_acc_marine_region_crustacea <- WOS_acc_curve_per_country(taxa_acc_data = crusta_year_tab_per_region_acc, taxa_name = "Crustacea", marine = TRUE)
 
 
@@ -196,7 +196,7 @@ WOS_curve_journal_acc_taxa_linear <- ggplot(taxa_journals_table_long, aes(x = ye
 # create a myers/non-myers column
 taxa_journals_table_long["myers"] <- NA
 myers_taxa <- c("amphibian", "bird", "mammal", "plant", "reptile")
-non_myers_taxa <- c("coleoptera", "crustacea", "fish", "fungi", "lumbricina", "papilionoidea", "sponge", "tree")
+non_myers_taxa <- c("coleoptera", "crustacea", "fish", "fungi", "lumbricina", "papilionoidea", "porifera", "tree")
 
 for (i in 1:length(taxa_journals_table_long$taxa)) {
   if (taxa_journals_table_long$taxa[i] %in% myers_taxa) {taxa_journals_table_long$myers[i] <- "myers_taxa"}
