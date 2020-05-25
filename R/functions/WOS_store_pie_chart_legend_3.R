@@ -1,5 +1,7 @@
 ### store the legend for the pie charts with 3 categories
+
 WOS_store_pie_chart_legend_3 <- function() {
+
   # make a small tibble containing just the 3 lines from_country / inside_med / outside_med
   tibble_for_pie_legend <- tibble(author_loc = c("from_country", "inside_med", "outside_med"), sum_n_articles = c(457,143,130))
   

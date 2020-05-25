@@ -1,4 +1,5 @@
 ### count number of journals for a given taxa and time span
+
 WOS_count_journals <- function(taxa_journals_data) {
   
   # pass year from factor to numeric for the subset() condition

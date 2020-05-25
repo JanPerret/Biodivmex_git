@@ -1,4 +1,5 @@
 ### make map subtitle text
+
 GB_make_map_subtitle <- function(taxa_table, kingdom_name, taxa_name) {
   
   text_reign_n_seq <- paste("Total number of sequences in GenBank for ", kingdom_name, " : ", taxa_table$n_seq[which(taxa_table$taxa == taxa_name)], sep="")
@@ -9,5 +10,6 @@ GB_make_map_subtitle <- function(taxa_table, kingdom_name, taxa_name) {
   
   text_subtitle <- paste("At world scale : ", text_reign_n_seq, " ; ", text_taxa_n_seq, " ; ", text_loc_rate, "\n",
                          "In the mediterranean basin : ", text_taxa_med_n_seq, " ; ", text_n_species, sep="")
+  
   return(text_subtitle)
 }

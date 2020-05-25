@@ -1,4 +1,5 @@
 ### extract the same information than GB_extract_general_info() but for each year
+
 GB_loop_over_years <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name) {
   
   # initiaze table to store the 6 general descriptive informations

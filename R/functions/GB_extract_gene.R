@@ -1,29 +1,24 @@
-### extract the same information than GB_extract_general_info() but for each year
-GB_loop_over_years <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name) {
+### extract number of sequences containing each gene for a given taxa
+
+GB_extract_gene <- function(taxa_data_med, taxa_name) {
   
-  # initiaze table to store the 6 general descriptive informations
-  general_table <- setNames(data.frame(matrix(ncol = 8, nrow = 0)),
-                            c("year", "taxa", "n_seq", "taxa_n_seq", "loc_rate", "n_seq_med", "sp_level_rate_med", "n_sp_med"))
+  # initiaze table
+  gene_table <- setNames(data.frame(matrix(ncol = 27, nrow = 1)), c("taxa", paste0(gene_list), "n_NA", "tot_n_seq"))
   
-  # list years since the first sequence was deposited in GenBank (for our taxa + genes conditions)
-  vect_year <- as.integer(c(1987:2019)) # first sequences is from 1987 in our data
-  
-  # loop over years
-  for (year in vect_year) {
-    given_year <- as.integer(year) # because else it doesn't work with filter()
+  # loop through gene names and fill gene_table
+  gene = ""
+  for (gene in gene_list) {
+    gene_table$taxa <- taxa_name
     
-    # subset tables for the given year
-    kingdom_data_year <- kingdom_data %>% filter(year == given_year)
-    taxa_data_year <- taxa_data %>% filter(year == given_year)
-    taxa_data_med_year <- taxa_data_med %>% filter(year == given_year)
+    # count number of sequences containing the given gene
+    gene_table[gene] <- sum(grepl(gene, taxa_data_med$gene)) # grepl is like str_detect but it doesn't return NA when used on NA
     
-    # extract information of the year tables with GB_extract_general_info() function
-    tab_given_year <- GB_extract_general_info(kingdom_data = kingdom_data_year, taxa_data = taxa_data_year, taxa_data_med = taxa_data_med_year, taxa_name = taxa_name)
+    # number of sequences without a gene assignation
+    gene_table$n_NA <- sum(is.na(taxa_data_med$gene))
     
-    # binding extracted informations to the output table
-    tab_given_year <- cbind(year = given_year, tab_given_year)
-    general_table <- rbind(general_table, tab_given_year)
+    # total number of sequences
+    gene_table$tot_n_seq <- length(taxa_data_med$access_num)
   }
   
-  return(general_table)
+  return(gene_table)
 }

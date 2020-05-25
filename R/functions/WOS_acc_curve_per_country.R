@@ -1,4 +1,5 @@
 ### make publication accumulation curve for a given taxa with one curve per country
+
 WOS_acc_curve_per_country <- function(taxa_acc_data, taxa_name, marine) {
   
   # exclude missing data

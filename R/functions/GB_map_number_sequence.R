@@ -5,6 +5,7 @@
 # med_centroids
 # point_grid
 # palette
+
 GB_map_number_sequence <- function(locality_table, subtitle_text, taxa_name) {
   
   # add information to plot to med_countries_islands

@@ -1,4 +1,5 @@
 ### make sequence accumulation curve for a given taxa with one curve per country
+
 GB_acc_curve_per_country <- function(taxa_acc_data, taxa_name) {
   
   # pass data from wide to long format

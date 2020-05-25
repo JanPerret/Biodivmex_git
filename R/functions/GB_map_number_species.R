@@ -4,6 +4,7 @@
 # med_countries_islands
 # point_grid
 # palette
+
 GB_map_number_species <- function(species_level_tab, subtitle_text, taxa_name) {
   
   # add the information to plot to med_countries_islands

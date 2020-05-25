@@ -1,4 +1,5 @@
 ### transform table with number of sequences in GenBank per country (rows) and years (columns) for accumulation curve
+
 table_accumulate <- function(year_tab, first_column) {
   
   len <- c(1:nrow(year_tab))

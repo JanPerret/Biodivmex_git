@@ -1,4 +1,5 @@
-### extract general information for a diven taxa
+### extract general information for a given taxa
+
 GB_extract_general_info <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name) {
   
   # initiaze table to store the 6 general descriptive informations

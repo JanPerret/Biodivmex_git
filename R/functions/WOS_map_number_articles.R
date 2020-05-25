@@ -6,6 +6,7 @@
 # med_centroids
 # point_grid
 # palette
+
 WOS_map_number_articles <- function(locality_table, subtitle_text, taxa_name) {
   
   # add information to plot to med_countries_islands

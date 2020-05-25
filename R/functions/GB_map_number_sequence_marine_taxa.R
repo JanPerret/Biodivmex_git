@@ -5,6 +5,7 @@
 # EEZ_centroids
 # point_grid_marine
 # palette
+
 GB_map_number_sequence_marine_taxa <- function(locality_table, subtitle_text, taxa_name) {
   
   # add information to plot to med_EEZ

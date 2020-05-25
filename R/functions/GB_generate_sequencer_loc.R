@@ -1,29 +1,25 @@
-### extract the same information than GB_extract_general_info() but for each year
-GB_loop_over_years <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name) {
+### add column with local / mediterranean / distant sequencer information
+
+GB_generate_sequencer_loc <- function(kingdom_data_med) {
   
-  # initiaze table to store the 6 general descriptive informations
-  general_table <- setNames(data.frame(matrix(ncol = 8, nrow = 0)),
-                            c("year", "taxa", "n_seq", "taxa_n_seq", "loc_rate", "n_seq_med", "sp_level_rate_med", "n_sp_med"))
+  # add empty column "sequencer_loc"
+  kingdom_data_med["sequencer_loc"] <- NA
   
-  # list years since the first sequence was deposited in GenBank (for our taxa + genes conditions)
-  vect_year <- as.integer(c(1987:2019)) # first sequences is from 1987 in our data
-  
-  # loop over years
-  for (year in vect_year) {
-    given_year <- as.integer(year) # because else it doesn't work with filter()
-    
-    # subset tables for the given year
-    kingdom_data_year <- kingdom_data %>% filter(year == given_year)
-    taxa_data_year <- taxa_data %>% filter(year == given_year)
-    taxa_data_med_year <- taxa_data_med %>% filter(year == given_year)
-    
-    # extract information of the year tables with GB_extract_general_info() function
-    tab_given_year <- GB_extract_general_info(kingdom_data = kingdom_data_year, taxa_data = taxa_data_year, taxa_data_med = taxa_data_med_year, taxa_name = taxa_name)
-    
-    # binding extracted informations to the output table
-    tab_given_year <- cbind(year = given_year, tab_given_year)
-    general_table <- rbind(general_table, tab_given_year)
+  # loop to fill the column
+  for (i in 1:length(kingdom_data_med$access_num)) {
+    if(is.na(kingdom_data_med$sequencer_nationality[i])) {} # no action if sequencer_nationality == NA
+    else if(kingdom_data_med$sequencer_nationality[i] == kingdom_data_med$sample_origin[i]) {kingdom_data_med$sequencer_loc[i] <- "from_country"} # from the country
+    else if(kingdom_data_med$sample_origin[i] == "Corsica" & kingdom_data_med$sequencer_nationality[i] == "France") {kingdom_data_med$sequencer_loc[i] <- "from_country"}
+    else if(kingdom_data_med$sample_origin[i] == "Balearic Islands" & kingdom_data_med$sequencer_nationality[i] == "Spain") {kingdom_data_med$sequencer_loc[i] <- "from_country"}
+    else if(kingdom_data_med$sample_origin[i] == "Sardinia" & kingdom_data_med$sequencer_nationality[i] == "Italy") {kingdom_data_med$sequencer_loc[i] <- "from_country"}
+    else if(kingdom_data_med$sample_origin[i] == "Sicily" & kingdom_data_med$sequencer_nationality[i] == "Italy") {kingdom_data_med$sequencer_loc[i] <- "from_country"}
+    else if(kingdom_data_med$sample_origin[i] == "Crete" & kingdom_data_med$sequencer_nationality[i] == "Greece") {kingdom_data_med$sequencer_loc[i] <- "from_country"}
+    else if(kingdom_data_med$sequencer_nationality[i] %in% med_countries_list) {kingdom_data_med$sequencer_loc[i] <- "inside_med"} # from the mediterranean basin
+    else if(!is.na(kingdom_data_med$sequencer_nationality[i])) {kingdom_data_med$sequencer_loc[i] <- "outside_med"} # outside mediterranean basin
   }
   
-  return(general_table)
+  kingdom_data_med$sequencer_loc <- factor(kingdom_data_med$sequencer_loc, levels = c("from_country", "outside_med", "inside_med"), ordered = FALSE) # fix factor levels
+  kingdom_data_med$sequencer_loc <- fct_explicit_na(kingdom_data_med$sequencer_loc) # give missing values an explicit factor level to ensure that they appear in summaries and plots
+  
+  return(kingdom_data_med)
 }
