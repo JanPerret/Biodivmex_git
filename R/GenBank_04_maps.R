@@ -28,23 +28,23 @@
 
 
 ### make texts with general informations to add as subtitles to the maps
-plant_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Embryophyta", taxa_name = "plant")
-fungi_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Fungi", taxa_name = "fungi")
-amph_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "amphibian")
-rept_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "reptile")
-bird_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "bird")
-mammal_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "mammal")
-fish_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "fish")
-porifera_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "porifera")
-crusta_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "crustacea")
-coleo_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "coleoptera")
-papilio_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "papilionoidea")
-lumbri_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "lumbricina")
-tree_subtitle <- GenBank_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Embryophyta", taxa_name = "tree")
+plant_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Embryophyta", taxa_name = "plant")
+fungi_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Fungi", taxa_name = "fungi")
+amph_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "amphibian")
+rept_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "reptile")
+bird_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "bird")
+mammal_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "mammal")
+fish_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "fish")
+porifera_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "porifera")
+crusta_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "crustacea")
+coleo_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "coleoptera")
+papilio_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "papilionoidea")
+lumbri_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Metazoa", taxa_name = "lumbricina")
+tree_subtitle <- GB_make_map_subtitle(taxa_table = all_taxa_desc_tab, kingdom_name = "Embryophyta", taxa_name = "tree")
 
 
 ### store the legend for the pie charts
-legend_pie_3_categories <- GenBank_store_pie_chart_legend()
+legend_pie_3_categories <- GB_store_pie_chart_legend()
 
 
 ### load shapefiles
@@ -96,16 +96,16 @@ palette <- RColorBrewer::brewer.pal(9, "YlOrRd")
 
 
 ### make maps with country filling by number of sequences and pie-charts indicationg sequencer nationality
-plant_result_map <- GenBank_map_number_sequence(locality_table = plant_seq_loc_tab, subtitle_text = plant_subtitle, taxa_name = "Embryophyta")
-fungi_result_map <- GenBank_map_number_sequence(locality_table = fungi_seq_loc_tab, subtitle_text = fungi_subtitle, taxa_name = "Fungi")
-amph_result_map <- GenBank_map_number_sequence(locality_table = amph_seq_loc_tab, subtitle_text = amph_subtitle, taxa_name = "Amphibians")
-rept_result_map <- GenBank_map_number_sequence(locality_table = rept_seq_loc_tab, subtitle_text = rept_subtitle, taxa_name = "Reptiles")
-bird_result_map <- GenBank_map_number_sequence(locality_table = bird_seq_loc_tab, subtitle_text = bird_subtitle, taxa_name = "Birds")
-mammal_result_map <- GenBank_map_number_sequence(locality_table = mammal_seq_loc_tab, subtitle_text = mammal_subtitle, taxa_name = "Mammals")
-coleo_result_map <- GenBank_map_number_sequence(locality_table = coleo_seq_loc_tab, subtitle_text = coleo_subtitle, taxa_name = "Coleoptera")
-papilio_result_map <- GenBank_map_number_sequence(locality_table = papilio_seq_loc_tab, subtitle_text = papilio_subtitle, taxa_name = "Papilionoidea")
-lumbri_result_map <- GenBank_map_number_sequence(locality_table = lumbri_seq_loc_tab, subtitle_text = lumbri_subtitle, taxa_name = "Lumbricina")
-tree_result_map <- GenBank_map_number_sequence(locality_table = tree_seq_loc_tab, subtitle_text = tree_subtitle, taxa_name = "Trees")
+plant_result_map <- GB_map_number_sequence(locality_table = plant_seq_loc_tab, subtitle_text = plant_subtitle, taxa_name = "Embryophyta")
+fungi_result_map <- GB_map_number_sequence(locality_table = fungi_seq_loc_tab, subtitle_text = fungi_subtitle, taxa_name = "Fungi")
+amph_result_map <- GB_map_number_sequence(locality_table = amph_seq_loc_tab, subtitle_text = amph_subtitle, taxa_name = "Amphibians")
+rept_result_map <- GB_map_number_sequence(locality_table = rept_seq_loc_tab, subtitle_text = rept_subtitle, taxa_name = "Reptiles")
+bird_result_map <- GB_map_number_sequence(locality_table = bird_seq_loc_tab, subtitle_text = bird_subtitle, taxa_name = "Birds")
+mammal_result_map <- GB_map_number_sequence(locality_table = mammal_seq_loc_tab, subtitle_text = mammal_subtitle, taxa_name = "Mammals")
+coleo_result_map <- GB_map_number_sequence(locality_table = coleo_seq_loc_tab, subtitle_text = coleo_subtitle, taxa_name = "Coleoptera")
+papilio_result_map <- GB_map_number_sequence(locality_table = papilio_seq_loc_tab, subtitle_text = papilio_subtitle, taxa_name = "Papilionoidea")
+lumbri_result_map <- GB_map_number_sequence(locality_table = lumbri_seq_loc_tab, subtitle_text = lumbri_subtitle, taxa_name = "Lumbricina")
+tree_result_map <- GB_map_number_sequence(locality_table = tree_seq_loc_tab, subtitle_text = tree_subtitle, taxa_name = "Trees")
 
 
 ### maps for MARINE TAXA :
@@ -124,9 +124,9 @@ med_EEZ <- read_sf("./data/shapefiles/marine_EEZ/EEZ_med_3.shp")
 EEZ_centroids <- read_csv2("./data/EEZ_centroids_for_maps.csv")
 
 # make the maps
-fish_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = fish_seq_loc_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
-porifera_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = porifera_seq_loc_tab, subtitle_text = porifera_subtitle, taxa_name = "Porifera")
-crusta_result_map <- GenBank_map_number_sequence_marine_taxa(locality_table = crusta_seq_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
+fish_result_map <- GB_map_number_sequence_marine_taxa(locality_table = fish_seq_loc_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
+porifera_result_map <- GB_map_number_sequence_marine_taxa(locality_table = porifera_seq_loc_tab, subtitle_text = porifera_subtitle, taxa_name = "Porifera")
+crusta_result_map <- GB_map_number_sequence_marine_taxa(locality_table = crusta_seq_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
 
 
 ### compose and save the final maps (map + pie-charts + pie chart legend)
@@ -267,21 +267,21 @@ dev.off()
 palette <- RColorBrewer::brewer.pal(9, "Purples") # for number of species
 
 # make the maps
-plant_species_map <- GenBank_map_number_species(species_level_tab = plant_species_level_tab, subtitle_text = plant_subtitle, taxa_name = "Embryophyta")
-fungi_species_map <- GenBank_map_number_species(species_level_tab = fungi_species_level_tab, subtitle_text = fungi_subtitle, taxa_name = "Fungi")
-amph_species_map <- GenBank_map_number_species(species_level_tab = amph_species_level_tab, subtitle_text = amph_subtitle, taxa_name = "Amphibians")
-rept_species_map <- GenBank_map_number_species(species_level_tab = rept_species_level_tab, subtitle_text = rept_subtitle, taxa_name = "Reptiles")
-bird_species_map <- GenBank_map_number_species(species_level_tab = bird_species_level_tab, subtitle_text = bird_subtitle, taxa_name = "Birds")
-mammal_species_map <- GenBank_map_number_species(species_level_tab = mammal_species_level_tab, subtitle_text = mammal_subtitle, taxa_name = "Mammals")
-coleo_species_map <- GenBank_map_number_species(species_level_tab = coleo_species_level_tab, subtitle_text = coleo_subtitle, taxa_name = "Coleoptera")
-papilio_species_map <- GenBank_map_number_species(species_level_tab = papilio_species_level_tab, subtitle_text = papilio_subtitle, taxa_name = "Papilionoidea")
-lumbri_species_map <- GenBank_map_number_species(species_level_tab = lumbri_species_level_tab, subtitle_text = lumbri_subtitle, taxa_name = "Lumbricina")
-tree_species_map <- GenBank_map_number_species(species_level_tab = tree_species_level_tab, subtitle_text = tree_subtitle, taxa_name = "Trees")
+plant_species_map <- GB_map_number_species(species_level_tab = plant_species_level_tab, subtitle_text = plant_subtitle, taxa_name = "Embryophyta")
+fungi_species_map <- GB_map_number_species(species_level_tab = fungi_species_level_tab, subtitle_text = fungi_subtitle, taxa_name = "Fungi")
+amph_species_map <- GB_map_number_species(species_level_tab = amph_species_level_tab, subtitle_text = amph_subtitle, taxa_name = "Amphibians")
+rept_species_map <- GB_map_number_species(species_level_tab = rept_species_level_tab, subtitle_text = rept_subtitle, taxa_name = "Reptiles")
+bird_species_map <- GB_map_number_species(species_level_tab = bird_species_level_tab, subtitle_text = bird_subtitle, taxa_name = "Birds")
+mammal_species_map <- GB_map_number_species(species_level_tab = mammal_species_level_tab, subtitle_text = mammal_subtitle, taxa_name = "Mammals")
+coleo_species_map <- GB_map_number_species(species_level_tab = coleo_species_level_tab, subtitle_text = coleo_subtitle, taxa_name = "Coleoptera")
+papilio_species_map <- GB_map_number_species(species_level_tab = papilio_species_level_tab, subtitle_text = papilio_subtitle, taxa_name = "Papilionoidea")
+lumbri_species_map <- GB_map_number_species(species_level_tab = lumbri_species_level_tab, subtitle_text = lumbri_subtitle, taxa_name = "Lumbricina")
+tree_species_map <- GB_map_number_species(species_level_tab = tree_species_level_tab, subtitle_text = tree_subtitle, taxa_name = "Trees")
 
 # marine taxa 
-fish_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = fish_species_level_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
-porifera_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = porifera_species_level_tab, subtitle_text = porifera_subtitle, taxa_name = "Porifera")
-crusta_species_map <- GenBank_map_number_species_marine_taxa(species_level_tab = crusta_species_level_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
+fish_species_map <- GB_map_number_species_marine_taxa(species_level_tab = fish_species_level_tab, subtitle_text = fish_subtitle, taxa_name = "Fish")
+porifera_species_map <- GB_map_number_species_marine_taxa(species_level_tab = porifera_species_level_tab, subtitle_text = porifera_subtitle, taxa_name = "Porifera")
+crusta_species_map <- GB_map_number_species_marine_taxa(species_level_tab = crusta_species_level_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
 
 
 ### save the maps
