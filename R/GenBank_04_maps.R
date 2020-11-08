@@ -82,7 +82,7 @@ world_sf <- st_as_sf(world)
 
 # crop world_sf polygons to keep only polygons inside a bounding box centered on the mediterranean sea
 box = c(xmin = -15.8519, ymin = 24.550494, xmax = 43.261471, ymax = 49.651575)
-med_clipped <- st_crop(world_sf, box)
+med_clipped <- st_crop(st_make_valid(world_sf), box)
 
 # table with the cendroids to plot the pie charts to
 med_centroids <- read_csv2("./data/country_centroids_for_maps.csv")
@@ -111,7 +111,7 @@ tree_result_map <- GB_map_number_sequence(locality_table = tree_seq_loc_tab, sub
 ### maps for MARINE TAXA :
 # crop world_sf polygons to keep only polygons inside a bounding box centered on the mediterranean sea
 box = c(xmin = -10.5, ymin = 27.5, xmax = 41.5, ymax = 49)
-med_clipped_marine <- st_crop(world_sf, box)
+med_clipped_marine <- st_crop(st_make_valid(world_sf), box)
 
 # generate coordinates for the point grid which will make the sea background
 point_grid_marine <- expand.grid(seq(from = -10.5, to = 41.5, by = 0.55), seq(from = 27.5, to = 49, by = 0.5))
@@ -137,7 +137,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(plant_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # fungi
@@ -147,7 +147,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(fungi_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # amphibian
@@ -157,7 +157,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(amph_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # reptile
@@ -167,7 +167,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(rept_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # bird
@@ -177,7 +177,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(bird_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # mammal
@@ -187,7 +187,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(mammal_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # coleoptera
@@ -197,7 +197,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(coleo_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # papilionoidea
@@ -207,7 +207,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(papilio_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # lumbricina
@@ -217,7 +217,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(lumbri_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # tree
@@ -227,7 +227,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(tree_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # fish
@@ -237,7 +237,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(fish_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # porifera
@@ -247,7 +247,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(porifera_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # crustacea
@@ -257,7 +257,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(crusta_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 
