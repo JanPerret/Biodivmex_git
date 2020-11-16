@@ -9,7 +9,7 @@
 
 
 # load data
-wos_data <- read_delim("./data/TEST_SIMPLE_v15_RESULT_WOS_files_merged.csv", delim = ",", col_names = TRUE,
+wos_data <- read_delim("./data/TEST_SIMPLE_v15_RESULT_WOS_files_merged_2020-11-13.csv", delim = ",", col_names = TRUE,
                        col_types = cols(
                          access_num = col_character(),
                          language = col_character(),
@@ -63,7 +63,16 @@ year_list <- c((truncation_year+1):2019)
 wos_data$year <- factor(wos_data$year, levels = year_list, ordered = TRUE)
 
 
-### total number of articles on each taxonomic group
+### number of articles per journal
+WOS_journal_table <- as.data.frame(table(wos_data$publisher))
+colnames(WOS_journal_table) <- c("publisher","n_articles")
+WOS_journal_table <- WOS_journal_table[with(WOS_journal_table, order(-n_articles)), ]
+
+# save table
+write_csv2(WOS_journal_table, path = "./output/text/WOS_recap_table_per_journal.csv", col_names = TRUE)
+
+
+### number of articles on each taxonomic group
 taxa_vect <- c("plant", "fungi", "amphibian", "reptile", "bird", "mammal", "fish", "porifera", "crustacea", "coleoptera", "papilionoidea", "lumbricina", "tree")
 
 # initiaze table

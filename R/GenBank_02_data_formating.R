@@ -143,6 +143,56 @@ metazoa_data_with_nuc <- metazoa_data
 metazoa_data <- metazoa_data %>% 
   filter(!str_detect(gene, paste(nuc_gene_names, sep = "|")))
 
+# sample_origin fill rate through the years for METAZOA
+metazoa_sample_origin_fill_rate <- metazoa_data_with_nuc %>%
+                                  group_by(year) %>% 
+                                  count()
+
+n_empty <- metazoa_data_with_nuc %>%
+                filter(is.na(sample_origin)) %>% 
+                group_by(year) %>% 
+                count()
+
+metazoa_sample_origin_fill_rate <- cbind(metazoa_sample_origin_fill_rate, empty_origin = n_empty$n)
+colnames(metazoa_sample_origin_fill_rate) <- c("year", "n_seq", "empty_origin")
+metazoa_sample_origin_fill_rate <- cbind(metazoa_sample_origin_fill_rate, 
+                                     fill_rate = round(1 - metazoa_sample_origin_fill_rate$empty_origin/metazoa_sample_origin_fill_rate$n_seq, digits = 2))
+
+# sample_origin fill rate through the years for PLANTS
+plant_sample_origin_fill_rate <- plant_data %>%
+  group_by(year) %>% 
+  count()
+
+n_empty <- plant_data %>%
+  filter(is.na(sample_origin)) %>% 
+  group_by(year) %>% 
+  count()
+
+plant_sample_origin_fill_rate <- cbind(plant_sample_origin_fill_rate, empty_origin = n_empty$n)
+colnames(plant_sample_origin_fill_rate) <- c("year", "n_seq", "empty_origin")
+plant_sample_origin_fill_rate <- cbind(plant_sample_origin_fill_rate, 
+                                         fill_rate = round(1 - plant_sample_origin_fill_rate$empty_origin/plant_sample_origin_fill_rate$n_seq, digits = 2))
+
+# sample_origin fill rate through the years for FUNGI
+fungi_sample_origin_fill_rate <- fungi_data %>%
+  group_by(year) %>% 
+  count()
+
+n_empty <- fungi_data %>%
+  filter(is.na(sample_origin)) %>% 
+  group_by(year) %>% 
+  count()
+
+fungi_sample_origin_fill_rate <- cbind(fungi_sample_origin_fill_rate, empty_origin = n_empty$n)
+colnames(fungi_sample_origin_fill_rate) <- c("year", "n_seq", "empty_origin")
+fungi_sample_origin_fill_rate <- cbind(fungi_sample_origin_fill_rate, 
+                                         fill_rate = round(1 - fungi_sample_origin_fill_rate$empty_origin/fungi_sample_origin_fill_rate$n_seq, digits = 2))
+
+# save the tables
+write_csv2(metazoa_sample_origin_fill_rate, path = "./output/text/GenBank_metazoa_sample_origin_fill_rate.csv", col_names = TRUE)
+write_csv2(plant_sample_origin_fill_rate, path = "./output/text/GenBank_plant_sample_origin_fill_rate.csv", col_names = TRUE)
+write_csv2(fungi_sample_origin_fill_rate, path = "./output/text/GenBank_fungi_sample_origin_fill_rate.csv", col_names = TRUE)
+
 
 ### make sub-data frames for the mediterranean basin and each animal taxa
 # make a sub-data frame for each animal taxa in the WORLD
@@ -154,7 +204,7 @@ coleo_data <- metazoa_data %>% filter(taxa == "Coleoptera")
 papilio_data <- metazoa_data %>% filter(taxa == "Papilionoidea")
 lumbri_data <- metazoa_data %>% filter(taxa == "Lumbricina")
 fish_data <- metazoa_data_with_nuc %>% filter(taxa == "Fish")
-porifera_data <- metazoa_data_with_nuc %>% filter(taxa == "porifera")
+porifera_data <- metazoa_data_with_nuc %>% filter(taxa == "Porifera")
 crusta_data <- metazoa_data_with_nuc %>% filter(taxa == "Crustacea")
 
 # make a sub-data frame for each animal taxa in the MEDITERRANEAN BASIN
