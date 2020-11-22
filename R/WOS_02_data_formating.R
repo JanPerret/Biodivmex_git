@@ -62,6 +62,16 @@ wos_data <- wos_data %>%
 year_list <- c((truncation_year+1):2019)
 wos_data$year <- factor(wos_data$year, levels = year_list, ordered = TRUE)
 
+# drop articles from irrelevant journals 
+journal_filtering <- read_delim("./data/WOS_journal_filtering_v2.csv", delim = ";", col_names = TRUE, 
+                                col_types = cols(
+                                  publisher = col_character()))
+
+# nrow(wos_data[rowSums(is.na(wos_data[, c(9:21)])) != 13, ])/nrow(wos_data) # rate of articles assigned to at least one taxa
+wos_data <- wos_data %>% 
+  filter(!(publisher %in% journal_filtering$publisher))
+# nrow(wos_data[rowSums(is.na(wos_data[, c(9:21)])) != 13, ])/nrow(wos_data) # same rate after filtering irrelevant journals
+
 
 ### number of articles per journal
 WOS_journal_table <- as.data.frame(table(wos_data$publisher))
