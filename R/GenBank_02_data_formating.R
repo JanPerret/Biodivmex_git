@@ -132,6 +132,11 @@ plant_data <- plant_data %>%
 metazoa_data <- metazoa_data %>% 
   mutate(sample_origin = replace(sample_origin, sample_origin == "Gaza Strip", "Palestine"))
 
+# remove sequences from 2020
+fungi_data <- subset(fungi_data, fungi_data$year != 2020)
+plant_data <- subset(plant_data, plant_data$year != 2020)
+metazoa_data <- subset(metazoa_data, metazoa_data$year != 2020)
+
 
 ### create sub-data frame without nuclear genes (only used for marine taxa)
 nuc_gene_names <- c("18S rRNA", "28S rRNA", "5.8S rRNA", "ITS", "Rag 2")
