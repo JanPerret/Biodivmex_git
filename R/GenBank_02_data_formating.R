@@ -219,6 +219,15 @@ fungi_data_med <- fungi_data %>% filter(sample_origin %in% med_countries_list)
 metazoa_data_med <- metazoa_data %>% filter(sample_origin %in% med_countries_list)
 metazoa_data_with_nuc_med <- metazoa_data_with_nuc %>% filter(sample_origin %in% med_countries_list)
 
+### number of sequences with at least one geographic and one taxonomic assignation
+n_valid_seq_fungi <- nrow(fungi_data_med)
+n_valid_seq_plant <- nrow(plant_data_med)
+n_valid_seq_metazoa <- nrow(subset(metazoa_data_with_nuc_med, !is.na(metazoa_data_with_nuc_med$taxa)))
+
+n_valid_seq <- n_valid_seq_fungi + n_valid_seq_plant + n_valid_seq_metazoa
+# 207,583
+
+
 ### add column "sequencer_loc" with local / mediterranean / distant sequencer information
 plant_data_med <- GB_generate_sequencer_loc(plant_data_med)
 fungi_data_med <- GB_generate_sequencer_loc(fungi_data_med)

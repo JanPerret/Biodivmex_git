@@ -72,6 +72,40 @@ wos_data <- wos_data %>%
   filter(!(publisher %in% journal_filtering$publisher))
 # nrow(wos_data[rowSums(is.na(wos_data[, c(9:21)])) != 13, ])/nrow(wos_data) # same rate after filtering irrelevant journals
 
+### number of articles with at least one geographic and one taxonomic assignation
+# wos_marine_tab <- wos_data %>% 
+#   filter(fish == "fish" | porifera == "porifera" | crustacea == "crustacea")
+# dim(wos_marine_tab)
+# dim(subset(wos_marine_tab, !is.na(wos_marine_tab$marine_region)))
+
+n_valid_articles <- 0
+
+for (i in 1:length(wos_data$access_num)) {
+  
+  # test if the article is assigned to any terrestrial taxa
+  if (any(!is.na(wos_data[i , c(9:14, 18:21)]))) {
+    
+    # test if the article is assigned to any fieldwork_country
+    if (!is.na(wos_data$fieldwork_country[i])) {
+      n_valid_articles <- n_valid_articles + 1
+    }
+  } else {
+    
+    # test if the article is assigned to any marine taxa
+    if (any(!is.na(wos_data[i , c(15, 16, 17)]))) {
+      
+      # test if the article is assigned to any marine region
+      if (!is.na(wos_data$marine_region[i])) {
+        n_valid_articles <- n_valid_articles + 1
+      }
+    }
+  }
+  
+}
+
+# the number of articles with at least one taxonomic AND one geographic assignation
+n_valid_articles
+# 12,222
 
 ### number of articles per journal
 WOS_journal_table <- as.data.frame(table(wos_data$publisher))
