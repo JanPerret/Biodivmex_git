@@ -146,7 +146,7 @@ metazoa_data_with_nuc <- metazoa_data
 
 # data frame for terrestrial taxa
 metazoa_data <- metazoa_data %>% 
-  filter(!str_detect(gene, paste(nuc_gene_names, sep = "|")))
+  filter(!str_detect(gene, paste(nuc_gene_names, sep = "|"))) ########################################## erreur a corriger ici !
 
 # sample_origin fill rate through the years for METAZOA
 metazoa_sample_origin_fill_rate <- metazoa_data_with_nuc %>%
@@ -222,11 +222,18 @@ metazoa_data_with_nuc_med <- metazoa_data_with_nuc %>% filter(sample_origin %in%
 ### number of sequences with at least one geographic and one taxonomic assignation
 n_valid_seq_fungi <- nrow(fungi_data_med)
 n_valid_seq_plant <- nrow(plant_data_med)
-n_valid_seq_metazoa <- nrow(subset(metazoa_data_with_nuc_med, !is.na(metazoa_data_with_nuc_med$taxa)))
 
-n_valid_seq <- n_valid_seq_fungi + n_valid_seq_plant + n_valid_seq_metazoa
-# 207,583
+terrestrial_taxa_list <- c("Amphibian", "Reptile", "Bird", "Mammal", "Coleoptera", "Papilionoidea") # no "Lumbricina"
+terrestrial_taxa_med_df <- metazoa_data_med %>% filter(taxa %in% terrestrial_taxa_list)
+n_valid_seq_terrestrial <- nrow(subset(terrestrial_taxa_med_df, !is.na(terrestrial_taxa_med_df$sample_origin)))
 
+# marine_taxa_list <- c("Fish", "Porifera", "Crustacea")
+# marine_taxa_med_df <- metazoa_data_with_nuc_med %>% filter(taxa %in% marine_taxa_list)
+marine_taxa_med_df <- metazoa_data_with_nuc_med %>% filter(fish == "fish" | porifera == "porifera" | crustacea == "crustacea")
+n_valid_seq_marine <- nrow(subset(marine_taxa_med_df, !is.na(marine_taxa_med_df$sample_origin)))
+
+n_valid_seq <- n_valid_seq_fungi + n_valid_seq_plant + n_valid_seq_terrestrial + n_valid_seq_marine
+# 171,048
 
 ### add column "sequencer_loc" with local / mediterranean / distant sequencer information
 plant_data_med <- GB_generate_sequencer_loc(plant_data_med)
