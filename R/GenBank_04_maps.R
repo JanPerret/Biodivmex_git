@@ -128,6 +128,59 @@ fish_result_map <- GB_map_number_sequence_marine_taxa(locality_table = fish_seq_
 porifera_result_map <- GB_map_number_sequence_marine_taxa(locality_table = porifera_seq_loc_tab, subtitle_text = porifera_subtitle, taxa_name = "Porifera")
 crusta_result_map <- GB_map_number_sequence_marine_taxa(locality_table = crusta_seq_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
 
+### SYNTHESIS MAPS
+# sum data to plot
+myers_seq_loc_tab <- plant_seq_loc_tab[, 2:6] + amph_seq_loc_tab[, 2:6] + rept_seq_loc_tab[, 2:6] + 
+  bird_seq_loc_tab[, 2:6] + mammal_seq_loc_tab[, 2:6]
+myers_seq_loc_tab <- cbind(sample_origin = plant_seq_loc_tab$sample_origin, myers_seq_loc_tab)
+
+non_myers_seq_loc_tab <- fungi_seq_loc_tab[, 2:6] + coleo_seq_loc_tab[, 2:6] + papilio_seq_loc_tab[, 2:6]
+non_myers_seq_loc_tab <- cbind(sample_origin = fungi_seq_loc_tab$sample_origin, non_myers_seq_loc_tab)
+
+marine_seq_loc_tab <- fish_seq_loc_tab[, 2:6] + porifera_seq_loc_tab[, 2:6] + crusta_seq_loc_tab[, 2:6]
+marine_seq_loc_tab <- cbind(sample_origin = fish_seq_loc_tab$sample_origin, marine_seq_loc_tab)
+
+# add column with n_seq percentage per country
+n_seq_percent <- myers_seq_loc_tab$n_seq[1:27] / sum(myers_seq_loc_tab$n_seq[1:27]) * 100
+myers_seq_loc_tab <- cbind(myers_seq_loc_tab, n_seq_percent = n_seq_percent)
+
+n_seq_percent <- non_myers_seq_loc_tab$n_seq[1:27] / sum(non_myers_seq_loc_tab$n_seq[1:27]) * 100
+non_myers_seq_loc_tab <- cbind(non_myers_seq_loc_tab, n_seq_percent = n_seq_percent)
+
+n_seq_percent <- marine_seq_loc_tab$n_seq[1:19] / sum(marine_seq_loc_tab$n_seq[1:19]) * 100
+marine_seq_loc_tab <- cbind(marine_seq_loc_tab, n_seq_percent = n_seq_percent)
+
+# save the tables
+write_csv2(myers_seq_loc_tab, file = "./output/text/GenBank_table_synthesis_map_myers.csv", col_names = TRUE)
+write_csv2(non_myers_seq_loc_tab, file = "./output/text/GenBank_table_synthesis_map_non_myers.csv", col_names = TRUE)
+write_csv2(marine_seq_loc_tab, file = "./output/text/GenBank_table_synthesis_map_marine.csv", col_names = TRUE)
+
+# make the maps
+# compose color palette for the synthesis maps
+# palette_synthesis <- rev(RColorBrewer::brewer.pal(9, "RdYlBu")) # 9 colors
+palette_synthesis <- rev(RColorBrewer::brewer.pal(9, "RdYlBu"))[-c(4, 5)] # 7 colors
+
+# test plot raw counts
+# GB_map_number_sequence(locality_table = myers_seq_loc_tab, subtitle_text = "test map raw counts", taxa_name = "Myers taxa")
+# GB_map_number_sequence(locality_table = non_myers_seq_loc_tab, subtitle_text = "test map raw counts", taxa_name = "non Myers taxa")
+# GB_map_number_sequence_marine_taxa(locality_table = marine_seq_loc_tab, subtitle_text = "test map raw counts", taxa_name = "marine taxa")
+
+# make the final maps
+GB_myers_result_map <- GB_map_number_sequence_synthesis(locality_table = myers_seq_loc_tab,
+                                 subtitle_text = paste("Total number of sequences :", sum(myers_seq_loc_tab$n_seq[1:27])),
+                                 taxa_name = "Myers taxa",
+                                 color_scale_mid = 4)
+
+GB_non_myers_result_map <- GB_map_number_sequence_synthesis(locality_table = non_myers_seq_loc_tab,
+                                 subtitle_text = paste("Total number of sequences :", sum(non_myers_seq_loc_tab$n_seq[1:27])),
+                                 taxa_name = "non Myers taxa",
+                                 color_scale_mid = 4)
+
+GB_marine_result_map <- GB_map_number_sequence_marine_taxa_synthesis(locality_table = marine_seq_loc_tab,
+                                             subtitle_text = paste("Total number of sequences :", sum(marine_seq_loc_tab$n_seq[1:19])),
+                                             taxa_name = "marine taxa",
+                                             color_scale_mid = 4)
+
 
 ### compose and save the final maps (map + pie-charts + pie chart legend)
 # plant
@@ -257,6 +310,36 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(crusta_result_map, vp = vplayout(1:12, 1:12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
+dev.off()
+
+# Myers synthesis map
+file_path = "./output/plots/GenBank_map_sequences_myers_taxa.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(GB_myers_result_map, vp = vplayout(1:12, 1:12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
+dev.off()
+
+# non-Myers synthesis map
+file_path = "./output/plots/GenBank_map_sequences_non_myers_taxa.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(GB_non_myers_result_map, vp = vplayout(1:12, 1:12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
+dev.off()
+
+# marine taxa synthesis map
+file_path = "./output/plots/GenBank_map_sequences_marine_taxa.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(GB_marine_result_map, vp = vplayout(1:12, 1:12))
 # print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 

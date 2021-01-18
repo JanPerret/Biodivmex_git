@@ -116,6 +116,47 @@ papilio_result_map <- WOS_map_number_articles(locality_table = papilio_article_l
 lumbri_result_map <- WOS_map_number_articles(locality_table = lumbri_article_loc_tab, subtitle_text = lumbri_subtitle, taxa_name = "Lumbricina")
 tree_result_map <- WOS_map_number_articles(locality_table = tree_article_loc_tab, subtitle_text = tree_subtitle, taxa_name = "Trees")
 
+### make synthesis maps
+# sum data to plot
+myers_article_loc_tab <- plant_article_loc_tab[, 2:6] + amph_article_loc_tab[, 2:6] + 
+  rept_article_loc_tab[, 2:6] + bird_article_loc_tab[, 2:6] + mammal_article_loc_tab[, 2:6]
+myers_article_loc_tab <- cbind(fieldwork_country = plant_article_loc_tab$fieldwork_country, myers_article_loc_tab)
+
+non_myers_article_loc_tab <- fungi_article_loc_tab[, 2:6] + coleo_article_loc_tab[, 2:6] + 
+  papilio_article_loc_tab[, 2:6]
+non_myers_article_loc_tab <- cbind(fieldwork_country = plant_article_loc_tab$fieldwork_country, non_myers_article_loc_tab)
+
+# to test with raw number of sequences
+myers_map_raw <- WOS_map_number_articles(locality_table = myers_article_loc_tab, subtitle_text = "test map", taxa_name = "Myers taxa")
+non_myers_map_raw <- WOS_map_number_articles(locality_table = non_myers_article_loc_tab, subtitle_text = "test map", taxa_name = "non-Myers taxa")
+
+# add column with n_articles percentage per country
+n_articles_percent <- myers_article_loc_tab$n_articles[1:27] / sum(myers_article_loc_tab$n_articles[1:27]) * 100
+myers_article_loc_tab <- cbind(myers_article_loc_tab, n_articles_percent = c(n_articles_percent, NA))
+
+n_articles_percent <- non_myers_article_loc_tab$n_articles[1:27] / sum(non_myers_article_loc_tab$n_articles[1:27]) * 100
+non_myers_article_loc_tab <- cbind(non_myers_article_loc_tab, n_articles_percent = c(n_articles_percent, NA))
+
+# save tables
+write_csv2(myers_article_loc_tab, file = "./output/text/WOS_table_synthesis_map_myers.csv", col_names = TRUE)
+write_csv2(non_myers_article_loc_tab, file = "./output/text/WOS_table_synthesis_map_non_myers.csv", col_names = TRUE)
+
+# compose color palette for the synthesis maps
+# palette_synthesis <- rev(RColorBrewer::brewer.pal(9, "RdYlBu")) # 9 colors
+palette_synthesis <- rev(RColorBrewer::brewer.pal(9, "RdYlBu"))[-c(4, 5)] # 7 colors
+
+# make the maps
+terrestrial_myers_map <- WOS_map_number_articles_synthesis(locality_table = myers_article_loc_tab,
+                                                           # subtitle_text = "Color scale midpoint: 4%",
+                                                           subtitle_text = paste("Total number of articles :", sum(myers_article_loc_tab$n_articles[1:27])),
+                                                           taxa_name = "Myers taxa",
+                                                           color_scale_mid = 4)
+terrestrial_non_myers_map <- WOS_map_number_articles_synthesis(locality_table = non_myers_article_loc_tab,
+                                                               # subtitle_text = "Color scale midpoint: 4%",
+                                                               subtitle_text = paste("Total number of articles :", sum(non_myers_article_loc_tab$n_articles[1:27])),
+                                                               taxa_name = "non-Myers taxa",
+                                                               color_scale_mid = 4)
+
 
 ### compose and save the final maps (map + pie-charts + pie chart legend)
 # plant
@@ -218,7 +259,25 @@ print(tree_result_map, vp = vplayout(1:12, 1:12))
 # print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
+# synthesis map for Myers taxa
+file_path = "./output/plots/WOS_map_myers_taxa.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(terrestrial_myers_map, vp = vplayout(1:12, 1:12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
+dev.off()
 
+# synthesis map for non-Myers taxa
+file_path = "./output/plots/WOS_map_non_myers_taxa.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(terrestrial_non_myers_map, vp = vplayout(1:12, 1:12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
+dev.off()
 
 
 ### maps for MARINE TAXA :
@@ -253,6 +312,27 @@ porifera_result_map <- WOS_map_number_articles_marine(locality_table = porifera_
 crusta_result_map <- WOS_map_number_articles_marine(locality_table = crusta_article_loc_tab, subtitle_text = crusta_subtitle, taxa_name = "Crustacea")
 
 
+### make synthesis maps
+# sum data to plot
+marine_article_loc_tab <- fish_article_loc_tab[, 2:5] + porifera_article_loc_tab[, 2:5] + crusta_article_loc_tab[, 2:5]
+marine_article_loc_tab <- cbind(marine_region = fish_article_loc_tab$marine_region, marine_article_loc_tab)
+
+# test with raw number of sequences
+# myers_map_raw <- WOS_map_number_articles_marine(locality_table = marine_article_loc_tab, subtitle_text = "test map", taxa_name = "Myers taxa")
+
+# add column with n_articles percentage per country
+n_articles_percent <- marine_article_loc_tab$n_articles[1:19] / sum(marine_article_loc_tab$n_articles[1:19]) * 100
+marine_article_loc_tab <- cbind(marine_article_loc_tab, n_articles_percent = c(n_articles_percent, NA))
+
+# save table
+write_csv2(marine_article_loc_tab, file = "./output/text/WOS_table_synthesis_map_marine.csv", col_names = TRUE)
+
+# make the map
+marine_result_map <- WOS_map_number_articles_marine_synthesis(locality_table = marine_article_loc_tab,
+                                                       subtitle_text = paste("Total number of articles :", sum(marine_article_loc_tab$n_articles[1:19])),
+                                                       taxa_name = "Myers taxa",
+                                                       color_scale_mid = 4)
+
 ### compose and save final maps for marine taxa
 # fish
 file_path = "./output/plots/WOS_map_fish.pdf"
@@ -281,5 +361,15 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(crusta_result_map, vp = vplayout(1:12, 1:12))
+# print(legend_pie_2_categories, vp = vplayout(9, 12))
+dev.off()
+
+# synthesis map for marine taxa
+file_path = "./output/plots/WOS_map_marine_taxa.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(marine_result_map, vp = vplayout(1:12, 1:12))
 # print(legend_pie_2_categories, vp = vplayout(9, 12))
 dev.off()

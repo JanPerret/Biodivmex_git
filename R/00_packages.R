@@ -15,4 +15,5 @@ library(rworldxtra) # for 'countriesHigh' SpatialPolygonsDataFrame object
 library(grid) # for functions grid.newpage(), pushViewport(), viewport(), grid.layout()
 library(ggpubr) # for function ggarrange()
 library(directlabels) # for function geom_dl()
+library(colorspace) # for scale_colour_continuous_divergingx()
 # library(gridExtra) # usefull ?
