@@ -72,22 +72,56 @@ wos_data <- wos_data %>%
   filter(!(publisher %in% journal_filtering$publisher))
 # nrow(wos_data[rowSums(is.na(wos_data[, c(9:21)])) != 13, ])/nrow(wos_data) # same rate after filtering irrelevant journals
 
-### number of articles with at least one geographic and one taxonomic assignation
-# wos_marine_tab <- wos_data %>% 
-#   filter(fish == "fish" | porifera == "porifera" | crustacea == "crustacea")
-# dim(wos_marine_tab)
-# dim(subset(wos_marine_tab, !is.na(wos_marine_tab$marine_region)))
 
-n_valid_articles <- 0
+### get number of aticles at different steps of the filtering to make the filtering recap
+
+# number of articles that passed "content filtering"
+number_art_passing_content_filtering <- nrow(wos_data)
+# 54,810
+
+# number of articles assigned to a taxa of interest
+number_art_taxa_of_interest <- 0
+
+for (i in 1:length(wos_data$access_num)) {
+  
+  # test if the article is assigned to any taxa
+  if (any(!is.na(wos_data[i , c(9:19, 21)]))) { # excluding lumbricina
+    number_art_taxa_of_interest <- number_art_taxa_of_interest + 1
+  }
+}
+# 25,371
+
+# number of sequences assigned to a study area
+number_art_study_area <- 0
+
+for (i in 1:length(wos_data$access_num)) {
+  
+  # test if the article is assigned to any fieldwork_country
+  if (!is.na(wos_data$fieldwork_country[i])) {
+    number_art_study_area <- number_art_study_area + 1
+  
+  } else {
+      
+  # test if the article is assigned to any marine region
+  if (!is.na(wos_data$marine_region[i])) {
+    number_art_study_area <- number_art_study_area + 1
+  }
+ }
+}
+# 31,307
+
+
+# number of articles with both (at least one geographic AND one taxonomic assignation)
+number_art_both <- 0
 
 for (i in 1:length(wos_data$access_num)) {
   
   # test if the article is assigned to any terrestrial taxa
-  if (any(!is.na(wos_data[i , c(9:14, 18:21)]))) {
+  if (any(!is.na(wos_data[i , c(9:14, 18, 19, 21)]))) {
     
     # test if the article is assigned to any fieldwork_country
     if (!is.na(wos_data$fieldwork_country[i])) {
-      n_valid_articles <- n_valid_articles + 1
+      number_art_both <- number_art_both + 1
     }
   } else {
     
@@ -96,16 +130,21 @@ for (i in 1:length(wos_data$access_num)) {
       
       # test if the article is assigned to any marine region
       if (!is.na(wos_data$marine_region[i])) {
-        n_valid_articles <- n_valid_articles + 1
+        number_art_both <- number_art_both + 1
       }
     }
   }
-  
 }
+# 12,190
 
-# the number of articles with at least one taxonomic AND one geographic assignation
-n_valid_articles
-# 12,222
+# make recap table of the filtering steps
+recap_titles <- c("Number of articles that passed content filtering",
+                  "Number of articles assigned to a taxa of interest",
+                  "Number of articles assigned to a study area",
+                  "Number of articles assigned to both a taxa of interest and a study area")
+num_art <- c(number_art_passing_content_filtering, number_art_taxa_of_interest, number_art_study_area, number_art_both) 
+WOS_filtering_recap_table <- data.frame(recap_titles, num_art)
+write_csv2(WOS_filtering_recap_table, file = "./output/text/WOS_filtering_recap.csv", col_names = TRUE)
 
 ### number of articles per journal
 WOS_journal_table <- as.data.frame(table(wos_data$publisher))
@@ -113,7 +152,7 @@ colnames(WOS_journal_table) <- c("publisher","n_articles")
 WOS_journal_table <- WOS_journal_table[with(WOS_journal_table, order(-n_articles)), ]
 
 # save table
-write_csv2(WOS_journal_table, path = "./output/text/WOS_recap_table_per_journal.csv", col_names = TRUE)
+write_csv2(WOS_journal_table, file = "./output/text/WOS_recap_table_per_journal.csv", col_names = TRUE)
 
 
 ### number of articles on each taxonomic group
@@ -171,7 +210,7 @@ WOS_taxa_table$loc_rate <- c(round((sum(!is.na(plant_df$fieldwork_country))/leng
                          )
 
 # save table
-write_csv2(WOS_taxa_table, path = "./output/text/WOS_recap_table_per_taxa.csv", col_names = TRUE)
+write_csv2(WOS_taxa_table, file = "./output/text/WOS_recap_table_per_taxa.csv", col_names = TRUE)
 
 
 ### number of articles per year for each taxa
@@ -197,13 +236,13 @@ taxa_year_table[13,] <- as.data.frame(table(tree_df$year))$Freq
 taxa_year_table <- cbind(taxa = taxa_vect, taxa_year_table)
 
 # save table
-write_csv2(taxa_year_table, path = "./output/text/WOS_recap_table_articles_per_year.csv", col_names = TRUE)
+write_csv2(taxa_year_table, file = "./output/text/WOS_recap_table_articles_per_year.csv", col_names = TRUE)
 
 # passing from raw counts to accumulation
 taxa_year_table_acc <- table_accumulate(year_tab = taxa_year_table, first_column = 2)
 
 # save table
-write_csv2(taxa_year_table_acc, path = "./output/text/WOS_recap_table_articles_per_year_acc.csv", col_names = TRUE)
+write_csv2(taxa_year_table_acc, file = "./output/text/WOS_recap_table_articles_per_year_acc.csv", col_names = TRUE)
 
 
 ### number of articles per country for each taxa
@@ -283,7 +322,7 @@ taxa_country_table[,13] <- as.data.frame(table(tree_country_df$fieldwork_country
 taxa_country_table <- cbind(fieldwork_country = c(paste0(country_list), "NA"), taxa_country_table)
 
 # save table
-write_csv2(taxa_country_table, path = "./output/text/WOS_recap_table_articles_per_country.csv", col_names = TRUE)
+write_csv2(taxa_country_table, file = "./output/text/WOS_recap_table_articles_per_country.csv", col_names = TRUE)
 
 
 ### number of articles per year per country for each taxa
@@ -303,19 +342,19 @@ fish_year_tab_per_country <- fish_country_df %>% group_by(fieldwork_country, yea
 tree_year_tab_per_country <- tree_country_df %>% group_by(fieldwork_country, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 
 # save tables
-write_csv2(plant_year_tab_per_country, path = "./output/text/WOS_plant_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(fungi_year_tab_per_country, path = "./output/text/WOS_fungi_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(amph_year_tab_per_country, path = "./output/text/WOS_amph_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(rept_year_tab_per_country, path = "./output/text/WOS_rept_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(bird_year_tab_per_country, path = "./output/text/WOS_bird_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(mammal_year_tab_per_country, path = "./output/text/WOS_mammal_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(coleo_year_tab_per_country, path = "./output/text/WOS_coleo_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(lumbri_year_tab_per_country, path = "./output/text/WOS_lumbri_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(papilio_year_tab_per_country, path = "./output/text/WOS_papilio_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(porifera_year_tab_per_country, path = "./output/text/WOS_porifera_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(crusta_year_tab_per_country, path = "./output/text/WOS_crusta_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(fish_year_tab_per_country, path = "./output/text/WOS_fish_year_tab_per_country.csv", col_names = TRUE)
-write_csv2(tree_year_tab_per_country, path = "./output/text/WOS_tree_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(plant_year_tab_per_country, file = "./output/text/WOS_plant_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(fungi_year_tab_per_country, file = "./output/text/WOS_fungi_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(amph_year_tab_per_country, file = "./output/text/WOS_amph_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(rept_year_tab_per_country, file = "./output/text/WOS_rept_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(bird_year_tab_per_country, file = "./output/text/WOS_bird_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(mammal_year_tab_per_country, file = "./output/text/WOS_mammal_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(coleo_year_tab_per_country, file = "./output/text/WOS_coleo_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(lumbri_year_tab_per_country, file = "./output/text/WOS_lumbri_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(papilio_year_tab_per_country, file = "./output/text/WOS_papilio_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(porifera_year_tab_per_country, file = "./output/text/WOS_porifera_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(crusta_year_tab_per_country, file = "./output/text/WOS_crusta_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(fish_year_tab_per_country, file = "./output/text/WOS_fish_year_tab_per_country.csv", col_names = TRUE)
+write_csv2(tree_year_tab_per_country, file = "./output/text/WOS_tree_year_tab_per_country.csv", col_names = TRUE)
 
 # passing from raw counts to accumulation tables
 plant_year_tab_per_country_acc <- table_accumulate(year_tab = plant_year_tab_per_country, first_column = 2)
@@ -333,19 +372,19 @@ fish_year_tab_per_country_acc <- table_accumulate(year_tab = fish_year_tab_per_c
 tree_year_tab_per_country_acc <- table_accumulate(year_tab = tree_year_tab_per_country, first_column = 2)
 
 # save tables
-write_csv2(plant_year_tab_per_country_acc, path = "./output/text/WOS_plant_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(fungi_year_tab_per_country_acc, path = "./output/text/WOS_fungi_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(amph_year_tab_per_country_acc, path = "./output/text/WOS_amph_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(rept_year_tab_per_country_acc, path = "./output/text/WOS_rept_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(bird_year_tab_per_country_acc, path = "./output/text/WOS_bird_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(mammal_year_tab_per_country_acc, path = "./output/text/WOS_mammal_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(coleo_year_tab_per_country_acc, path = "./output/text/WOS_coleo_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(lumbri_year_tab_per_country_acc, path = "./output/text/WOS_lumbri_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(papilio_year_tab_per_country_acc, path = "./output/text/WOS_papilio_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(porifera_year_tab_per_country_acc, path = "./output/text/WOS_porifera_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(crusta_year_tab_per_country_acc, path = "./output/text/WOS_crusta_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(fish_year_tab_per_country_acc, path = "./output/text/WOS_fish_year_tab_per_country_acc.csv", col_names = TRUE)
-write_csv2(tree_year_tab_per_country_acc, path = "./output/text/WOS_tree_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(plant_year_tab_per_country_acc, file = "./output/text/WOS_plant_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(fungi_year_tab_per_country_acc, file = "./output/text/WOS_fungi_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(amph_year_tab_per_country_acc, file = "./output/text/WOS_amph_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(rept_year_tab_per_country_acc, file = "./output/text/WOS_rept_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(bird_year_tab_per_country_acc, file = "./output/text/WOS_bird_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(mammal_year_tab_per_country_acc, file = "./output/text/WOS_mammal_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(coleo_year_tab_per_country_acc, file = "./output/text/WOS_coleo_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(lumbri_year_tab_per_country_acc, file = "./output/text/WOS_lumbri_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(papilio_year_tab_per_country_acc, file = "./output/text/WOS_papilio_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(porifera_year_tab_per_country_acc, file = "./output/text/WOS_porifera_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(crusta_year_tab_per_country_acc, file = "./output/text/WOS_crusta_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(fish_year_tab_per_country_acc, file = "./output/text/WOS_fish_year_tab_per_country_acc.csv", col_names = TRUE)
+write_csv2(tree_year_tab_per_country_acc, file = "./output/text/WOS_tree_year_tab_per_country_acc.csv", col_names = TRUE)
 
 
 ### number of articles per country with from_country / inside_med / outside_med corresponding author for each taxa
@@ -467,19 +506,19 @@ crusta_article_loc_tab <- subset(crusta_article_loc_tab, crusta_article_loc_tab$
 tree_article_loc_tab <- subset(tree_article_loc_tab, tree_article_loc_tab$fieldwork_country != "Macedonia")
 
 # save tables
-write_csv2(plant_article_loc_tab, path = "./output/text/WOS_plant_article_loc_tab.csv", col_names = TRUE)
-write_csv2(fungi_article_loc_tab, path = "./output/text/WOS_fungi_article_loc_tab.csv", col_names = TRUE)
-write_csv2(amph_article_loc_tab, path = "./output/text/WOS_amph_article_loc_tab.csv", col_names = TRUE)
-write_csv2(rept_article_loc_tab, path = "./output/text/WOS_rept_article_loc_tab.csv", col_names = TRUE)
-write_csv2(bird_article_loc_tab, path = "./output/text/WOS_bird_article_loc_tab.csv", col_names = TRUE)
-write_csv2(mammal_article_loc_tab, path = "./output/text/WOS_mammal_article_loc_tab.csv", col_names = TRUE)
-write_csv2(coleo_article_loc_tab, path = "./output/text/WOS_coleo_article_loc_tab.csv", col_names = TRUE)
-write_csv2(lumbri_article_loc_tab, path = "./output/text/WOS_lumbri_article_loc_tab.csv", col_names = TRUE)
-write_csv2(papilio_article_loc_tab, path = "./output/text/WOS_papilio_article_loc_tab.csv", col_names = TRUE)
-write_csv2(porifera_article_loc_tab, path = "./output/text/WOS_porifera_article_loc_tab.csv", col_names = TRUE)
-write_csv2(crusta_article_loc_tab, path = "./output/text/WOS_crusta_article_loc_tab.csv", col_names = TRUE)
-write_csv2(fish_article_loc_tab, path = "./output/text/WOS_fish_article_loc_tab.csv", col_names = TRUE)
-write_csv2(tree_article_loc_tab, path = "./output/text/WOS_tree_article_loc_tab.csv", col_names = TRUE)
+write_csv2(plant_article_loc_tab, file = "./output/text/WOS_plant_article_loc_tab.csv", col_names = TRUE)
+write_csv2(fungi_article_loc_tab, file = "./output/text/WOS_fungi_article_loc_tab.csv", col_names = TRUE)
+write_csv2(amph_article_loc_tab, file = "./output/text/WOS_amph_article_loc_tab.csv", col_names = TRUE)
+write_csv2(rept_article_loc_tab, file = "./output/text/WOS_rept_article_loc_tab.csv", col_names = TRUE)
+write_csv2(bird_article_loc_tab, file = "./output/text/WOS_bird_article_loc_tab.csv", col_names = TRUE)
+write_csv2(mammal_article_loc_tab, file = "./output/text/WOS_mammal_article_loc_tab.csv", col_names = TRUE)
+write_csv2(coleo_article_loc_tab, file = "./output/text/WOS_coleo_article_loc_tab.csv", col_names = TRUE)
+write_csv2(lumbri_article_loc_tab, file = "./output/text/WOS_lumbri_article_loc_tab.csv", col_names = TRUE)
+write_csv2(papilio_article_loc_tab, file = "./output/text/WOS_papilio_article_loc_tab.csv", col_names = TRUE)
+write_csv2(porifera_article_loc_tab, file = "./output/text/WOS_porifera_article_loc_tab.csv", col_names = TRUE)
+write_csv2(crusta_article_loc_tab, file = "./output/text/WOS_crusta_article_loc_tab.csv", col_names = TRUE)
+write_csv2(fish_article_loc_tab, file = "./output/text/WOS_fish_article_loc_tab.csv", col_names = TRUE)
+write_csv2(tree_article_loc_tab, file = "./output/text/WOS_tree_article_loc_tab.csv", col_names = TRUE)
 
 ### number of different journals through the years for each taxa
 # keep only document types "Article", "Correction" and "Review" because journal names are the most standardized
@@ -555,7 +594,7 @@ taxa_journals_table[which(taxa_journals_table$taxa == "lumbricina"),5:(4+length(
 taxa_journals_table[which(taxa_journals_table$taxa == "tree"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = tree_journals_df)
 
 # save table
-write_csv2(taxa_journals_table, path = "./output/text/WOS_taxa_journals_table.csv", col_names = TRUE)
+write_csv2(taxa_journals_table, file = "./output/text/WOS_taxa_journals_table.csv", col_names = TRUE)
 
 
 ### USE OF MARINE REGIONS INSTEAD OF COUNTRIES FOR MARINE TAXA ###
@@ -617,7 +656,7 @@ taxa_region_table[,3] <- as.data.frame(table(crusta_region_df$marine_region))$Fr
 taxa_region_table <- cbind(marine_region = c(paste0(region_list), "NA"), taxa_region_table)
 
 # save table
-write_csv2(taxa_region_table, path = "./output/text/WOS_recap_articles_per_marine_region.csv", col_names = TRUE)
+write_csv2(taxa_region_table, file = "./output/text/WOS_recap_articles_per_marine_region.csv", col_names = TRUE)
 
 
 ### number of articles per year per marine region for each taxa (l.236)
@@ -627,9 +666,9 @@ porifera_year_tab_per_region <- porifera_region_df %>% group_by(marine_region, y
 crusta_year_tab_per_region <- crusta_region_df %>% group_by(marine_region, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 
 # save tables
-write_csv2(fish_year_tab_per_region, path = "./output/text/WOS_fish_year_tab_per_region.csv", col_names = TRUE)
-write_csv2(porifera_year_tab_per_region, path = "./output/text/WOS_porifera_year_tab_per_region.csv", col_names = TRUE)
-write_csv2(crusta_year_tab_per_region, path = "./output/text/WOS_crusta_year_tab_per_region.csv", col_names = TRUE)
+write_csv2(fish_year_tab_per_region, file = "./output/text/WOS_fish_year_tab_per_region.csv", col_names = TRUE)
+write_csv2(porifera_year_tab_per_region, file = "./output/text/WOS_porifera_year_tab_per_region.csv", col_names = TRUE)
+write_csv2(crusta_year_tab_per_region, file = "./output/text/WOS_crusta_year_tab_per_region.csv", col_names = TRUE)
 
 # passing from raw counts to accumulation tables
 fish_year_tab_per_region_acc <- table_accumulate(year_tab = fish_year_tab_per_region, first_column = 2)
@@ -637,9 +676,9 @@ porifera_year_tab_per_region_acc <- table_accumulate(year_tab = porifera_year_ta
 crusta_year_tab_per_region_acc <- table_accumulate(year_tab = crusta_year_tab_per_region, first_column = 2)
 
 # save tables
-write_csv2(fish_year_tab_per_region_acc, path = "./output/text/WOS_fish_year_tab_per_region_acc.csv", col_names = TRUE)
-write_csv2(porifera_year_tab_per_region_acc, path = "./output/text/WOS_porifera_year_tab_per_region_acc.csv", col_names = TRUE)
-write_csv2(crusta_year_tab_per_region_acc, path = "./output/text/WOS_crusta_year_tab_per_region_acc.csv", col_names = TRUE)
+write_csv2(fish_year_tab_per_region_acc, file = "./output/text/WOS_fish_year_tab_per_region_acc.csv", col_names = TRUE)
+write_csv2(porifera_year_tab_per_region_acc, file = "./output/text/WOS_porifera_year_tab_per_region_acc.csv", col_names = TRUE)
+write_csv2(crusta_year_tab_per_region_acc, file = "./output/text/WOS_crusta_year_tab_per_region_acc.csv", col_names = TRUE)
 
 
 ### number of articles per marine region with inside_med / outside_med corresponding author information (l.298)
@@ -708,8 +747,8 @@ porifera_article_loc_tab <- cbind(porifera_article_loc_tab, n_articles = porifer
 crusta_article_loc_tab <- cbind(crusta_article_loc_tab, n_articles = crusta_article_loc_tab$inside_med + crusta_article_loc_tab$outside_med + crusta_article_loc_tab$`(Missing)`)
 
 # save tables
-write_csv2(porifera_article_loc_tab, path = "./output/text/WOS_porifera_article_loc_tab.csv", col_names = TRUE)
-write_csv2(crusta_article_loc_tab, path = "./output/text/WOS_crusta_article_loc_tab.csv", col_names = TRUE)
-write_csv2(fish_article_loc_tab, path = "./output/text/WOS_fish_article_loc_tab.csv", col_names = TRUE)
+write_csv2(porifera_article_loc_tab, file = "./output/text/WOS_porifera_article_loc_tab.csv", col_names = TRUE)
+write_csv2(crusta_article_loc_tab, file = "./output/text/WOS_crusta_article_loc_tab.csv", col_names = TRUE)
+write_csv2(fish_article_loc_tab, file = "./output/text/WOS_fish_article_loc_tab.csv", col_names = TRUE)
 
 

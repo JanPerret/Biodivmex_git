@@ -137,16 +137,26 @@ fungi_data <- subset(fungi_data, fungi_data$year != 2020)
 plant_data <- subset(plant_data, plant_data$year != 2020)
 metazoa_data <- subset(metazoa_data, metazoa_data$year != 2020)
 
+# remove sequences for wich no gene could be assigned
+fungi_data <- subset(fungi_data, !is.na(fungi_data$gene))
+plant_data <- subset(plant_data, !is.na(plant_data$gene))
+metazoa_data <- subset(metazoa_data, !is.na(metazoa_data$gene))
+
+
+### number of sequences that passed "content filtering":
+number_seq_passing_content_filtering <- nrow(fungi_data) + nrow(plant_data) + nrow(metazoa_data)
+# 6,622,014
 
 ### create sub-data frame without nuclear genes (only used for marine taxa)
-nuc_gene_names <- c("18S rRNA", "28S rRNA", "5.8S rRNA", "ITS", "Rag 2")
-
 # save data frame with nuclear sequences for marine taxa
 metazoa_data_with_nuc <- metazoa_data
 
-# data frame for terrestrial taxa
-metazoa_data <- metazoa_data %>% 
-  filter(!str_detect(gene, paste(nuc_gene_names, sep = "|"))) ########################################## erreur a corriger ici !
+# list of nuclear markers
+nuc_gene_names <- c("18S rRNA|28S rRNA|5.8S rRNA|ITS|Rag 2")
+
+# remove from the table sequences of these markers
+metazoa_data <- metazoa_data %>%
+  filter(!grepl(pattern = nuc_gene_names, x = gene))
 
 # sample_origin fill rate through the years for METAZOA
 metazoa_sample_origin_fill_rate <- metazoa_data_with_nuc %>%
@@ -194,9 +204,9 @@ fungi_sample_origin_fill_rate <- cbind(fungi_sample_origin_fill_rate,
                                          fill_rate = round(1 - fungi_sample_origin_fill_rate$empty_origin/fungi_sample_origin_fill_rate$n_seq, digits = 2))
 
 # save the tables
-write_csv2(metazoa_sample_origin_fill_rate, path = "./output/text/GenBank_metazoa_sample_origin_fill_rate.csv", col_names = TRUE)
-write_csv2(plant_sample_origin_fill_rate, path = "./output/text/GenBank_plant_sample_origin_fill_rate.csv", col_names = TRUE)
-write_csv2(fungi_sample_origin_fill_rate, path = "./output/text/GenBank_fungi_sample_origin_fill_rate.csv", col_names = TRUE)
+write_csv2(metazoa_sample_origin_fill_rate, file = "./output/text/GenBank_metazoa_sample_origin_fill_rate.csv", col_names = TRUE)
+write_csv2(plant_sample_origin_fill_rate, file = "./output/text/GenBank_plant_sample_origin_fill_rate.csv", col_names = TRUE)
+write_csv2(fungi_sample_origin_fill_rate, file = "./output/text/GenBank_fungi_sample_origin_fill_rate.csv", col_names = TRUE)
 
 
 ### make sub-data frames for the mediterranean basin and each animal taxa
@@ -219,21 +229,35 @@ fungi_data_med <- fungi_data %>% filter(sample_origin %in% med_countries_list)
 metazoa_data_med <- metazoa_data %>% filter(sample_origin %in% med_countries_list)
 metazoa_data_with_nuc_med <- metazoa_data_with_nuc %>% filter(sample_origin %in% med_countries_list)
 
-### number of sequences with at least one geographic and one taxonomic assignation
-n_valid_seq_fungi <- nrow(fungi_data_med)
-n_valid_seq_plant <- nrow(plant_data_med)
 
+### get number of sequences at different steps of the filtering to make the filtering recap
 terrestrial_taxa_list <- c("Amphibian", "Reptile", "Bird", "Mammal", "Coleoptera", "Papilionoidea") # no "Lumbricina"
+
+# number of sequences assigned to a taxa of interest
+n_seq_marine_taxa <- nrow(metazoa_data_with_nuc %>% filter(fish == "fish" | porifera == "porifera" | crustacea == "crustacea"))
+n_seq_terrestrial_taxa <- nrow(metazoa_data %>% filter(taxa %in% terrestrial_taxa_list))
+n_seq_taxa_of_interest <- nrow(fungi_data) + nrow(plant_data) + n_seq_marine_taxa + n_seq_terrestrial_taxa
+# 2,689,132
+
+# number of sequences assigned to a study area
+n_seq_study_area <- nrow(fungi_data_med) + nrow(plant_data_med) + nrow(metazoa_data_with_nuc_med)
+# 292,522
+
+# number of sequences with at least one geographic and one taxonomic assignation
 terrestrial_taxa_med_df <- metazoa_data_med %>% filter(taxa %in% terrestrial_taxa_list)
-n_valid_seq_terrestrial <- nrow(subset(terrestrial_taxa_med_df, !is.na(terrestrial_taxa_med_df$sample_origin)))
-
-# marine_taxa_list <- c("Fish", "Porifera", "Crustacea")
-# marine_taxa_med_df <- metazoa_data_with_nuc_med %>% filter(taxa %in% marine_taxa_list)
 marine_taxa_med_df <- metazoa_data_with_nuc_med %>% filter(fish == "fish" | porifera == "porifera" | crustacea == "crustacea")
-n_valid_seq_marine <- nrow(subset(marine_taxa_med_df, !is.na(marine_taxa_med_df$sample_origin)))
 
-n_valid_seq <- n_valid_seq_fungi + n_valid_seq_plant + n_valid_seq_terrestrial + n_valid_seq_marine
-# 171,048
+n_valid_seq <- nrow(fungi_data_med) + nrow(plant_data_med) + nrow(terrestrial_taxa_med_df) + nrow(marine_taxa_med_df)
+# 164,974
+
+# make recap table of the filtering steps
+recap_titles <- c("Number of sequences that passed content filtering",
+                  "Number of sequences assigned to a taxa of interest",
+                  "Number of sequences assigned to a study area",
+                  "Number of sequences assigned to both a taxa of interest and a study area")
+num_seq <- c(number_seq_passing_content_filtering, n_seq_taxa_of_interest, n_seq_study_area, n_valid_seq) 
+GenBank_filtering_recap_table <- data.frame(recap_titles, num_seq)
+write_csv2(GenBank_filtering_recap_table, file = "./output/text/GenBank_filtering_recap.csv", col_names = TRUE)
 
 ### add column "sequencer_loc" with local / mediterranean / distant sequencer information
 plant_data_med <- GB_generate_sequencer_loc(plant_data_med)
@@ -279,7 +303,7 @@ all_taxa_desc_tab <- rbind(plant_desc_tab, fungi_desc_tab, amph_desc_tab, rept_d
                            coleo_desc_tab, papilio_desc_tab, lumbri_desc_tab, fish_desc_tab, porifera_desc_tab, crusta_desc_tab,
                            tree_desc_tab)
 # save table
-write_csv2(all_taxa_desc_tab, path = "./output/text/GenBank_all_taxa_desc_tab.csv", col_names = TRUE)
+write_csv2(all_taxa_desc_tab, file = "./output/text/GenBank_all_taxa_desc_tab.csv", col_names = TRUE)
 
 
 ### extract these general information per year
@@ -299,19 +323,19 @@ tree_desc_year_tab <- GB_loop_over_years(kingdom_data = plant_data, taxa_data = 
 tree_desc_year_tab[,3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
 
 # save tables
-write_csv2(plant_desc_year_tab, path = "./output/text/GenBank_plant_desc_year_tab.csv", col_names = TRUE)
-write_csv2(fungi_desc_year_tab, path = "./output/text/GenBank_fungi_desc_year_tab.csv", col_names = TRUE)
-write_csv2(amph_desc_year_tab, path = "./output/text/GenBank_amph_desc_year_tab.csv", col_names = TRUE)
-write_csv2(rept_desc_year_tab, path = "./output/text/GenBank_rept_desc_year_tab.csv", col_names = TRUE)
-write_csv2(bird_desc_year_tab, path = "./output/text/GenBank_bird_desc_year_tab.csv", col_names = TRUE)
-write_csv2(mammal_desc_year_tab, path = "./output/text/GenBank_mammal_desc_year_tab.csv", col_names = TRUE)
-write_csv2(coleo_desc_year_tab, path = "./output/text/GenBank_coleo_desc_year_tab.csv", col_names = TRUE)
-write_csv2(papilio_desc_year_tab, path = "./output/text/GenBank_papilio_desc_year_tab.csv", col_names = TRUE)
-write_csv2(lumbri_desc_year_tab, path = "./output/text/GenBank_lumbri_desc_year_tab.csv", col_names = TRUE)
-write_csv2(fish_desc_year_tab, path = "./output/text/GenBank_fish_desc_year_tab.csv", col_names = TRUE)
-write_csv2(porifera_desc_year_tab, path = "./output/text/GenBank_porifera_desc_year_tab.csv", col_names = TRUE)
-write_csv2(crusta_desc_year_tab, path = "./output/text/GenBank_crusta_desc_year_tab.csv", col_names = TRUE)
-write_csv2(tree_desc_year_tab, path = "./output/text/GenBank_tree_desc_year_tab.csv", col_names = TRUE)
+write_csv2(plant_desc_year_tab, file = "./output/text/GenBank_plant_desc_year_tab.csv", col_names = TRUE)
+write_csv2(fungi_desc_year_tab, file = "./output/text/GenBank_fungi_desc_year_tab.csv", col_names = TRUE)
+write_csv2(amph_desc_year_tab, file = "./output/text/GenBank_amph_desc_year_tab.csv", col_names = TRUE)
+write_csv2(rept_desc_year_tab, file = "./output/text/GenBank_rept_desc_year_tab.csv", col_names = TRUE)
+write_csv2(bird_desc_year_tab, file = "./output/text/GenBank_bird_desc_year_tab.csv", col_names = TRUE)
+write_csv2(mammal_desc_year_tab, file = "./output/text/GenBank_mammal_desc_year_tab.csv", col_names = TRUE)
+write_csv2(coleo_desc_year_tab, file = "./output/text/GenBank_coleo_desc_year_tab.csv", col_names = TRUE)
+write_csv2(papilio_desc_year_tab, file = "./output/text/GenBank_papilio_desc_year_tab.csv", col_names = TRUE)
+write_csv2(lumbri_desc_year_tab, file = "./output/text/GenBank_lumbri_desc_year_tab.csv", col_names = TRUE)
+write_csv2(fish_desc_year_tab, file = "./output/text/GenBank_fish_desc_year_tab.csv", col_names = TRUE)
+write_csv2(porifera_desc_year_tab, file = "./output/text/GenBank_porifera_desc_year_tab.csv", col_names = TRUE)
+write_csv2(crusta_desc_year_tab, file = "./output/text/GenBank_crusta_desc_year_tab.csv", col_names = TRUE)
+write_csv2(tree_desc_year_tab, file = "./output/text/GenBank_tree_desc_year_tab.csv", col_names = TRUE)
 
 
 ### recap table with number of sequences through time for each taxa
@@ -348,8 +372,8 @@ all_taxa_year_tab_acc <- cbind(taxa = taxa_vect, all_taxa_year_tab_acc)
 all_taxa_year_tab_acc <- as.data.frame(all_taxa_year_tab_acc)
 
 # save tables
-write_csv2(all_taxa_year_tab, path = "./output/text/GenBank_all_taxa_year_tab.csv", col_names = TRUE)
-write_csv2(all_taxa_year_tab_acc, path = "./output/text/GenBank_all_taxa_year_tab_acc.csv", col_names = TRUE)
+write_csv2(all_taxa_year_tab, file = "./output/text/GenBank_all_taxa_year_tab.csv", col_names = TRUE)
+write_csv2(all_taxa_year_tab_acc, file = "./output/text/GenBank_all_taxa_year_tab_acc.csv", col_names = TRUE)
 
 
 ### recap tables for number of sequences for each gene in med region
@@ -383,8 +407,8 @@ all_taxa_gene_tab_percentage <- round(all_taxa_gene_tab_percentage, digits = 2)
 all_taxa_gene_tab_percentage <- as.data.frame(cbind(taxa = all_taxa_gene_tab$taxa, all_taxa_gene_tab_percentage, tot_n_seq = all_taxa_gene_tab$tot_n_seq))
 
 # save tables
-write_csv2(all_taxa_gene_tab, path = "./output/text/GenBank_all_taxa_gene_tab.csv", col_names = TRUE)
-write_csv2(all_taxa_gene_tab_percentage, path = "./output/text/GenBank_all_taxa_gene_tab_percentage.csv", col_names = TRUE)
+write_csv2(all_taxa_gene_tab, file = "./output/text/GenBank_all_taxa_gene_tab.csv", col_names = TRUE)
+write_csv2(all_taxa_gene_tab_percentage, file = "./output/text/GenBank_all_taxa_gene_tab_percentage.csv", col_names = TRUE)
 
 
 # loop over years to have the number of sequences containing each gene for each year
@@ -403,19 +427,19 @@ crusta_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = crusta_dat
 tree_gene_year_tab <- GB_gene_recap_loop_over_years(taxa_data_med = tree_data_med, taxa_name = "tree")
 
 # save tables
-write_csv2(plant_gene_year_tab, path = "./output/text/GenBank_plant_gene_year_tab.csv", col_names = TRUE)
-write_csv2(fungi_gene_year_tab, path = "./output/text/GenBank_fungi_gene_year_tab.csv", col_names = TRUE)
-write_csv2(amph_gene_year_tab, path = "./output/text/GenBank_amph_gene_year_tab.csv", col_names = TRUE)
-write_csv2(rept_gene_year_tab, path = "./output/text/GenBank_rept_gene_year_tab.csv", col_names = TRUE)
-write_csv2(bird_gene_year_tab, path = "./output/text/GenBank_bird_gene_year_tab.csv", col_names = TRUE)
-write_csv2(mammal_gene_year_tab, path = "./output/text/GenBank_mammal_gene_year_tab.csv", col_names = TRUE)
-write_csv2(coleo_gene_year_tab, path = "./output/text/GenBank_coleo_gene_year_tab.csv", col_names = TRUE)
-write_csv2(papilio_gene_year_tab, path = "./output/text/GenBank_papilio_gene_year_tab.csv", col_names = TRUE)
-write_csv2(lumbri_gene_year_tab, path = "./output/text/GenBank_lumbri_gene_year_tab.csv", col_names = TRUE)
-write_csv2(fish_gene_year_tab, path = "./output/text/GenBank_fish_gene_year_tab.csv", col_names = TRUE)
-write_csv2(porifera_gene_year_tab, path = "./output/text/GenBank_porifera_gene_year_tab.csv", col_names = TRUE)
-write_csv2(crusta_gene_year_tab, path = "./output/text/GenBank_crusta_gene_year_tab.csv", col_names = TRUE)
-write_csv2(tree_gene_year_tab, path = "./output/text/GenBank_tree_gene_year_tab.csv", col_names = TRUE)
+write_csv2(plant_gene_year_tab, file = "./output/text/GenBank_plant_gene_year_tab.csv", col_names = TRUE)
+write_csv2(fungi_gene_year_tab, file = "./output/text/GenBank_fungi_gene_year_tab.csv", col_names = TRUE)
+write_csv2(amph_gene_year_tab, file = "./output/text/GenBank_amph_gene_year_tab.csv", col_names = TRUE)
+write_csv2(rept_gene_year_tab, file = "./output/text/GenBank_rept_gene_year_tab.csv", col_names = TRUE)
+write_csv2(bird_gene_year_tab, file = "./output/text/GenBank_bird_gene_year_tab.csv", col_names = TRUE)
+write_csv2(mammal_gene_year_tab, file = "./output/text/GenBank_mammal_gene_year_tab.csv", col_names = TRUE)
+write_csv2(coleo_gene_year_tab, file = "./output/text/GenBank_coleo_gene_year_tab.csv", col_names = TRUE)
+write_csv2(papilio_gene_year_tab, file = "./output/text/GenBank_papilio_gene_year_tab.csv", col_names = TRUE)
+write_csv2(lumbri_gene_year_tab, file = "./output/text/GenBank_lumbri_gene_year_tab.csv", col_names = TRUE)
+write_csv2(fish_gene_year_tab, file = "./output/text/GenBank_fish_gene_year_tab.csv", col_names = TRUE)
+write_csv2(porifera_gene_year_tab, file = "./output/text/GenBank_porifera_gene_year_tab.csv", col_names = TRUE)
+write_csv2(crusta_gene_year_tab, file = "./output/text/GenBank_crusta_gene_year_tab.csv", col_names = TRUE)
+write_csv2(tree_gene_year_tab, file = "./output/text/GenBank_tree_gene_year_tab.csv", col_names = TRUE)
 
 
 ### recap tables with sequencer localisation per taxa per country
@@ -513,19 +537,19 @@ crusta_seq_loc_tab <- cbind(crusta_seq_loc_tab, n_seq = crusta_seq_loc_tab$from_
 tree_seq_loc_tab <- cbind(tree_seq_loc_tab, n_seq = tree_seq_loc_tab$from_country + tree_seq_loc_tab$inside_med + tree_seq_loc_tab$outside_med + tree_seq_loc_tab$`(Missing)`)
 
 # save tables
-write_csv2(plant_seq_loc_tab, path = "./output/text/GenBank_plant_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(fungi_seq_loc_tab, path = "./output/text/GenBank_fungi_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(amph_seq_loc_tab, path = "./output/text/GenBank_amph_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(rept_seq_loc_tab, path = "./output/text/GenBank_rept_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(bird_seq_loc_tab, path = "./output/text/GenBank_bird_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(mammal_seq_loc_tab, path = "./output/text/GenBank_mammal_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(coleo_seq_loc_tab, path = "./output/text/GenBank_coleo_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(papilio_seq_loc_tab, path = "./output/text/GenBank_papilio_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(lumbri_seq_loc_tab, path = "./output/text/GenBank_lumbri_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(fish_seq_loc_tab, path = "./output/text/GenBank_fish_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(porifera_seq_loc_tab, path = "./output/text/GenBank_porifera_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(crusta_seq_loc_tab, path = "./output/text/GenBank_crusta_seq_loc_tab.csv", col_names = TRUE)
-write_csv2(tree_seq_loc_tab, path = "./output/text/GenBank_tree_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(plant_seq_loc_tab, file = "./output/text/GenBank_plant_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(fungi_seq_loc_tab, file = "./output/text/GenBank_fungi_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(amph_seq_loc_tab, file = "./output/text/GenBank_amph_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(rept_seq_loc_tab, file = "./output/text/GenBank_rept_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(bird_seq_loc_tab, file = "./output/text/GenBank_bird_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(mammal_seq_loc_tab, file = "./output/text/GenBank_mammal_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(coleo_seq_loc_tab, file = "./output/text/GenBank_coleo_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(papilio_seq_loc_tab, file = "./output/text/GenBank_papilio_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(lumbri_seq_loc_tab, file = "./output/text/GenBank_lumbri_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(fish_seq_loc_tab, file = "./output/text/GenBank_fish_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(porifera_seq_loc_tab, file = "./output/text/GenBank_porifera_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(crusta_seq_loc_tab, file = "./output/text/GenBank_crusta_seq_loc_tab.csv", col_names = TRUE)
+write_csv2(tree_seq_loc_tab, file = "./output/text/GenBank_tree_seq_loc_tab.csv", col_names = TRUE)
 
 
 ### recap tables with proportion of sequences assigned at least at species level per country for each taxa
@@ -551,19 +575,19 @@ porifera_species_level_tab <- porifera_species_level_tab %>% filter(!country %in
 crusta_species_level_tab <- crusta_species_level_tab %>% filter(!country %in% sample_origin_to_remove)
 
 # save tables
-write_csv2(plant_species_level_tab, path = "./output/text/GenBank_plant_species_level_tab.csv", col_names = TRUE)
-write_csv2(fungi_species_level_tab, path = "./output/text/GenBank_fungi_species_level_tab.csv", col_names = TRUE)
-write_csv2(amph_species_level_tab, path = "./output/text/GenBank_amph_species_level_tab.csv", col_names = TRUE)
-write_csv2(rept_species_level_tab, path = "./output/text/GenBank_rept_species_level_tab.csv", col_names = TRUE)
-write_csv2(bird_species_level_tab, path = "./output/text/GenBank_bird_species_level_tab.csv", col_names = TRUE)
-write_csv2(mammal_species_level_tab, path = "./output/text/GenBank_mammal_species_level_tab.csv", col_names = TRUE)
-write_csv2(coleo_species_level_tab, path = "./output/text/GenBank_coleo_species_level_tab.csv", col_names = TRUE)
-write_csv2(papilio_species_level_tab, path = "./output/text/GenBank_papilio_species_level_tab.csv", col_names = TRUE)
-write_csv2(lumbri_species_level_tab, path = "./output/text/GenBank_lumbri_species_level_tab.csv", col_names = TRUE)
-write_csv2(fish_species_level_tab, path = "./output/text/GenBank_fish_species_level_tab.csv", col_names = TRUE)
-write_csv2(porifera_species_level_tab, path = "./output/text/GenBank_porifera_species_level_tab.csv", col_names = TRUE)
-write_csv2(crusta_species_level_tab, path = "./output/text/GenBank_crusta_species_level_tab.csv", col_names = TRUE)
-write_csv2(tree_species_level_tab, path = "./output/text/GenBank_tree_species_level_tab.csv", col_names = TRUE)
+write_csv2(plant_species_level_tab, file = "./output/text/GenBank_plant_species_level_tab.csv", col_names = TRUE)
+write_csv2(fungi_species_level_tab, file = "./output/text/GenBank_fungi_species_level_tab.csv", col_names = TRUE)
+write_csv2(amph_species_level_tab, file = "./output/text/GenBank_amph_species_level_tab.csv", col_names = TRUE)
+write_csv2(rept_species_level_tab, file = "./output/text/GenBank_rept_species_level_tab.csv", col_names = TRUE)
+write_csv2(bird_species_level_tab, file = "./output/text/GenBank_bird_species_level_tab.csv", col_names = TRUE)
+write_csv2(mammal_species_level_tab, file = "./output/text/GenBank_mammal_species_level_tab.csv", col_names = TRUE)
+write_csv2(coleo_species_level_tab, file = "./output/text/GenBank_coleo_species_level_tab.csv", col_names = TRUE)
+write_csv2(papilio_species_level_tab, file = "./output/text/GenBank_papilio_species_level_tab.csv", col_names = TRUE)
+write_csv2(lumbri_species_level_tab, file = "./output/text/GenBank_lumbri_species_level_tab.csv", col_names = TRUE)
+write_csv2(fish_species_level_tab, file = "./output/text/GenBank_fish_species_level_tab.csv", col_names = TRUE)
+write_csv2(porifera_species_level_tab, file = "./output/text/GenBank_porifera_species_level_tab.csv", col_names = TRUE)
+write_csv2(crusta_species_level_tab, file = "./output/text/GenBank_crusta_species_level_tab.csv", col_names = TRUE)
+write_csv2(tree_species_level_tab, file = "./output/text/GenBank_tree_species_level_tab.csv", col_names = TRUE)
 
 
 ### recap tables with number of sequences per year per country for each taxa
@@ -599,19 +623,19 @@ crusta_country_year_tab <- crusta_data_med %>% group_by(sample_origin, year, .dr
 tree_country_year_tab <- tree_data_med %>% group_by(sample_origin, year, .drop = FALSE) %>% summarise(n=n()) %>% pivot_wider(names_from = year, values_from = n)
 
 # save tables
-write_csv2(plant_country_year_tab, path = "./output/text/GenBank_plant_country_year_tab.csv", col_names = TRUE)
-write_csv2(fungi_country_year_tab, path = "./output/text/GenBank_fungi_country_year_tab.csv", col_names = TRUE)
-write_csv2(amph_country_year_tab, path = "./output/text/GenBank_amph_country_year_tab.csv", col_names = TRUE)
-write_csv2(rept_country_year_tab, path = "./output/text/GenBank_rept_country_year_tab.csv", col_names = TRUE)
-write_csv2(bird_country_year_tab, path = "./output/text/GenBank_bird_country_year_tab.csv", col_names = TRUE)
-write_csv2(mammal_country_year_tab, path = "./output/text/GenBank_mammal_country_year_tab.csv", col_names = TRUE)
-write_csv2(coleo_country_year_tab, path = "./output/text/GenBank_coleo_country_year_tab.csv", col_names = TRUE)
-write_csv2(papilio_country_year_tab, path = "./output/text/GenBank_papilio_country_year_tab.csv", col_names = TRUE)
-write_csv2(lumbri_country_year_tab, path = "./output/text/GenBank_lumbri_country_year_tab.csv", col_names = TRUE)
-write_csv2(fish_country_year_tab, path = "./output/text/GenBank_fish_country_year_tab.csv", col_names = TRUE)
-write_csv2(porifera_country_year_tab, path = "./output/text/GenBank_porifera_country_year_tab.csv", col_names = TRUE)
-write_csv2(crusta_country_year_tab, path = "./output/text/GenBank_crusta_country_year_tab.csv", col_names = TRUE)
-write_csv2(tree_country_year_tab, path = "./output/text/GenBank_tree_country_year_tab.csv", col_names = TRUE)
+write_csv2(plant_country_year_tab, file = "./output/text/GenBank_plant_country_year_tab.csv", col_names = TRUE)
+write_csv2(fungi_country_year_tab, file = "./output/text/GenBank_fungi_country_year_tab.csv", col_names = TRUE)
+write_csv2(amph_country_year_tab, file = "./output/text/GenBank_amph_country_year_tab.csv", col_names = TRUE)
+write_csv2(rept_country_year_tab, file = "./output/text/GenBank_rept_country_year_tab.csv", col_names = TRUE)
+write_csv2(bird_country_year_tab, file = "./output/text/GenBank_bird_country_year_tab.csv", col_names = TRUE)
+write_csv2(mammal_country_year_tab, file = "./output/text/GenBank_mammal_country_year_tab.csv", col_names = TRUE)
+write_csv2(coleo_country_year_tab, file = "./output/text/GenBank_coleo_country_year_tab.csv", col_names = TRUE)
+write_csv2(papilio_country_year_tab, file = "./output/text/GenBank_papilio_country_year_tab.csv", col_names = TRUE)
+write_csv2(lumbri_country_year_tab, file = "./output/text/GenBank_lumbri_country_year_tab.csv", col_names = TRUE)
+write_csv2(fish_country_year_tab, file = "./output/text/GenBank_fish_country_year_tab.csv", col_names = TRUE)
+write_csv2(porifera_country_year_tab, file = "./output/text/GenBank_porifera_country_year_tab.csv", col_names = TRUE)
+write_csv2(crusta_country_year_tab, file = "./output/text/GenBank_crusta_country_year_tab.csv", col_names = TRUE)
+write_csv2(tree_country_year_tab, file = "./output/text/GenBank_tree_country_year_tab.csv", col_names = TRUE)
 
 ### same table but for accumulation curve
 plant_country_year_tab_acc <- table_accumulate(year_tab = plant_country_year_tab, first_column = 2)
@@ -629,17 +653,17 @@ crusta_country_year_tab_acc <- table_accumulate(year_tab = crusta_country_year_t
 tree_country_year_tab_acc <- table_accumulate(year_tab = tree_country_year_tab, first_column = 2)
 
 # save tables
-write_csv2(plant_country_year_tab_acc, path = "./output/text/GenBank_plant_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(fungi_country_year_tab_acc, path = "./output/text/GenBank_fungi_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(amph_country_year_tab_acc, path = "./output/text/GenBank_amph_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(rept_country_year_tab_acc, path = "./output/text/GenBank_rept_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(bird_country_year_tab_acc, path = "./output/text/GenBank_bird_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(mammal_country_year_tab_acc, path = "./output/text/GenBank_mammal_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(coleo_country_year_tab_acc, path = "./output/text/GenBank_coleo_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(papilio_country_year_tab_acc, path = "./output/text/GenBank_papilio_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(lumbri_country_year_tab_acc, path = "./output/text/GenBank_lumbri_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(fish_country_year_tab_acc, path = "./output/text/GenBank_fish_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(porifera_country_year_tab_acc, path = "./output/text/GenBank_porifera_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(crusta_country_year_tab_acc, path = "./output/text/GenBank_crusta_country_year_tab_acc.csv", col_names = TRUE)
-write_csv2(tree_country_year_tab_acc, path = "./output/text/GenBank_tree_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(plant_country_year_tab_acc, file = "./output/text/GenBank_plant_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(fungi_country_year_tab_acc, file = "./output/text/GenBank_fungi_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(amph_country_year_tab_acc, file = "./output/text/GenBank_amph_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(rept_country_year_tab_acc, file = "./output/text/GenBank_rept_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(bird_country_year_tab_acc, file = "./output/text/GenBank_bird_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(mammal_country_year_tab_acc, file = "./output/text/GenBank_mammal_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(coleo_country_year_tab_acc, file = "./output/text/GenBank_coleo_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(papilio_country_year_tab_acc, file = "./output/text/GenBank_papilio_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(lumbri_country_year_tab_acc, file = "./output/text/GenBank_lumbri_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(fish_country_year_tab_acc, file = "./output/text/GenBank_fish_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(porifera_country_year_tab_acc, file = "./output/text/GenBank_porifera_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(crusta_country_year_tab_acc, file = "./output/text/GenBank_crusta_country_year_tab_acc.csv", col_names = TRUE)
+write_csv2(tree_country_year_tab_acc, file = "./output/text/GenBank_tree_country_year_tab_acc.csv", col_names = TRUE)
 
