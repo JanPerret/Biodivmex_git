@@ -373,3 +373,87 @@ vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y
 print(marine_result_map, vp = vplayout(1:12, 1:12))
 # print(legend_pie_2_categories, vp = vplayout(9, 12))
 dev.off()
+
+
+### make maps for EVENNESS
+# MARINE TAXA
+# get number of articles per marine region for each taxa
+marine_article_evenness_tab <- cbind(fish = fish_article_loc_tab$n_articles,
+                                    porifera = porifera_article_loc_tab$n_articles,
+                                    crusta = crusta_article_loc_tab$n_articles)
+# get percentages
+marine_article_evenness_tab <- marine_article_evenness_tab/rowSums(marine_article_evenness_tab)
+marine_article_evenness_tab[is.na(marine_article_evenness_tab)] <- 0 # because NAs are generated at the libe above
+
+# square the percentage
+marine_article_evenness_tab2 <- marine_article_evenness_tab*marine_article_evenness_tab
+colnames(marine_article_evenness_tab2) <- paste0(colnames(marine_article_evenness_tab2), "2")
+
+# calculate simpson index
+simpson <- (1/rowSums(marine_article_evenness_tab2)) / ncol(marine_article_evenness_tab2)
+
+# make final table
+marine_article_evenness_tab <- cbind(marine_region = fish_article_loc_tab[,1], marine_article_evenness_tab, marine_article_evenness_tab2, simpson = simpson)
+marine_article_evenness_tab[marine_article_evenness_tab == Inf] <- NA # this is when there is 0 reference for a study area
+
+
+# TERRESTRIAL TAXA
+# get number of articles per country for each taxa
+terrestrial_article_evenness_tab <- cbind(plant = plant_article_loc_tab$n_articles,
+                                    fungi = fungi_article_loc_tab$n_articles,
+                                    amphibian = amph_article_loc_tab$n_articles,
+                                    reptile = rept_article_loc_tab$n_articles,
+                                    bird = bird_article_loc_tab$n_articles,
+                                    mammal = mammal_article_loc_tab$n_articles,
+                                    coleo = coleo_article_loc_tab$n_articles,
+                                    papilio = papilio_article_loc_tab$n_articles)
+
+# get percentages
+terrestrial_article_evenness_tab <- terrestrial_article_evenness_tab/rowSums(terrestrial_article_evenness_tab)
+terrestrial_article_evenness_tab[is.na(terrestrial_article_evenness_tab)] <- 0 # because NAs are generated at the libe above
+
+# square the percentage
+terrestrial_article_evenness_tab2 <- terrestrial_article_evenness_tab*terrestrial_article_evenness_tab
+colnames(terrestrial_article_evenness_tab2) <- paste0(colnames(terrestrial_article_evenness_tab2), "2")
+
+# calculate simpson index
+simpson <- (1/rowSums(terrestrial_article_evenness_tab2)) / ncol(terrestrial_article_evenness_tab2)
+
+# make final table
+terrestrial_article_evenness_tab <- cbind(fieldwork_country = plant_article_loc_tab[,1], terrestrial_article_evenness_tab, terrestrial_article_evenness_tab2, simpson = simpson)
+terrestrial_article_evenness_tab[terrestrial_article_evenness_tab == Inf] <- NA # this is when there is 0 reference for a study area
+
+# save tables
+write_csv2(marine_article_evenness_tab, file = "./output/text/WOS_table_evenness_map_marine.csv", col_names = TRUE)
+write_csv2(terrestrial_article_evenness_tab, file = "./output/text/WOS_table_evenness_map_terrestrial.csv", col_names = TRUE)
+
+# make the maps
+palette_evenness <- RColorBrewer::brewer.pal(5, "YlGn")
+
+WOS_marine_evenness_map <- WOS_map_number_articles_marine_evenness(locality_table = marine_article_evenness_tab,
+                                                                   subtitle_text = paste("."),
+                                                                   taxa_name = "Marine taxa")
+
+WOS_terrestrial_evenness_map <- WOS_map_number_articles_evenness(locality_table = terrestrial_article_evenness_tab,
+                                                                 subtitle_text = paste("."),
+                                                                 taxa_name = "Terrestrial taxa")
+
+# save maps
+# marine taxa
+file_path = "./output/plots/WOS_map_marine_taxa_evenness.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(WOS_marine_evenness_map, vp = vplayout(1:12, 1:12))
+dev.off()
+
+# terrestrial taxa
+file_path = "./output/plots/WOS_map_terrestrial_taxa_evenness.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(WOS_terrestrial_evenness_map, vp = vplayout(1:12, 1:12))
+dev.off()
+

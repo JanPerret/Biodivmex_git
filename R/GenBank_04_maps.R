@@ -181,6 +181,70 @@ GB_marine_result_map <- GB_map_number_sequence_marine_taxa_synthesis(locality_ta
                                              taxa_name = "marine taxa",
                                              color_scale_mid = 4)
 
+### EVENNESS MAPS
+# TERRESTRIAL TAXA
+# get number of sequences per country for each taxa
+terrestrial_seq_evenness_tab <- cbind(plant = plant_seq_loc_tab$n_seq,
+                                      fungi = fungi_seq_loc_tab$n_seq,
+                                      amphibian = amph_seq_loc_tab$n_seq,
+                                      reptile = rept_seq_loc_tab$n_seq,
+                                      bird = bird_seq_loc_tab$n_seq,
+                                      mammal = mammal_seq_loc_tab$n_seq,
+                                      coleo = coleo_seq_loc_tab$n_seq,
+                                      papilio = papilio_seq_loc_tab$n_seq)
+
+# get percentages
+terrestrial_seq_evenness_tab <- terrestrial_seq_evenness_tab/rowSums(terrestrial_seq_evenness_tab)
+terrestrial_seq_evenness_tab[is.na(terrestrial_seq_evenness_tab)] <- 0 # because NAs are generated at the libe above
+
+# square the percentage
+terrestrial_seq_evenness_tab2 <- terrestrial_seq_evenness_tab*terrestrial_seq_evenness_tab
+colnames(terrestrial_seq_evenness_tab2) <- paste0(colnames(terrestrial_seq_evenness_tab2), "2")
+
+# calculate simpson index
+simpson <- (1/rowSums(terrestrial_seq_evenness_tab2)) / ncol(terrestrial_seq_evenness_tab2)
+
+# make final table
+terrestrial_seq_evenness_tab <- cbind(sample_origin = plant_seq_loc_tab[,1], terrestrial_seq_evenness_tab, terrestrial_seq_evenness_tab2, simpson = simpson)
+terrestrial_seq_evenness_tab[terrestrial_seq_evenness_tab == Inf] <- NA # this is when there is 0 reference for a study area
+
+
+# MARINE TAXA
+# get number of seqs per marine region for each taxa
+marine_seq_evenness_tab <- cbind(fish = fish_seq_loc_tab$n_seq,
+                                     porifera = porifera_seq_loc_tab$n_seq,
+                                     crusta = crusta_seq_loc_tab$n_seq)
+# get percentages
+marine_seq_evenness_tab <- marine_seq_evenness_tab/rowSums(marine_seq_evenness_tab)
+marine_seq_evenness_tab[is.na(marine_seq_evenness_tab)] <- 0 # because NAs are generated at the libe above
+
+# square the percentage
+marine_seq_evenness_tab2 <- marine_seq_evenness_tab*marine_seq_evenness_tab
+colnames(marine_seq_evenness_tab2) <- paste0(colnames(marine_seq_evenness_tab2), "2")
+
+# calculate simpson index
+simpson <- (1/rowSums(marine_seq_evenness_tab2)) / ncol(marine_seq_evenness_tab2)
+
+# make final table
+marine_seq_evenness_tab <- cbind(sample_origin = fish_seq_loc_tab[,1], marine_seq_evenness_tab, marine_seq_evenness_tab2, simpson = simpson)
+marine_seq_evenness_tab[marine_seq_evenness_tab == Inf] <- NA # this is when there is 0 reference for a study area
+
+# save tables
+write_csv2(terrestrial_seq_evenness_tab, file = "./output/text/GenBank_table_evenness_map_terrestrial.csv", col_names = TRUE)
+write_csv2(marine_seq_evenness_tab, file = "./output/text/GenBank_table_evenness_map_marine.csv", col_names = TRUE)
+
+# make the maps
+palette_evenness <- RColorBrewer::brewer.pal(5, "YlGn")
+
+GB_terrestrial_evenness_map <- GB_map_number_sequence_evenness(locality_table = terrestrial_seq_evenness_tab,
+                                                            subtitle_text = paste("."),
+                                                            taxa_name = "Terrestrial taxa")
+
+GB_marine_evenness_map <- GB_map_number_sequence_marine_taxa_evenness(locality_table = marine_seq_evenness_tab,
+                                                                   subtitle_text = paste("."),
+                                                                   taxa_name = "Marine taxa")
+
+
 
 ### compose and save the final maps (map + pie-charts + pie chart legend)
 # plant
@@ -341,6 +405,24 @@ grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(GB_marine_result_map, vp = vplayout(1:12, 1:12))
 # print(legend_pie_3_categories, vp = vplayout(9, 12))
+dev.off()
+
+# terrestrial taxa evenness map
+file_path = "./output/plots/GenBank_map_terrestrial_taxa_evenness.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(GB_terrestrial_evenness_map, vp = vplayout(1:12, 1:12))
+dev.off()
+
+# marine taxa evenness map
+file_path = "./output/plots/GenBank_map_marine_taxa_evenness.pdf"
+pdf(file=file_path, width = 20, height = 12)
+grid::grid.newpage()
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
+vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
+print(GB_marine_evenness_map, vp = vplayout(1:12, 1:12))
 dev.off()
 
 
