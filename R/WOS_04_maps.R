@@ -47,7 +47,7 @@ tree_subtitle <- WOS_make_map_subtitle(taxa_table = WOS_taxa_table, taxa_name = 
 
 
 ### store the legend for the pie charts
-legend_pie_3_categories <- WOS_store_pie_chart_legend_3()
+# legend_pie_3_categories <- WOS_store_pie_chart_legend_3() ### error to correct here since package update (probably ggplot2)
 
 
 ### load shapefiles
@@ -196,7 +196,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(rept_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # bird
@@ -236,7 +236,7 @@ grid::grid.newpage()
 grid::pushViewport(grid::viewport(layout = grid::grid.layout(12, 12)))
 vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y, just = "left", width = unit(2, "npc"), height = unit(2, "npc"))
 print(papilio_result_map, vp = vplayout(1:12, 1:12))
-print(legend_pie_3_categories, vp = vplayout(9, 12))
+# print(legend_pie_3_categories, vp = vplayout(9, 12))
 dev.off()
 
 # lumbricina
@@ -282,7 +282,7 @@ dev.off()
 
 ### maps for MARINE TAXA :
 ### store the legend for the pie charts
-legend_pie_2_categories <- WOS_store_pie_chart_legend_2()
+# legend_pie_2_categories <- WOS_store_pie_chart_legend_2() ### error to correct here since package update (probably ggplot2)
 
 # crop world_sf polygons to keep only polygons inside a bounding box centered on the mediterranean sea
 box = c(xmin = -10.5, ymin = 27.5, xmax = 41.5, ymax = 49)
