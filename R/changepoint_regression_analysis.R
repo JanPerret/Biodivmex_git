@@ -14,6 +14,7 @@ GenBank_taxa_trend <- GenBank_taxa_trend[, -c(2,3,4)] # drop years 1987 to 1989
 
 
 # mydata = WOS_taxa_trend
+# mytaxa = "plant"
 
 get_breakpoints <- function(mydata) {
   
@@ -34,19 +35,20 @@ get_breakpoints <- function(mydata) {
       pivot_longer(cols = "1990":"2019", names_to = "year", values_to = "n_references")
     
     # fit regression
-    fit.lm <- lm(n_references ~ year1990, data = taxa_tab)
-    # fit.lm <- glm(n_references ~ year1990, data = taxa_tab, family = "poisson") # with a poisson glm
+    fit.glm <- glm(n_references ~ year1990, data = taxa_tab, family = "poisson") # with a poisson glm
     
     # plot this model
-    # x0 <- seq(min(year1990), max(year1990), length = 30)  ## prediction grid
-    # y0 <- predict.glm(fit.lm, newdata = list(x = x0))  ## predicted values
+    # x0 <- seq(min(year1990), max(year1990), length = 30)  # prediction grid
+    # y0 <- predict.glm(fit.glm, newdata = list(x = x0))  # predicted values
     # y0 <- exp(y0) # backtransform estimates
     # plot(x = year1990, y = taxa_tab$n_references)
     # lines(x0, y0, col = 2)  ## add regression curve (colour: red)
     
     # fit the segmented regression with one breakpoint
-    fit.seg <- segmented(fit.lm, seg.Z = ~ year1990, npsi = 1)
-    # plot(fit.seg, add = TRUE, col = 'red')
+    fit.seg <- segmented(fit.glm, seg.Z = ~ year1990, npsi = 1)
+    # seg.predict <- predict(fit.seg)
+    # seg.predict <- exp(seg.predict) # backtransform estimates
+    # lines(year1990, seg.predict, col = 2)
     # lines(fit.seg, col = 2, pch = 19, bottom = TRUE, lwd = 2) #for the CI for the breakpoint
     
     # get the estimated breakpoint and its CI
@@ -57,7 +59,7 @@ get_breakpoints <- function(mydata) {
     upperCI <- 1990 + round(myconfint[3], digits = 2) # upper IC
     
     # get davies test p-values
-    mytest <- davies.test(fit.lm, ~ year1990, k = 30) # to test de breakpoint and get a p-value 
+    mytest <- davies.test(fit.glm, ~ year1990, k = 30) # to test the breakpoint and get a p-value 
     myp_value <- mytest$p.value
     
     result_vect <- c(taxa_tab$taxa[1], breakpoint, lowerCI, upperCI, myp_value)
