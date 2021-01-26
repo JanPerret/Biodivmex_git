@@ -16,4 +16,5 @@ library(grid) # for functions grid.newpage(), pushViewport(), viewport(), grid.l
 library(ggpubr) # for function ggarrange()
 library(directlabels) # for function geom_dl()
 library(colorspace) # for scale_colour_continuous_divergingx()
+library(HatchedPolygons)
 # library(gridExtra) # usefull ?
