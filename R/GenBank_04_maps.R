@@ -237,11 +237,11 @@ write_csv2(marine_seq_evenness_tab, file = "./output/text/GenBank_table_evenness
 palette_evenness <- RColorBrewer::brewer.pal(5, "YlGn")
 
 GB_terrestrial_evenness_map <- GB_map_number_sequence_evenness(locality_table = terrestrial_seq_evenness_tab,
-                                                            subtitle_text = paste("."),
+                                                            subtitle_text = paste(""),
                                                             taxa_name = "Terrestrial taxa")
 
 GB_marine_evenness_map <- GB_map_number_sequence_marine_taxa_evenness(locality_table = marine_seq_evenness_tab,
-                                                                   subtitle_text = paste("."),
+                                                                   subtitle_text = paste(""),
                                                                    taxa_name = "Marine taxa")
 
 

@@ -27,7 +27,7 @@ GB_map_number_sequence_marine_taxa_synthesis <- function(locality_table, subtitl
     geom_sf(data = med_EEZ_joined, aes(fill = n_seq_percent)) + # EEZ layer with the colour filling
     geom_sf(data = med_clipped_marine, mapping = aes(), fill = "white") + # countries background with white filling
     # scale_fill_gradientn(name="Percentage of the total number of sequences", colours=palette_synthesis, na.value="white")+
-    scale_fill_gradientn(name="Percentage of the total number of sequences", colours = palette_synthesis, values = myscale, na.value = "white") + 
+    scale_fill_gradientn(name="Percentage of the total\nnumber of sequences", colours = palette_synthesis, values = myscale, na.value = "white") + 
     theme_minimal() +
     theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
     theme(axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank()) +

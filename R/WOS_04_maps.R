@@ -330,7 +330,7 @@ write_csv2(marine_article_loc_tab, file = "./output/text/WOS_table_synthesis_map
 # make the map
 marine_result_map <- WOS_map_number_articles_marine_synthesis(locality_table = marine_article_loc_tab,
                                                        subtitle_text = paste("Total number of articles :", sum(marine_article_loc_tab$n_articles[1:19])),
-                                                       taxa_name = "Myers taxa",
+                                                       taxa_name = "Marine taxa",
                                                        color_scale_mid = 4)
 
 ### compose and save final maps for marine taxa
@@ -431,11 +431,11 @@ write_csv2(terrestrial_article_evenness_tab, file = "./output/text/WOS_table_eve
 palette_evenness <- RColorBrewer::brewer.pal(5, "YlGn")
 
 WOS_marine_evenness_map <- WOS_map_number_articles_marine_evenness(locality_table = marine_article_evenness_tab,
-                                                                   subtitle_text = paste("."),
+                                                                   subtitle_text = paste(""),
                                                                    taxa_name = "Marine taxa")
 
 WOS_terrestrial_evenness_map <- WOS_map_number_articles_evenness(locality_table = terrestrial_article_evenness_tab,
-                                                                 subtitle_text = paste("."),
+                                                                 subtitle_text = paste(""),
                                                                  taxa_name = "Terrestrial taxa")
 
 # save maps

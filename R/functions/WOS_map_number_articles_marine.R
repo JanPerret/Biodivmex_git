@@ -9,6 +9,7 @@
 # eastern_med
 # marine_region_centroids
 
+
 WOS_map_number_articles_marine <- function(locality_table, subtitle_text, taxa_name) {
   
   # add the information to plot to med_marine_region
@@ -17,7 +18,7 @@ WOS_map_number_articles_marine <- function(locality_table, subtitle_text, taxa_n
   # join information to MULTIPOLYGON object
   med_marine_region_joined <- left_join(med_marine_region, tab_for_join, by = c("marine_reg" ="marine_region"))
   
-  fill_scale_limit <- c(min(med_marine_region_joined$n_articles), max(med_marine_region_joined$n_articles))
+  fill_scale_limit <- c(min(med_marine_region_joined$n_articles, na.rm = TRUE), max(med_marine_region_joined$n_articles, na.rm = TRUE))
   
   med_marine_region_joined_under_layer <- subset(med_marine_region_joined, 
                                                  med_marine_region_joined$marine_reg == "Northwestern Mediterranean Sea" |
@@ -40,7 +41,7 @@ WOS_map_number_articles_marine <- function(locality_table, subtitle_text, taxa_n
   # join information for filling the circles
   circle_centroid_joined <- left_join(circle_centroid, tab_for_join, by = c("marine_reg" ="marine_region"))
   
-  # hatch filling
+  # create layer for the 3 regions with hatched filling
   xy.sf <- sf::st_as_sf(med_marine_region_joined_over_layer) # simulate st_read()
   xy.sf.hatch <- hatched.SpatialPolygons(xy.sf, density = c(3.5), angle = c(35))
   st_crs(xy.sf.hatch) <- st_crs(med_marine_region_joined)
@@ -51,15 +52,15 @@ WOS_map_number_articles_marine <- function(locality_table, subtitle_text, taxa_n
   # plot the map
   map <- ggplot(NULL) + 
     geom_point(data = point_grid_marine, aes(x = point_grid_marine$X, y = point_grid_marine$Y), color = "grey83", size = 0.2) +  # point grid to make the sea
-    geom_sf(data = med_clipped_marine, mapping = aes(), fill = "white") +  # countries background with white filling
     geom_sf(data = med_marine_region_joined_under_layer, aes(fill = n_articles)) +  # layer with NW med and Tunisian Plateau to avoid overlap
-    geom_sf(data = med_marine_region_joined, aes(fill = n_articles)) +  # layer with the other marine regions
     geom_sf(data = xy.sf.hatch, aes(color = n_articles), size = 1.8) + # layer with the 3 small regions that overlap other regions
-    geom_sf(data = med_marine_region_joined_over_layer, fill = NA ) + # to plot the borders of these 3 regions
+    geom_sf(data = med_marine_region_joined, aes(fill = n_articles)) +  # layer with the other marine regions
+    geom_sf(data = med_clipped_marine, mapping = aes(), fill = "white") +  # countries background with white filling
+    geom_sf(data = med_marine_region_joined_over_layer, fill = NA ) + # to plot the borders of the 3 small regions
     geom_segment(aes(x = 5.165294, y = 36.667825, xend = -0.26, yend = 32.33), size = 0.7, colour = "green2") + # segment for western med
     geom_segment(aes(x = 30.824110, y = 36.848481, xend = 36.422313, yend = 42), size = 0.7, colour = "royalblue1") + # segment for eastern med
     geom_point(data = circle_centroid_joined, aes(x = x, y = y, fill = n_articles), shape=21, size = 70, stroke = 1, col = c("green2", "royalblue1")) + # circles with the filling for the 2 big regions
-    scale_fill_gradientn(name="Number of articles", colours=palette, na.value="white") +
+    scale_fill_gradientn(name="Number of articles", colours=palette, na.value="white", limits = fill_scale_limit) +
     scale_color_gradientn(name="Number of articles", colours=palette, na.value="white", limits = fill_scale_limit) + # added for the polygons with hatched filling
     geom_sf(data = western_med, fill = NA, colour = "green2", size = 0.5, inherit.aes = FALSE) +  # western med bounder
     geom_sf(data = eastern_med, fill = NA, colour = "royalblue1", size = 0.5, inherit.aes = FALSE) +  # eastern med bounder
@@ -77,12 +78,12 @@ WOS_map_number_articles_marine <- function(locality_table, subtitle_text, taxa_n
           legend.box.margin=margin(10,10,10,10))
   
   ### make pie charts with from_country / outside_med / inside_med information
-  # data for the pie charts
-  locality_table <- locality_table[,c(1:3)]
-  loc_tab_long <- as_tibble(pivot_longer(locality_table,
-                                         cols = colnames(locality_table)[2]:colnames(locality_table)[ncol(locality_table)],
-                                         names_to = "author_loc",
-                                         values_to = "n_articles"))
+  # # data for the pie charts
+  # locality_table <- locality_table[,c(1:3)]
+  # loc_tab_long <- as_tibble(pivot_longer(locality_table,
+  #                                        cols = colnames(locality_table)[2]:colnames(locality_table)[ncol(locality_table)],
+  #                                        names_to = "author_loc",
+  #                                        values_to = "n_articles"))
 
   # join the informations to plot to marine_region_centroids
   marine_region_centroids_joined <- left_join(marine_region_centroids, locality_table, by = c("marine_reg" = "marine_region"))
@@ -97,16 +98,17 @@ WOS_map_number_articles_marine <- function(locality_table, subtitle_text, taxa_n
       # title of the future pie chart
       coun_name <- marine_region_centroids_joined[marine_region_centroids_joined$FID == as.character(n),]$marine_reg
 
-      # make a small tibble containing just the 2 summary lines inside_med / outside_med
-      wos_totals_marine_region <- loc_tab_long[loc_tab_long$marine_region == coun_name,]
-      wos_totals_marine_region <- wos_totals_marine_region %>%
-                                         group_by(author_loc) %>%
-                                         summarise (sum_n_articles = sum(n_articles))
+      # # make a small tibble containing just the 2 summary lines inside_med / outside_med
+      # wos_totals_marine_region <- loc_tab_long[loc_tab_long$marine_region == coun_name,]
+      # wos_totals_marine_region <- wos_totals_marine_region %>%
+      #                                    group_by(author_loc) %>%
+      #                                    summarise (sum_n_articles = sum(n_articles))
 
       gt_plot <- ggplotGrob(
 
         # make the pie-charts
-        ggplot(wos_totals_marine_region, aes(x=1, y = sum_n_articles, fill = author_loc)) +
+        ggplot(NULL) +
+        # ggplot(wos_totals_marine_region, aes(x=1, y = sum_n_articles, fill = author_loc)) +
           # geom_bar(width = 1, stat = "identity", colour = "black") +
           # coord_polar("y", start=0) +
           # geom_text(aes(label = sum_n_articles, group = author_loc),
