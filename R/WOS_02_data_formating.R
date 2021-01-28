@@ -35,14 +35,6 @@ wos_data <- read_delim("./data/TEST_SIMPLE_v15_RESULT_WOS_files_merged_2020-11-1
                          tree = col_character()
                        ))
 
-# drop articles about mediterranean regions outside the mediterranean basin
-wos_data <- wos_data %>%
-  filter(is.na(outside_med))
-
-# drop the outside_med column
-wos_data <- wos_data %>%
-  select(-outside_med)
-
 # drop articles not written in english
 wos_data <- wos_data %>%
   filter(language == "English")
@@ -71,6 +63,27 @@ journal_filtering <- read_delim("./data/WOS_journal_filtering_v2.csv", delim = "
 wos_data <- wos_data %>% 
   filter(!(publisher %in% journal_filtering$publisher))
 # nrow(wos_data[rowSums(is.na(wos_data[, c(9:21)])) != 13, ])/nrow(wos_data) # same rate after filtering irrelevant journals
+
+# drop articles about mediterranean regions outside the mediterranean basin
+wos_data <- wos_data %>%
+  filter(is.na(outside_med))
+
+# drop the outside_med column
+wos_data <- wos_data %>%
+  select(-outside_med)
+
+# ### random sample of 500 articles for classification error rates estimation
+# set.seed(2020)
+# wos_data_sample_error_rates <- wos_data[sample(nrow(wos_data), size = 500, replace = FALSE), ]
+# 
+# # load corpus file with complete metadata (e.g. titles, keywords and abstracts) and join to the sample table
+# wos_data_complete <- read_tsv("./data/RESULT_WOS_files_merged.csv", col_names = TRUE, col_types = cols(.default = "c"))
+# wos_data_complete <- wos_data_complete[, c(1:13)] # remove junk columns
+# wos_data_sample_error_rates <- dplyr::inner_join(wos_data_sample_error_rates, wos_data_complete, by = c("access_num" = "accession_number"))
+# # dim(wos_data_sample_error_rates)
+# 
+# # save table
+# write_csv2(wos_data_sample_error_rates, file = "./output/text/WOS_sample_error_rates.csv", col_names = TRUE)
 
 
 ### get number of aticles at different steps of the filtering to make the filtering recap

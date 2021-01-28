@@ -17,7 +17,7 @@ GenBank_taxa_trend <- GenBank_taxa_trend[, -c(2,3,4)] # drop years 1987 to 1989
 GenBank_taxa_trend <- subset(GenBank_taxa_trend, GenBank_taxa_trend$taxa != "lumbricina")
 
 # mydata = GenBank_taxa_trend
-# mytaxa = "lumbricina"
+# mytaxa = "plant"
 
 get_breakpoints <- function(mydata) {
   
@@ -32,7 +32,6 @@ get_breakpoints <- function(mydata) {
   for (mytaxa in taxa_vect) {
     
     index <- index + 1
-    # mytaxa = taxa_vect[9] # c'est les lombrics qui buggent
     taxa_tab <- subset(mydata, mydata$taxa == mytaxa)
     
     taxa_tab <- taxa_tab %>%
@@ -63,7 +62,7 @@ get_breakpoints <- function(mydata) {
     upperCI <- 1990 + round(myconfint[3], digits = 2) # upper IC
     
     # get davies test p-values
-    mytest <- davies.test(fit.glm, ~ year1990, k = 30) # to test the breakpoint and get a p-value 
+    mytest <- pscore.test(fit.glm, ~ year1990, k = 30) # test for the existence of one breakpoint
     myp_value <- mytest$p.value
     
     result_vect <- c(taxa_tab$taxa[1], breakpoint, lowerCI, upperCI, myp_value)
@@ -111,10 +110,10 @@ lowerCI <- 2000 + round(myconfint[2], digits = 2) # lower IC
 upperCI <- 2000 + round(myconfint[3], digits = 2) # upper IC
 
 # get davies test p-values
-mytest <- davies.test(fit.glm, ~ year2000, k = 30) # to test the breakpoint and get a p-value 
+mytest <- pscore.test(fit.glm, ~ year2000, k = 30) # test for the existence of one breakpoint
 myp_value <- mytest$p.value
 
-result_vect <- c(taxa_tab$taxa[1], breakpoint, lowerCI, upperCI, myp_value)
+result_vect <- c(lumbri_tab$taxa[1], breakpoint, lowerCI, upperCI, myp_value)
 GenBank_breakpoints <- rbind(GenBank_breakpoints[c(1:11), ], result_vect, GenBank_breakpoints[12, ])
 
 write_csv2(WOS_breakpoints, file = "./output/text/WOS_breakpoints.csv")
