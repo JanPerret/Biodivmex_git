@@ -19,6 +19,7 @@ for i in range(len(file_list)) :
 			data = fin.read().splitlines(True)
 		with open('WOS_files_merged.txt', 'a') as output_file: # creating output file and adding the file without the 2 first lines at the end of the file at each iteration of the loop
 			output_file.writelines(data[2:])
+			output_file.write('\n')
 	else :
 		print(file, 'has already been shortened')
 
