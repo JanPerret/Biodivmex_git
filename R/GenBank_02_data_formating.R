@@ -552,7 +552,7 @@ write_csv2(crusta_seq_loc_tab, file = "./output/text/GenBank_crusta_seq_loc_tab.
 write_csv2(tree_seq_loc_tab, file = "./output/text/GenBank_tree_seq_loc_tab.csv", col_names = TRUE)
 
 
-### recap tables with proportion of sequences assigned at least at species level per country for each taxa
+### recap tables with proportion of sequences assigned at species level per country for each taxa
 plant_species_level_tab <- GB_recap_species_level(taxa_data_med = plant_data_med, taxa_name = "plant")
 fungi_species_level_tab <- GB_recap_species_level(taxa_data_med = fungi_data_med, taxa_name = "fungi")
 amph_species_level_tab <- GB_recap_species_level(taxa_data_med = amph_data_med, taxa_name = "amphibian")
@@ -589,6 +589,50 @@ write_csv2(porifera_species_level_tab, file = "./output/text/GenBank_porifera_sp
 write_csv2(crusta_species_level_tab, file = "./output/text/GenBank_crusta_species_level_tab.csv", col_names = TRUE)
 write_csv2(tree_species_level_tab, file = "./output/text/GenBank_tree_species_level_tab.csv", col_names = TRUE)
 
+
+### recap table with the number of species with at least one sequence in GenBank for the islands
+island_sp_tab <- rbind(plant_species_level_tab, fungi_species_level_tab, amph_species_level_tab,
+                       rept_species_level_tab, bird_species_level_tab, mammal_species_level_tab,
+                       coleo_species_level_tab, papilio_species_level_tab, lumbri_species_level_tab,
+                       tree_species_level_tab)
+
+island_list <- c("Balearic Islands", "Corsica", "Crete", "Cyprus", "Sardinia", "Sicily", "Malta")
+island_sp_tab <- island_sp_tab %>% filter(country %in% island_list)
+
+table_islands_n_sp <- island_sp_tab[, c(1, 2, 5)] %>% 
+  pivot_wider(names_from = taxa, values_from = n_sp)
+
+table_islands_n_seq <- island_sp_tab[, c(1, 2, 4)] %>% 
+  pivot_wider(names_from = taxa, values_from = n_seq)
+
+# save tables
+write_csv2(island_sp_tab, file = "./output/text/GenBank_island_sp_tab.csv", col_names = TRUE)
+write_csv2(table_islands_n_sp, file = "./output/text/GenBank_islands_n_sp_tab.csv", col_names = TRUE)
+write_csv2(table_islands_n_seq, file = "./output/text/GenBank_islands_n_seq_tab.csv", col_names = TRUE)
+
+### get the corresponding species names
+plant_island_sp_list <- GB_island_species_list(plant_data_med)
+fungi_island_sp_list <- GB_island_species_list(fungi_data_med)
+amph_island_sp_list <- GB_island_species_list(amph_data_med)
+rept_island_sp_list <- GB_island_species_list(rept_data_med)
+bird_island_sp_list <- GB_island_species_list(bird_data_med)
+mammal_island_sp_list <- GB_island_species_list(mammal_data_med)
+coleo_island_sp_list <- GB_island_species_list(coleo_data_med)
+papilio_island_sp_list <- GB_island_species_list(papilio_data_med)
+lumbri_island_sp_list <- GB_island_species_list(lumbri_data_med)
+tree_island_sp_list <- GB_island_species_list(tree_data_med)
+
+# save tables
+write_csv2(plant_island_sp_list, file = "./output/text/GenBank_island_sp_list_plant.csv", col_names = TRUE)
+write_csv2(fungi_island_sp_list, file = "./output/text/GenBank_island_sp_list_fungi.csv", col_names = TRUE)
+write_csv2(amph_island_sp_list, file = "./output/text/GenBank_island_sp_list_amph.csv", col_names = TRUE)
+write_csv2(rept_island_sp_list, file = "./output/text/GenBank_island_sp_list_rept.csv", col_names = TRUE)
+write_csv2(bird_island_sp_list, file = "./output/text/GenBank_island_sp_list_bird.csv", col_names = TRUE)
+write_csv2(mammal_island_sp_list, file = "./output/text/GenBank_island_sp_list_mammal.csv", col_names = TRUE)
+write_csv2(coleo_island_sp_list, file = "./output/text/GenBank_island_sp_list_coleo.csv", col_names = TRUE)
+write_csv2(papilio_island_sp_list, file = "./output/text/GenBank_island_sp_list_papilio.csv", col_names = TRUE)
+write_csv2(lumbri_island_sp_list, file = "./output/text/GenBank_island_sp_list_lumbri.csv", col_names = TRUE)
+write_csv2(tree_island_sp_list, file = "./output/text/GenBank_island_sp_list_tree.csv", col_names = TRUE)
 
 ### recap tables with number of sequences per year per country for each taxa
 # fix year factor levels for all taxa
