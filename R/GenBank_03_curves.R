@@ -24,7 +24,7 @@ all_taxa_year_tab_acc_long <- subset(all_taxa_year_tab_acc_long, all_taxa_year_t
 
 # curve with colour per taxa linear y axis
 GenBank_curve_seq_acc_taxa_linear <- ggplot(all_taxa_year_tab_acc_long, aes(x = year, y = n_seq, group = taxa, colour = taxa)) +
-                                        geom_line(size=1.2) +
+                                        geom_line(size = 1.2) +
                                         labs(title = "Number of sequences for each taxonomic group in the mediterranean basin") +
                                         xlab("Year") + ylab("Number of sequences") +
                                         theme_bw() +
@@ -33,11 +33,11 @@ GenBank_curve_seq_acc_taxa_linear <- ggplot(all_taxa_year_tab_acc_long, aes(x = 
                                         directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
                                         coord_cartesian(clip = 'off') +
                                         theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
-                                        expand_limits(x = c(2020))
+                                        expand_limits(x = c(2021))
 
 # curve with colour per taxa log10 y axis
 GenBank_curve_seq_acc_taxa_log10 <- ggplot(all_taxa_year_tab_acc_long, aes(x = year, y = (n_seq+1), group = taxa, colour = taxa)) + ###### log10(y+1) pour que ca ne bug pas
-                                        geom_line(size=1.2) +
+                                        geom_line(size = 1.2) +
                                         labs(title = "Number of sequences for each taxonomic group in the mediterranean basin (log10 scale)") +
                                         xlab("Year") + ylab("Number of sequences") +
                                         theme_bw() +
@@ -47,7 +47,7 @@ GenBank_curve_seq_acc_taxa_log10 <- ggplot(all_taxa_year_tab_acc_long, aes(x = y
                                         directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
                                         coord_cartesian(clip = 'off') +
                                         theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
-                                        expand_limits(x = c(2020))
+                                        expand_limits(x = c(2021))
 
 # make difference between myers taxa and others
 # create a myers/non-myers column
@@ -62,7 +62,7 @@ for (i in 1:length(all_taxa_year_tab_acc_long$taxa)) {
 
 # curve with colour per myers_non-myers linear y axis
 GenBank_curve_seq_acc_myers_linear <- ggplot(all_taxa_year_tab_acc_long, aes(x = year, y = n_seq, group = taxa, colour = myers)) +
-                                          geom_line(size=1.2) +
+                                          geom_line(size = 1.2) +
                                           labs(title = "Number of sequences for Myers/non-Myers taxonomic groups in the mediterranean basin") +
                                           xlab("Year") + ylab("Number of sequences") +
                                           theme_bw() +
@@ -71,11 +71,11 @@ GenBank_curve_seq_acc_myers_linear <- ggplot(all_taxa_year_tab_acc_long, aes(x =
                                           directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
                                           coord_cartesian(clip = 'off') +
                                           theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
-                                          expand_limits(x = c(2020))
+                                          expand_limits(x = c(2021))
 
 # curve with colour per myers_non-myers log10 y axis
 GenBank_curve_seq_acc_myers_log10 <- ggplot(all_taxa_year_tab_acc_long, aes(x = year, y = (n_seq+1), group = taxa, colour = myers)) + ###### log10(y+1) pour que ca ne bug pas
-                                          geom_line(size=1.2) +
+                                          geom_line(size = 1.2) +
                                           labs(title = "Number of sequences for Myers/non-Myers taxonomic groups in the mediterranean basin (log10 scale)") +
                                           xlab("Year") + ylab("Number of sequences") +
                                           theme_bw() +
@@ -85,7 +85,7 @@ GenBank_curve_seq_acc_myers_log10 <- ggplot(all_taxa_year_tab_acc_long, aes(x = 
                                           directlabels::geom_dl(aes(label = taxa), method = list(dl.trans(x = x + 0.2), "last.points", cex = 1)) +
                                           coord_cartesian(clip = 'off') +
                                           theme(legend.position = "none", plot.margin = margin(0.3, 0.3, 0.3, 0.3, "cm")) +
-                                          expand_limits(x = c(2020))
+                                          expand_limits(x = c(2021))
 
 # save figures in PDF
 pdf(file = "./output/plots/GenBank_curve_seq_acc_taxa_linear.pdf", width = 11.69, height = 8.27)

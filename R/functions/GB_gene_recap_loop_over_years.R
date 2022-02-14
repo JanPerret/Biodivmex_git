@@ -6,7 +6,7 @@ GB_gene_recap_loop_over_years <- function(taxa_data_med, taxa_name) {
   gene_table <- setNames(data.frame(matrix(ncol = 28, nrow = 0)), c("taxa", "year", paste0(gene_list), "n_NA", "tot_n_seq"))
   
   # list years since the first sequence was deposited in GenBank (for our taxa + genes conditions)
-  vect_year <- as.integer(c(1987:2019)) # first sequences is from 1987 in our dataframe
+  vect_year <- as.integer(c(1987:2020)) # first sequences is from 1987 in our dataframe
   
   # loop over years
   for (year in vect_year) {

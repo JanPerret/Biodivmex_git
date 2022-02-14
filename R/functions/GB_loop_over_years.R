@@ -7,7 +7,7 @@ GB_loop_over_years <- function(kingdom_data, taxa_data, taxa_data_med, taxa_name
                             c("year", "taxa", "n_seq", "taxa_n_seq", "loc_rate", "n_seq_med", "sp_level_rate_med", "n_sp_med"))
   
   # list years since the first sequence was deposited in GenBank (for our taxa + genes conditions)
-  vect_year <- as.integer(c(1987:2019)) # first sequences is from 1987 in our data
+  vect_year <- as.integer(c(1987:2020)) # first sequences is from 1987 in our data
   
   # loop over years
   for (year in vect_year) {

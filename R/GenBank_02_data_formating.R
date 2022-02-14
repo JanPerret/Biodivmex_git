@@ -9,7 +9,7 @@
 
 
 ### load data
-fungi_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_fungi_references.csv", delim = ",", col_names = TRUE,
+fungi_data <- read_delim("./data/SIMPLE_v11_RESULT_GENBANK_v10_fungi_references.csv", delim = ",", col_names = TRUE,
                          col_types = cols(
                            access_num = col_character(),
                            mol_type = col_character(),
@@ -27,7 +27,7 @@ fungi_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_fungi_refere
                            tree = col_character()
                          ))
 
-plant_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_plant_references.csv", delim = ",", col_names = TRUE,
+plant_data <- read_delim("./data/SIMPLE_v11_RESULT_GENBANK_v10_plant_references.csv", delim = ",", col_names = TRUE,
                          col_types = cols(
                            access_num = col_character(),
                            mol_type = col_character(),
@@ -45,7 +45,7 @@ plant_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_plant_refere
                            tree = col_character()
                          ))
 
-metazoa_data <- read_delim("./data/TEST_v11_SIMPLE_RESULT_GENBANK_v10_animal_references_mitochondrial_nuclear_seq.csv", delim = ",", col_names = TRUE,
+metazoa_data <- read_delim("./data/SIMPLE_v11_RESULT_GENBANK_v10_animal_references_mitochondrial_nuclear_seq.csv", delim = ",", col_names = TRUE,
                            col_types = cols(
                              access_num = col_character(),
                              mol_type = col_character(),
@@ -86,7 +86,7 @@ plant_data <- plant_data %>%
 metazoa_data <- metazoa_data %>% 
   mutate(species_level = replace(species_level, species_level == "BUG", NA))
 
-# replace species_levels values which contain digits by NAs
+# replace species_levels values which contain digits by NA
 fungi_data <- fungi_data %>% 
   mutate(species_level = replace(species_level, str_detect(species_level,"[:digit:]"), NA))
 plant_data <- plant_data %>% 
@@ -132,10 +132,10 @@ plant_data <- plant_data %>%
 metazoa_data <- metazoa_data %>% 
   mutate(sample_origin = replace(sample_origin, sample_origin == "Gaza Strip", "Palestine"))
 
-# remove sequences from 2020
-fungi_data <- subset(fungi_data, fungi_data$year != 2020)
-plant_data <- subset(plant_data, plant_data$year != 2020)
-metazoa_data <- subset(metazoa_data, metazoa_data$year != 2020)
+# remove sequences from 2021
+fungi_data <- subset(fungi_data, fungi_data$year != 2021)
+plant_data <- subset(plant_data, plant_data$year != 2021)
+metazoa_data <- subset(metazoa_data, metazoa_data$year != 2021)
 
 # remove sequences for wich no gene could be assigned
 fungi_data <- subset(fungi_data, !is.na(fungi_data$gene))
@@ -145,7 +145,7 @@ metazoa_data <- subset(metazoa_data, !is.na(metazoa_data$gene))
 
 ### number of sequences that passed "content filtering":
 number_seq_passing_content_filtering <- nrow(fungi_data) + nrow(plant_data) + nrow(metazoa_data)
-# 6,622,014
+# 7,050,591
 
 ### create sub-data frame without nuclear genes (only used for marine taxa)
 # save data frame with nuclear sequences for marine taxa
@@ -237,18 +237,18 @@ terrestrial_taxa_list <- c("Amphibian", "Reptile", "Bird", "Mammal", "Coleoptera
 n_seq_marine_taxa <- nrow(metazoa_data_with_nuc %>% filter(fish == "fish" | porifera == "porifera" | crustacea == "crustacea"))
 n_seq_terrestrial_taxa <- nrow(metazoa_data %>% filter(taxa %in% terrestrial_taxa_list))
 n_seq_taxa_of_interest <- nrow(fungi_data) + nrow(plant_data) + n_seq_marine_taxa + n_seq_terrestrial_taxa
-# 2,689,132
+# 2,860,073
 
 # number of sequences assigned to a study area
 n_seq_study_area <- nrow(fungi_data_med) + nrow(plant_data_med) + nrow(metazoa_data_with_nuc_med)
-# 292,522
+# 326,010
 
 # number of sequences with at least one geographic and one taxonomic assignation
 terrestrial_taxa_med_df <- metazoa_data_med %>% filter(taxa %in% terrestrial_taxa_list)
 marine_taxa_med_df <- metazoa_data_with_nuc_med %>% filter(fish == "fish" | porifera == "porifera" | crustacea == "crustacea")
 
 n_valid_seq <- nrow(fungi_data_med) + nrow(plant_data_med) + nrow(terrestrial_taxa_med_df) + nrow(marine_taxa_med_df)
-# 164,974
+# 175,828
 
 # make recap table of the filtering steps
 recap_titles <- c("Number of sequences that passed content filtering",
@@ -296,7 +296,7 @@ fish_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, t
 porifera_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = porifera_data, taxa_data_med = porifera_data_med, taxa_name = "porifera")
 crusta_desc_tab <- GB_extract_general_info(kingdom_data = metazoa_data_with_nuc, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 tree_desc_tab <- GB_extract_general_info(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = tree_data_med, taxa_name = "tree")
-tree_desc_tab[,3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
+tree_desc_tab[, 3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
 
 # make recap table
 all_taxa_desc_tab <- rbind(plant_desc_tab, fungi_desc_tab, amph_desc_tab, rept_desc_tab, bird_desc_tab, mammal_desc_tab,
@@ -320,7 +320,7 @@ fish_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, t
 porifera_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = porifera_data, taxa_data_med = porifera_data_med, taxa_name = "porifera")
 crusta_desc_year_tab <- GB_loop_over_years(kingdom_data = metazoa_data_with_nuc, taxa_data = crusta_data, taxa_data_med = crusta_data_med, taxa_name = "crustacea")
 tree_desc_year_tab <- GB_loop_over_years(kingdom_data = plant_data, taxa_data = plant_data, taxa_data_med = tree_data_med, taxa_name = "tree")
-tree_desc_year_tab[,3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
+tree_desc_year_tab[, 3:4] <- NA # removing irrelevant informations : here we have no way to know taxa number of sequences outside of med region or the loc_rate
 
 # save tables
 write_csv2(plant_desc_year_tab, file = "./output/text/GenBank_plant_desc_year_tab.csv", col_names = TRUE)
@@ -340,7 +340,7 @@ write_csv2(tree_desc_year_tab, file = "./output/text/GenBank_tree_desc_year_tab.
 
 ### recap table with number of sequences through time for each taxa
 # initiaze table
-year_list <- c(1987:2019)
+year_list <- c(1987:2020)
 all_taxa_year_tab <- setNames(data.frame(matrix(ncol = length(year_list), nrow = 0)), c(paste0(year_list)))
 
 # number of sequences in med basin per year
@@ -402,7 +402,7 @@ all_taxa_gene_tab <- rbind(plant_gene_tab, fungi_gene_tab, amph_gene_tab, rept_g
                            tree_gene_tab)
 
 # recap table in percentage
-all_taxa_gene_tab_percentage <- all_taxa_gene_tab[,-c(1, 27)] %>% sapply(`/`, all_taxa_gene_tab[,27])
+all_taxa_gene_tab_percentage <- all_taxa_gene_tab[, -c(1, 27)] %>% sapply(`/`, all_taxa_gene_tab[, 27])
 all_taxa_gene_tab_percentage <- round(all_taxa_gene_tab_percentage, digits = 2)
 all_taxa_gene_tab_percentage <- as.data.frame(cbind(taxa = all_taxa_gene_tab$taxa, all_taxa_gene_tab_percentage, tot_n_seq = all_taxa_gene_tab$tot_n_seq))
 
@@ -636,7 +636,7 @@ write_csv2(tree_island_sp_list, file = "./output/text/GenBank_island_sp_list_tre
 
 ### recap tables with number of sequences per year per country for each taxa
 # fix year factor levels for all taxa
-year_list <- c(1987:2019)
+year_list <- c(1987:2020)
 
 plant_data_med$year <- factor(plant_data_med$year, levels = year_list, ordered = TRUE)
 fungi_data_med$year <- factor(fungi_data_med$year, levels = year_list, ordered = TRUE)
