@@ -9,7 +9,7 @@
 
 
 # load data
-wos_data <- read_delim("./data/TEST_SIMPLE_v15_RESULT_WOS_files_merged_2020-11-13.csv", delim = ",", col_names = TRUE,
+wos_data <- read_delim("./data/SIMPLE_v15_RESULT_WOS_files_merged_2022-02-14.csv", delim = ",", col_names = TRUE,
                        col_types = cols(
                          access_num = col_character(),
                          language = col_character(),
@@ -39,19 +39,19 @@ wos_data <- read_delim("./data/TEST_SIMPLE_v15_RESULT_WOS_files_merged_2020-11-1
 wos_data <- wos_data %>%
   filter(language == "English")
 
-# drop articles from 2020
+# drop articles from 2021
 wos_data <- wos_data %>%
-  filter(year != 2020)
+  filter(year != 2021)
 
 ### corpus time truncation condition
 truncation_year = 1989
 
 wos_data <- wos_data %>%
-  filter(year > truncation_year) # all articles published from 1990 to 2019
+  filter(year > truncation_year) # all articles published from 1990 to 2020
 # NB : there was no article with year = NA anyway in the dataframe
 
 # fix year factor levels for all taxa
-year_list <- c((truncation_year+1):2019)
+year_list <- c((truncation_year + 1):2020)
 wos_data$year <- factor(wos_data$year, levels = year_list, ordered = TRUE)
 
 # drop articles from irrelevant journals 
@@ -72,6 +72,11 @@ wos_data <- wos_data %>%
 wos_data <- wos_data %>%
   select(-outside_med)
 
+# remove duplicated rows
+wos_data <- wos_data %>%
+  distinct()
+         
+
 # ### random sample of 500 articles for classification error rates estimation
 # set.seed(2020)
 # wos_data_sample_error_rates <- wos_data[sample(nrow(wos_data), size = 500, replace = FALSE), ]
@@ -90,7 +95,7 @@ wos_data <- wos_data %>%
 
 # number of articles that passed "content filtering"
 number_art_passing_content_filtering <- nrow(wos_data)
-# 54,810
+# 58,676
 
 # number of articles assigned to a taxa of interest
 number_art_taxa_of_interest <- 0
@@ -102,7 +107,7 @@ for (i in 1:length(wos_data$access_num)) {
     number_art_taxa_of_interest <- number_art_taxa_of_interest + 1
   }
 }
-# 25,371
+# 27,055
 
 # number of sequences assigned to a study area
 number_art_study_area <- 0
@@ -121,7 +126,7 @@ for (i in 1:length(wos_data$access_num)) {
   }
  }
 }
-# 31,307
+# 33,486
 
 
 # number of articles with both (at least one geographic AND one taxonomic assignation)
@@ -148,7 +153,7 @@ for (i in 1:length(wos_data$access_num)) {
     }
   }
 }
-# 12,190
+# 13,001 
 
 # make recap table of the filtering steps
 recap_titles <- c("Number of articles that passed content filtering",
@@ -277,7 +282,7 @@ for (i in 1:length(wos_data_div$access_num)){
   
 }
 
-times[times==0] <- 1 # if there is no country name in fieldwork_country reference still count for one row
+times[times == 0] <- 1 # if there is no country name in fieldwork_country reference still count for one row
 
 # replace positions of length 0 by NA
 coun <- lapply(coun, function(x) if(identical(x, character(0))) NA_character_ else x)
@@ -592,19 +597,19 @@ taxa_journals_table$tot_articles <- c(length(plant_journals_df$access_num),
 taxa_journals_table$mean_art_per_journal <- round(taxa_journals_table$tot_articles / taxa_journals_table$tot_n_journals, digits = 2)
 
 # fill taxa_journals_table by indexing rows with taxa name and columns with year_list length
-taxa_journals_table[which(taxa_journals_table$taxa == "plant"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = plant_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "fungi"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = fungi_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "amphibian"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = amph_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "reptile"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = rept_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "bird"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = bird_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "mammal"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = mammal_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "fish"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = fish_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "porifera"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = porifera_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "crustacea"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = crusta_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "coleoptera"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = coleo_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "papilionoidea"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = papilio_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "lumbricina"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = lumbri_journals_df)
-taxa_journals_table[which(taxa_journals_table$taxa == "tree"),5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = tree_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "plant"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = plant_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "fungi"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = fungi_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "amphibian"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = amph_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "reptile"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = rept_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "bird"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = bird_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "mammal"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = mammal_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "fish"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = fish_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "porifera"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = porifera_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "crustacea"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = crusta_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "coleoptera"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = coleo_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "papilionoidea"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = papilio_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "lumbricina"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = lumbri_journals_df)
+taxa_journals_table[which(taxa_journals_table$taxa == "tree"), 5:(4+length(year_list))] <- WOS_count_journals(taxa_journals_data = tree_journals_df)
 
 # save table
 write_csv2(taxa_journals_table, file = "./output/text/WOS_taxa_journals_table.csv", col_names = TRUE)
@@ -631,7 +636,7 @@ for (i in 1:length(wos_data_div_marine$access_num)){
   
 }
 
-times[times==0] <- 1 # if there is no region name in marine_region reference still count for one row
+times[times == 0] <- 1 # if there is no region name in marine_region reference still count for one row
 
 # replace positions of length 0 by NA
 reg <- lapply(reg, function(x) if(identical(x, character(0))) NA_character_ else x)
