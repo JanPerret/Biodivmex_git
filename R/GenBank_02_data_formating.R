@@ -589,6 +589,36 @@ write_csv2(porifera_species_level_tab, file = "./output/text/GenBank_porifera_sp
 write_csv2(crusta_species_level_tab, file = "./output/text/GenBank_crusta_species_level_tab.csv", col_names = TRUE)
 write_csv2(tree_species_level_tab, file = "./output/text/GenBank_tree_species_level_tab.csv", col_names = TRUE)
 
+### species names list for each taxa with the associated number of sequences
+plant_species_name_list <- plant_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+fungi_species_name_list <- fungi_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+amph_species_name_list <- amph_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+rept_species_name_list <- rept_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+bird_species_name_list <- bird_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+mammal_species_name_list <- mammal_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+coleo_species_name_list <- coleo_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+papilio_species_name_list <- papilio_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+lumbri_species_name_list <- lumbri_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+fish_species_name_list <- fish_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+porifera_species_name_list <- porifera_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+crusta_species_name_list <- crusta_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+tree_species_name_list <- tree_data_med %>% count(species_level, sort = TRUE, name = "n_seq")
+
+# save tables
+write_csv2(plant_species_name_list, file = "./output/text/GenBank_plant_species_name_list.csv", col_names = TRUE)
+write_csv2(fungi_species_name_list, file = "./output/text/GenBank_fungi_species_name_list.csv", col_names = TRUE)
+write_csv2(amph_species_name_list, file = "./output/text/GenBank_amph_species_name_list.csv", col_names = TRUE)
+write_csv2(rept_species_name_list, file = "./output/text/GenBank_rept_species_name_list.csv", col_names = TRUE)
+write_csv2(bird_species_name_list, file = "./output/text/GenBank_bird_species_name_list.csv", col_names = TRUE)
+write_csv2(mammal_species_name_list, file = "./output/text/GenBank_mammal_species_name_list.csv", col_names = TRUE)
+write_csv2(coleo_species_name_list, file = "./output/text/GenBank_coleo_species_name_list.csv", col_names = TRUE)
+write_csv2(papilio_species_name_list, file = "./output/text/GenBank_papilio_species_name_list.csv", col_names = TRUE)
+write_csv2(lumbri_species_name_list, file = "./output/text/GenBank_lumbri_species_name_list.csv", col_names = TRUE)
+write_csv2(fish_species_name_list, file = "./output/text/GenBank_fish_species_name_list.csv", col_names = TRUE)
+write_csv2(porifera_species_name_list, file = "./output/text/GenBank_porifera_species_name_list.csv", col_names = TRUE)
+write_csv2(crusta_species_name_list, file = "./output/text/GenBank_crusta_species_name_list.csv", col_names = TRUE)
+write_csv2(tree_species_name_list, file = "./output/text/GenBank_tree_species_name_list.csv", col_names = TRUE)
+
 
 ### recap table with the number of species with at least one sequence in GenBank for the islands
 island_sp_tab <- rbind(plant_species_level_tab, fungi_species_level_tab, amph_species_level_tab,
