@@ -79,7 +79,7 @@ But because I had to parse a large number of files, I changed the approach into 
 
 This program deletes the first 10 lines of every file ending with ".seq" that is located in the folder where the script is. These first 10 lines correspond to the GenBank release information and could enter in conflict with the following programs so I chose to get rid of them.
 
-2_fungi_Genbank_references_selection.py 2_animal_Genbank_references_selection.py 2_plant_Genbank_references_selection.py
+2_fungi_Genbank_references_selection.py ; 2_animal_Genbank_references_selection.py ; 2_plant_Genbank_references_selection.py
 
 These programs scan all the .seq files in the working directory line by line and put in one .txt file all the references meeting the specified conditions.
 
