@@ -502,7 +502,7 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 					lumbricina += ' ' + name_final
 					lumbricina = lumbricina.strip()
 					
-		# CWR assignation with only 2 conditional levels
+		# Tree assignation with 2 conditional levels (a co-occurrence word + a species name)
 			for a in range(0,tree_words_length):
 				name1 = tree_words[a]
 				if name1 in search_mix:
@@ -558,7 +558,7 @@ def Simple_WOS_table_maker(table_file_name, output_table):
 		output_table.write('\n'+ref_infos)
 
 
-output_table = open('TEST_SIMPLE_v15_'+table_file_name,'w') # opening a file to write the output
+output_table = open('SIMPLE_v15_'+table_file_name,'w') # opening a file to write the output
 # write the column headers
 output_table.write('access_num'+','+'language'+','+'doc_type'+','+'publisher'+','+'year'+','+'author_nationality'+','+'fieldwork_country'+','+'marine_region'+','+'outside_med'+','+'plant'+','+'fungi'+','+'amphibian'+','+'reptile'+','+'bird'+','+'mammal'+','+'fish'+','+'porifera'+','+'crustacea'+','+'coleoptera'+','+'papilionoidea'+','+'lumbricina'+','+'tree')
 Simple_WOS_table_maker(table_file_name, output_table)

@@ -39,8 +39,8 @@ wos_file_name = str(input("Enter your Wed of Science file name (converted to ANS
 
 
 def WOS_info_extraction(filename, output_file):
-	fin = open(filename, "r")
-	num_lines = sum(1 for line in open(filename))
+	fin = open(filename, "r", encoding = 'latin-1')
+	num_lines = sum(1 for line in open(filename, encoding = 'latin-1'))
 	# print("File has "+str(num_lines)+" lines.")
 	
 	start = ""
@@ -186,7 +186,7 @@ def WOS_info_extraction(filename, output_file):
 	fin.close()
 
 
-output_file = open('RESULT_'+wos_file_name,'w') # opening a file to write the output
+output_file = open('RESULT_' + wos_file_name, 'w') # opening a file to write the output
 output_file.write("doc_type"+','+"language"+','+"publisher"+','+"publication_year"+','+"DOI"+','+"accession_number"+','+"research_areas"+','+"author_names"+','+"title"+','+"auth_keywords"+','+"keywords_plus"+','+"abstract"+','+"reprint_author_address")
 WOS_info_extraction(wos_file_name, output_file)
 output_file.close()

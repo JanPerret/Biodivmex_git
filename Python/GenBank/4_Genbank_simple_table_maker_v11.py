@@ -469,7 +469,7 @@ def Simple_table_maker(table_file_name, output_table):
 				output_table.write('\n'+ref_infos)
 
 
-output_table = open('TEST_v11_SIMPLE_'+table_file_name,'w') # opening a file to write the output
+output_table = open('SIMPLE_v11_'+table_file_name,'w') # opening a file to write the output
 output_table.write('access_num'+','+'mol_type'+','+'taxa'+','+'species'+','+'gene'+','+'year'+','+'sequencer_nationality'+','+'sample_origin'+','+'supp_origin_infos'+','+'species_level'+','+'fish'+','+'porifera'+','+'crustacea'+','+'tree')
 Simple_table_maker(table_file_name, output_table)
 output_table.close()
