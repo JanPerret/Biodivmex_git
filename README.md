@@ -18,7 +18,8 @@ With these files you will be able to run all the analysis and make the figures p
 
 For Web of Science (251 Mo): [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7341655.svg)](https://doi.org/10.5281/zenodo.7341655)
 
-For Genbank (XX Go):
+For Genbank (3.1 Go): [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7341767.svg)](https://doi.org/10.5281/zenodo.7341767)
+
 
 # Web-of-Science-metadata-extractor
 
