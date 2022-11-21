@@ -8,9 +8,17 @@ Mail: [jan.perret\@cefe.cnrs.fr](mailto:jan.perret@cefe.cnrs.fr) or [jan.perret\
 
 1.  Download the current folder.
 
-2.  Download the ZIP file "Biodivmex_data.zip" from the Zenodo link below, and unzip it in the root directory. <br> Zenodo link : <br> With this files you will be able to run all the analysis and make the figures presented in the article by executing the script "make.R" located in the root directory.
+2.  Download the ZIP file "Biodivmex_data.zip" from the Zenodo link below, and unzip it in the root directory.
 
-3.  The data filtering and cleaning process was done with Python programs (stored in the ./Python directory). If you want to run again this process, download the following ZIP files: <br> For Web of Science (240 Mo): <br> For Genbank (XX Go): <br> How these programs work is described in the sections below.
+Zenodo link: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7341641.svg)](https://doi.org/10.5281/zenodo.7341641)
+
+With these files you will be able to run all the analysis and make the figures presented in the article by executing the script "make.R" located in the root directory.
+
+3.  The data filtering and cleaning process was done with Python programs (stored in the ./Python directory). If you want to run again this process, download the ZIP files below. How these programs work is described in the sections below.
+
+For Web of Science (251 Mo): [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7341655.svg)](https://doi.org/10.5281/zenodo.7341655)
+
+For Genbank (XX Go):
 
 # Web-of-Science-metadata-extractor
 
