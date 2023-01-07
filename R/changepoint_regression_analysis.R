@@ -7,10 +7,10 @@ library(tidyverse)
 
 
 ### load data
-WOS_taxa_trend <- read_csv2("./output/text/WOS_recap_table_articles_per_year_acc.csv")
-GenBank_taxa_trend <- read_csv2("./output/text/GenBank_all_taxa_year_tab_acc.csv")
-# WOS_taxa_trend <- read_csv2("./output/text/WOS_recap_table_articles_per_year.csv")
-# GenBank_taxa_trend <- read_csv2("./output/text/GenBank_all_taxa_year_tab.csv")
+# WOS_taxa_trend <- read_csv2("./output/text/WOS_recap_table_articles_per_year_acc.csv")
+# GenBank_taxa_trend <- read_csv2("./output/text/GenBank_all_taxa_year_tab_acc.csv")
+WOS_taxa_trend <- read_csv2("./output/text/WOS_recap_table_articles_per_year.csv")
+GenBank_taxa_trend <- read_csv2("./output/text/GenBank_all_taxa_year_tab.csv")
 
 # drop years 1987 to 1989
 GenBank_taxa_trend <- GenBank_taxa_trend[, -c(2,3,4)]
@@ -24,7 +24,7 @@ GenBank_taxa_trend <- subset(GenBank_taxa_trend, GenBank_taxa_trend$taxa != "lum
 get_breakpoints <- function(mydata) {
   
   taxa_vect <- unique(mydata$taxa)
-  year1990 <- c(1:30)
+  year1990 <- c(1:31)
   empty_vect <- rep(NA, nrow(mydata))
   result_table <- data.frame(taxa = empty_vect, breakpoint = empty_vect, lowerCI = empty_vect,
                              upperCI = empty_vect, p_value = empty_vect, intercept = empty_vect,
@@ -37,13 +37,13 @@ get_breakpoints <- function(mydata) {
     taxa_tab <- subset(mydata, mydata$taxa == mytaxa)
     
     taxa_tab <- taxa_tab %>%
-      pivot_longer(cols = "1990":"2019", names_to = "year", values_to = "n_references")
+      pivot_longer(cols = "1990":"2020", names_to = "year", values_to = "n_references")
     
     # fit regression
     fit.glm <- glm(n_references ~ year1990, data = taxa_tab, family = "quasipoisson") # with a poisson glm
     
-    # plot this model
-    # x0 <- seq(min(year1990), max(year1990), length = 30)  # prediction grid
+    # # plot this model
+    # x0 <- seq(min(year1990), max(year1990), length = 31)  # prediction grid
     # y0 <- predict.glm(fit.glm, newdata = list(x = x0))  # predicted values
     # y0 <- exp(y0) # backtransform estimates
     # plot(x = year1990, y = taxa_tab$n_references)
@@ -70,7 +70,7 @@ get_breakpoints <- function(mydata) {
     myslope2 <- mycoef[[2]] + mycoef[[3]]
     
     # get davies test p-values
-    mytest <- pscore.test(fit.glm, ~ year1990, k = 30) # test for the existence of one breakpoint
+    mytest <- pscore.test(fit.glm, ~ year1990, k = 31) # test for the existence of one breakpoint
     myp_value <- mytest$p.value
     
     result_vect <- c(taxa_tab$taxa[1], breakpoint, lowerCI, upperCI, myp_value, myintercept, myslope1, myslope2)
@@ -87,5 +87,11 @@ WOS_breakpoints <- get_breakpoints(mydata = WOS_taxa_trend)
 GenBank_breakpoints <- get_breakpoints(mydata = GenBank_taxa_trend)
 
 # save output
+WOS_breakpoints <- WOS_breakpoints[order(WOS_breakpoints$breakpoint), ]
+GenBank_breakpoints <- GenBank_breakpoints[order(GenBank_breakpoints$breakpoint), ]
+WOS_breakpoints$p_value <- formatC(as.numeric(WOS_breakpoints$p_value), format = "e", digits = 2)
+GenBank_breakpoints$p_value <- formatC(as.numeric(GenBank_breakpoints$p_value), format = "e", digits = 2)
+
 write_csv2(WOS_breakpoints, file = "./output/text/WOS_breakpoints.csv")
 write_csv2(GenBank_breakpoints, file = "./output/text/GenBank_breakpoints.csv")
+
