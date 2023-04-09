@@ -157,21 +157,3 @@ plot_Fig4 <- ggarrange(fig4_wos_map_evenness_continental, fig4_wos_map_evenness_
 pdf(file = "./output/plots/Figure4_maps_evenness.pdf", width = 17, height = 10)
 print(plot_Fig4)
 dev.off()
-
-
-#### Figure S2 : GenBank maps for plants, mammals, fungi and coleoptera.  ####
-
-# a. 
-# b. 
-# c. 
-# d. 
-
-
-#### Figure S3 : WOS maps for plants, mammals, fungi and coleoptera.  ####
-
-# a. 
-# b. 
-# c. 
-# d. 
-
-
