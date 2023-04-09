@@ -457,3 +457,73 @@ vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y
 print(WOS_terrestrial_evenness_map, vp = vplayout(1:12, 1:12))
 dev.off()
 
+
+#### maps for Figure 2 ####
+# a. WOS_map_myers_taxa
+terrestrial_myers_map <- WOS_map_number_articles_synthesis(locality_table = myers_article_loc_tab,
+                                                           # subtitle_text = "Color scale midpoint: 4%",
+                                                           subtitle_text = paste("Total number of articles :", sum(myers_article_loc_tab$n_articles[1:27])),
+                                                           taxa_name = "Myers taxa",
+                                                           color_scale_mid = 4)
+fig2_map_continental_myers <- terrestrial_myers_map +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.45, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+# b. WOS_map_non_myers_taxa
+terrestrial_non_myers_map <- WOS_map_number_articles_synthesis(locality_table = non_myers_article_loc_tab,
+                                                               # subtitle_text = "Color scale midpoint: 4%",
+                                                               subtitle_text = paste("Total number of articles :", sum(non_myers_article_loc_tab$n_articles[1:27])),
+                                                               taxa_name = "non-Myers taxa",
+                                                               color_scale_mid = 4)
+fig2_map_continental_other <- terrestrial_non_myers_map +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.45, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+# c. WOS_map_marine_taxa
+marine_result_map <- WOS_map_number_articles_marine_synthesis_for_fig2(locality_table = marine_article_loc_tab,
+                                                                       subtitle_text = paste("Total number of articles :", sum(marine_article_loc_tab$n_articles[1:19])),
+                                                                       taxa_name = "Marine taxa",
+                                                                       color_scale_mid = 4)
+fig2_map_marine <- marine_result_map +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.29, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+
+#### maps for Figure 4 ####
+WOS_terrestrial_evenness_map <- WOS_map_number_articles_evenness(locality_table = terrestrial_article_evenness_tab,
+                                                                 subtitle_text = paste(""),
+                                                                 taxa_name = "Terrestrial taxa")
+fig4_wos_map_evenness_continental <- WOS_terrestrial_evenness_map +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.45, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+
+WOS_marine_evenness_map <- WOS_map_number_articles_marine_evenness_for_fig4(locality_table = marine_article_evenness_tab,
+                                                                            subtitle_text = paste(""),
+                                                                            taxa_name = "Marine taxa")
+fig4_wos_map_evenness_marine <- WOS_marine_evenness_map +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.29, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+
+

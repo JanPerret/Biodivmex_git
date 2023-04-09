@@ -567,3 +567,72 @@ vplayout <- function(x, y) grid::viewport(layout.pos.row = x, layout.pos.col = y
 print(crusta_species_map, vp = vplayout(1:12, 1:12))
 dev.off()
 
+
+
+#### maps for Figure 2 ####
+# d. GenBank_map_sequences_myers_taxa
+GB_myers_result_map <- GB_map_number_sequence_synthesis(locality_table = myers_seq_loc_tab,
+                                                        subtitle_text = paste("Total number of sequences :", sum(myers_seq_loc_tab$n_seq[1:27])),
+                                                        taxa_name = "Myers taxa",
+                                                        color_scale_mid = 4)
+fig2_genbank_map_continental_myers <- GB_myers_result_map +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.45, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+# e. GenBank_map_sequences_non_myers_taxa
+GB_non_myers_result_map <- GB_map_number_sequence_synthesis(locality_table = non_myers_seq_loc_tab,
+                                                            subtitle_text = paste("Total number of sequences :", sum(non_myers_seq_loc_tab$n_seq[1:27])),
+                                                            taxa_name = "non Myers taxa",
+                                                            color_scale_mid = 4)
+fig2_genbank_map_continental_other <- GB_non_myers_result_map +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.45, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+# c. GenBank_map_sequences_marine_taxa
+GB_marine_result_map <- GB_map_number_sequence_marine_taxa_synthesis(locality_table = marine_seq_loc_tab,
+                                                                     subtitle_text = paste("Total number of sequences :", sum(marine_seq_loc_tab$n_seq[1:19])),
+                                                                     taxa_name = "marine taxa",
+                                                                     color_scale_mid = 4)
+fig2_genbank_map_marine <- GB_marine_result_map +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.29, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+
+#### maps for Figure 4 ####
+GB_terrestrial_evenness_map <- GB_map_number_sequence_evenness(locality_table = terrestrial_seq_evenness_tab,
+                                                               subtitle_text = paste(""),
+                                                               taxa_name = "Terrestrial taxa")
+fig4_genbank_map_evenness_continental <- GB_terrestrial_evenness_map +
+  scale_fill_gradientn(name = "Simpson evenness index", colours = palette_evenness, na.value = "white", breaks = c(0.3, 0.5, 0.7)) +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.45, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+
+GB_marine_evenness_map <- GB_map_number_sequence_marine_taxa_evenness(locality_table = marine_seq_evenness_tab,
+                                                                      subtitle_text = paste(""),
+                                                                      taxa_name = "Marine taxa")
+fig4_genbank_map_evenness_marine <- GB_marine_evenness_map +
+  theme(title = element_blank(), 
+        # legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.position = c(0.29, 0.12),
+        text = element_text(size = 16)) +
+  ggtitle(element_blank(), subtitle = element_blank())
+
+

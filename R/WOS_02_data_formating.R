@@ -662,7 +662,7 @@ porifera_region_df <- subset(wos_data_div_marine, wos_data_div_marine$porifera =
 crusta_region_df <- subset(wos_data_div_marine, wos_data_div_marine$crustacea == "crustacea")
 
 # number of articles per region
-# initiaze table
+# initiate table
 taxa_region_table <- setNames(data.frame(matrix(ncol = 3, nrow = length(region_list)+1)), c("fish", "porifera", "crustacea"))
 
 # number of articles per region
@@ -768,5 +768,267 @@ crusta_article_loc_tab <- cbind(crusta_article_loc_tab, n_articles = crusta_arti
 write_csv2(porifera_article_loc_tab, file = "./output/text/WOS_porifera_article_loc_tab.csv", col_names = TRUE)
 write_csv2(crusta_article_loc_tab, file = "./output/text/WOS_crusta_article_loc_tab.csv", col_names = TRUE)
 write_csv2(fish_article_loc_tab, file = "./output/text/WOS_fish_article_loc_tab.csv", col_names = TRUE)
+
+
+#### Values for the Table 1 of the main text ####
+# View(wos_data)
+vect_myers_taxa <- c("plant", "amphibian", "reptile", "bird", "mammal")
+vect_other_taxa <- c("fungi", "coleoptera", "papilionoidea")
+
+# portugal
+df_portugal <- subset(wos_data, grepl("Portugal", wos_data$fieldwork_country))
+df_portugal_myers <- subset(df_portugal, !is.na(df_portugal$plant) | !is.na(df_portugal$amphibian) | !is.na(df_portugal$reptile) | !is.na(df_portugal$bird) | !is.na(df_portugal$mammal))
+df_portugal_other <- subset(df_portugal, !is.na(df_portugal$fungi) | !is.na(df_portugal$coleoptera) | !is.na(df_portugal$papilionoidea))
+nrow(df_portugal_myers); (nrow(df_portugal_myers)/13001)*100
+nrow(df_portugal_other); (nrow(df_portugal_other)/13001)*100
+df_portugal_all_taxa <- subset(df_portugal, !is.na(df_portugal$plant) | !is.na(df_portugal$amphibian) | !is.na(df_portugal$reptile) | !is.na(df_portugal$bird) | !is.na(df_portugal$mammal) | !is.na(df_portugal$fungi) | !is.na(df_portugal$coleoptera) | !is.na(df_portugal$papilionoidea))
+nrow(df_portugal_all_taxa)
+
+# spain
+df_spain <- subset(wos_data, grepl("Spain", wos_data$fieldwork_country) | grepl("Balearic Islands", wos_data$fieldwork_country))
+df_spain_myers <- subset(df_spain, !is.na(df_spain$plant) | !is.na(df_spain$amphibian) | !is.na(df_spain$reptile) | !is.na(df_spain$bird) | !is.na(df_spain$mammal))
+df_spain_other <- subset(df_spain, !is.na(df_spain$fungi) | !is.na(df_spain$coleoptera) | !is.na(df_spain$papilionoidea))
+nrow(df_spain_myers); (nrow(df_spain_myers)/13001)*100
+nrow(df_spain_other); (nrow(df_spain_other)/13001)*100
+df_spain_all_taxa <- subset(df_spain, !is.na(df_spain$plant) | !is.na(df_spain$amphibian) | !is.na(df_spain$reptile) | !is.na(df_spain$bird) | !is.na(df_spain$mammal) | !is.na(df_spain$fungi) | !is.na(df_spain$coleoptera) | !is.na(df_spain$papilionoidea))
+nrow(df_spain_all_taxa)
+
+# france
+df_france <- subset(wos_data, grepl("France", wos_data$fieldwork_country) | grepl("Corsica", wos_data$fieldwork_country))
+df_france_myers <- subset(df_france, !is.na(df_france$plant) | !is.na(df_france$amphibian) | !is.na(df_france$reptile) | !is.na(df_france$bird) | !is.na(df_france$mammal))
+df_france_other <- subset(df_france, !is.na(df_france$fungi) | !is.na(df_france$coleoptera) | !is.na(df_france$papilionoidea))
+nrow(df_france_myers); (nrow(df_france_myers)/13001)*100
+nrow(df_france_other); (nrow(df_france_other)/13001)*100
+df_france_all_taxa <- subset(df_france, !is.na(df_france$plant) | !is.na(df_france$amphibian) | !is.na(df_france$reptile) | !is.na(df_france$bird) | !is.na(df_france$mammal) | !is.na(df_france$fungi) | !is.na(df_france$coleoptera) | !is.na(df_france$papilionoidea))
+nrow(df_france_all_taxa)
+
+# italy
+df_italy <- subset(wos_data, grepl("Italy", wos_data$fieldwork_country) | grepl("Sicily", wos_data$fieldwork_country) | grepl("Sardinia", wos_data$fieldwork_country))
+df_italy_myers <- subset(df_italy, !is.na(df_italy$plant) | !is.na(df_italy$amphibian) | !is.na(df_italy$reptile) | !is.na(df_italy$bird) | !is.na(df_italy$mammal))
+df_italy_other <- subset(df_italy, !is.na(df_italy$fungi) | !is.na(df_italy$coleoptera) | !is.na(df_italy$papilionoidea))
+nrow(df_italy_myers); (nrow(df_italy_myers)/13001)*100
+nrow(df_italy_other); (nrow(df_italy_other)/13001)*100
+df_italy_all_taxa <- subset(df_italy, !is.na(df_italy$plant) | !is.na(df_italy$amphibian) | !is.na(df_italy$reptile) | !is.na(df_italy$bird) | !is.na(df_italy$mammal) | !is.na(df_italy$fungi) | !is.na(df_italy$coleoptera) | !is.na(df_italy$papilionoidea))
+nrow(df_italy_all_taxa)
+
+# North Western
+df_north_western <- subset(wos_data, grepl("Portugal", wos_data$fieldwork_country) | grepl("Spain", wos_data$fieldwork_country) | grepl("Balearic Islands", wos_data$fieldwork_country) | grepl("France", wos_data$fieldwork_country) | grepl("Corsica", wos_data$fieldwork_country) | grepl("Italy", wos_data$fieldwork_country) | grepl("Sicily", wos_data$fieldwork_country) | grepl("Sardinia", wos_data$fieldwork_country))
+df_north_western_myers <- subset(df_north_western, !is.na(df_north_western$plant) | !is.na(df_north_western$amphibian) | !is.na(df_north_western$reptile) | !is.na(df_north_western$bird) | !is.na(df_north_western$mammal))
+df_north_western_other <- subset(df_north_western, !is.na(df_north_western$fungi) | !is.na(df_north_western$coleoptera) | !is.na(df_north_western$papilionoidea))
+nrow(df_north_western_myers); (nrow(df_north_western_myers)/13001)*100
+nrow(df_north_western_other); (nrow(df_north_western_other)/13001)*100
+
+# Croatia
+df_croatia <- subset(wos_data, grepl("Croatia", wos_data$fieldwork_country))
+df_croatia_myers <- subset(df_croatia, !is.na(df_croatia$plant) | !is.na(df_croatia$amphibian) | !is.na(df_croatia$reptile) | !is.na(df_croatia$bird) | !is.na(df_croatia$mammal))
+df_croatia_other <- subset(df_croatia, !is.na(df_croatia$fungi) | !is.na(df_croatia$coleoptera) | !is.na(df_croatia$papilionoidea))
+nrow(df_croatia_myers); (nrow(df_croatia_myers)/13001)*100
+nrow(df_croatia_other); (nrow(df_croatia_other)/13001)*100
+df_croatia_all_taxa <- subset(df_croatia, !is.na(df_croatia$plant) | !is.na(df_croatia$amphibian) | !is.na(df_croatia$reptile) | !is.na(df_croatia$bird) | !is.na(df_croatia$mammal) | !is.na(df_croatia$fungi) | !is.na(df_croatia$coleoptera) | !is.na(df_croatia$papilionoidea))
+nrow(df_croatia_all_taxa)
+
+# Slovenia
+df_slovenia <- subset(wos_data, grepl("Slovenia", wos_data$fieldwork_country))
+df_slovenia_myers <- subset(df_slovenia, !is.na(df_slovenia$plant) | !is.na(df_slovenia$amphibian) | !is.na(df_slovenia$reptile) | !is.na(df_slovenia$bird) | !is.na(df_slovenia$mammal))
+df_slovenia_other <- subset(df_slovenia, !is.na(df_slovenia$fungi) | !is.na(df_slovenia$coleoptera) | !is.na(df_slovenia$papilionoidea))
+nrow(df_slovenia_myers); (nrow(df_slovenia_myers)/13001)*100
+nrow(df_slovenia_other); (nrow(df_slovenia_other)/13001)*100
+df_slovenia_all_taxa <- subset(df_slovenia, !is.na(df_slovenia$plant) | !is.na(df_slovenia$amphibian) | !is.na(df_slovenia$reptile) | !is.na(df_slovenia$bird) | !is.na(df_slovenia$mammal) | !is.na(df_slovenia$fungi) | !is.na(df_slovenia$coleoptera) | !is.na(df_slovenia$papilionoidea))
+nrow(df_slovenia_all_taxa)
+
+# Montenegro
+df_montenegro <- subset(wos_data, grepl("Montenegro", wos_data$fieldwork_country))
+df_montenegro_myers <- subset(df_montenegro, !is.na(df_montenegro$plant) | !is.na(df_montenegro$amphibian) | !is.na(df_montenegro$reptile) | !is.na(df_montenegro$bird) | !is.na(df_montenegro$mammal))
+df_montenegro_other <- subset(df_montenegro, !is.na(df_montenegro$fungi) | !is.na(df_montenegro$coleoptera) | !is.na(df_montenegro$papilionoidea))
+nrow(df_montenegro_myers); (nrow(df_montenegro_myers)/13001)*100
+nrow(df_montenegro_other); (nrow(df_montenegro_other)/13001)*100
+df_montenegro_all_taxa <- subset(df_montenegro, !is.na(df_montenegro$plant) | !is.na(df_montenegro$amphibian) | !is.na(df_montenegro$reptile) | !is.na(df_montenegro$bird) | !is.na(df_montenegro$mammal) | !is.na(df_montenegro$fungi) | !is.na(df_montenegro$coleoptera) | !is.na(df_montenegro$papilionoidea))
+nrow(df_montenegro_all_taxa)
+
+# Albania
+df_albania <- subset(wos_data, grepl("Albania", wos_data$fieldwork_country))
+df_albania_myers <- subset(df_albania, !is.na(df_albania$plant) | !is.na(df_albania$amphibian) | !is.na(df_albania$reptile) | !is.na(df_albania$bird) | !is.na(df_albania$mammal))
+df_albania_other <- subset(df_albania, !is.na(df_albania$fungi) | !is.na(df_albania$coleoptera) | !is.na(df_albania$papilionoidea))
+nrow(df_albania_myers); (nrow(df_albania_myers)/13001)*100
+nrow(df_albania_other); (nrow(df_albania_other)/13001)*100
+df_albania_all_taxa <- subset(df_albania, !is.na(df_albania$plant) | !is.na(df_albania$amphibian) | !is.na(df_albania$reptile) | !is.na(df_albania$bird) | !is.na(df_albania$mammal) | !is.na(df_albania$fungi) | !is.na(df_albania$coleoptera) | !is.na(df_albania$papilionoidea))
+nrow(df_albania_all_taxa)
+
+# Bosnia and Herzegovina
+df_bosnia <- subset(wos_data, grepl("Bosnia", wos_data$fieldwork_country))
+df_bosnia_myers <- subset(df_bosnia, !is.na(df_bosnia$plant) | !is.na(df_bosnia$amphibian) | !is.na(df_bosnia$reptile) | !is.na(df_bosnia$bird) | !is.na(df_bosnia$mammal))
+df_bosnia_other <- subset(df_bosnia, !is.na(df_bosnia$fungi) | !is.na(df_bosnia$coleoptera) | !is.na(df_bosnia$papilionoidea))
+nrow(df_bosnia_myers); (nrow(df_bosnia_myers)/13001)*100
+nrow(df_bosnia_other); (nrow(df_bosnia_other)/13001)*100
+df_bosnia_all_taxa <- subset(df_bosnia, !is.na(df_bosnia$plant) | !is.na(df_bosnia$amphibian) | !is.na(df_bosnia$reptile) | !is.na(df_bosnia$bird) | !is.na(df_bosnia$mammal) | !is.na(df_bosnia$fungi) | !is.na(df_bosnia$coleoptera) | !is.na(df_bosnia$papilionoidea))
+nrow(df_bosnia_all_taxa)
+
+# Balkans
+df_balkans <- subset(wos_data, grepl("Croatia", wos_data$fieldwork_country) | grepl("Slovenia", wos_data$fieldwork_country) | grepl("Montenegro", wos_data$fieldwork_country) | grepl("Albania", wos_data$fieldwork_country) | grepl("Bosnia", wos_data$fieldwork_country))
+df_balkans_myers <- subset(df_balkans, !is.na(df_balkans$plant) | !is.na(df_balkans$amphibian) | !is.na(df_balkans$reptile) | !is.na(df_balkans$bird) | !is.na(df_balkans$mammal))
+df_balkans_other <- subset(df_balkans, !is.na(df_balkans$fungi) | !is.na(df_balkans$coleoptera) | !is.na(df_balkans$papilionoidea))
+nrow(df_balkans_myers); (nrow(df_balkans_myers)/13001)*100
+nrow(df_balkans_other); (nrow(df_balkans_other)/13001)*100
+
+# Algeria
+df_algeria <- subset(wos_data, grepl("Algeria", wos_data$fieldwork_country))
+df_algeria_myers <- subset(df_algeria, !is.na(df_algeria$plant) | !is.na(df_algeria$amphibian) | !is.na(df_algeria$reptile) | !is.na(df_algeria$bird) | !is.na(df_algeria$mammal))
+df_algeria_other <- subset(df_algeria, !is.na(df_algeria$fungi) | !is.na(df_algeria$coleoptera) | !is.na(df_algeria$papilionoidea))
+nrow(df_algeria_myers); (nrow(df_algeria_myers)/13001)*100
+nrow(df_algeria_other); (nrow(df_algeria_other)/13001)*100
+df_algeria_all_taxa <- subset(df_algeria, !is.na(df_algeria$plant) | !is.na(df_algeria$amphibian) | !is.na(df_algeria$reptile) | !is.na(df_algeria$bird) | !is.na(df_algeria$mammal) | !is.na(df_algeria$fungi) | !is.na(df_algeria$coleoptera) | !is.na(df_algeria$papilionoidea))
+nrow(df_algeria_all_taxa)
+
+# Tunisia
+df_tunisia <- subset(wos_data, grepl("Tunisia", wos_data$fieldwork_country))
+df_tunisia_myers <- subset(df_tunisia, !is.na(df_tunisia$plant) | !is.na(df_tunisia$amphibian) | !is.na(df_tunisia$reptile) | !is.na(df_tunisia$bird) | !is.na(df_tunisia$mammal))
+df_tunisia_other <- subset(df_tunisia, !is.na(df_tunisia$fungi) | !is.na(df_tunisia$coleoptera) | !is.na(df_tunisia$papilionoidea))
+nrow(df_tunisia_myers); (nrow(df_tunisia_myers)/13001)*100
+nrow(df_tunisia_other); (nrow(df_tunisia_other)/13001)*100
+df_tunisia_all_taxa <- subset(df_tunisia, !is.na(df_tunisia$plant) | !is.na(df_tunisia$amphibian) | !is.na(df_tunisia$reptile) | !is.na(df_tunisia$bird) | !is.na(df_tunisia$mammal) | !is.na(df_tunisia$fungi) | !is.na(df_tunisia$coleoptera) | !is.na(df_tunisia$papilionoidea))
+nrow(df_tunisia_all_taxa)
+
+# Malta
+df_malta <- subset(wos_data, grepl("Malta", wos_data$fieldwork_country))
+df_malta_myers <- subset(df_malta, !is.na(df_malta$plant) | !is.na(df_malta$amphibian) | !is.na(df_malta$reptile) | !is.na(df_malta$bird) | !is.na(df_malta$mammal))
+df_malta_other <- subset(df_malta, !is.na(df_malta$fungi) | !is.na(df_malta$coleoptera) | !is.na(df_malta$papilionoidea))
+nrow(df_malta_myers); (nrow(df_malta_myers)/13001)*100
+nrow(df_malta_other); (nrow(df_malta_other)/13001)*100
+df_malta_all_taxa <- subset(df_malta, !is.na(df_malta$plant) | !is.na(df_malta$amphibian) | !is.na(df_malta$reptile) | !is.na(df_malta$bird) | !is.na(df_malta$mammal) | !is.na(df_malta$fungi) | !is.na(df_malta$coleoptera) | !is.na(df_malta$papilionoidea))
+nrow(df_malta_all_taxa)
+
+# Egypt
+df_egypt <- subset(wos_data, grepl("Egypt", wos_data$fieldwork_country))
+df_egypt_myers <- subset(df_egypt, !is.na(df_egypt$plant) | !is.na(df_egypt$amphibian) | !is.na(df_egypt$reptile) | !is.na(df_egypt$bird) | !is.na(df_egypt$mammal))
+df_egypt_other <- subset(df_egypt, !is.na(df_egypt$fungi) | !is.na(df_egypt$coleoptera) | !is.na(df_egypt$papilionoidea))
+nrow(df_egypt_myers); (nrow(df_egypt_myers)/13001)*100
+nrow(df_egypt_other); (nrow(df_egypt_other)/13001)*100
+df_egypt_all_taxa <- subset(df_egypt, !is.na(df_egypt$plant) | !is.na(df_egypt$amphibian) | !is.na(df_egypt$reptile) | !is.na(df_egypt$bird) | !is.na(df_egypt$mammal) | !is.na(df_egypt$fungi) | !is.na(df_egypt$coleoptera) | !is.na(df_egypt$papilionoidea))
+nrow(df_egypt_all_taxa)
+
+# Libya
+df_libya <- subset(wos_data, grepl("Libya", wos_data$fieldwork_country))
+df_libya_myers <- subset(df_libya, !is.na(df_libya$plant) | !is.na(df_libya$amphibian) | !is.na(df_libya$reptile) | !is.na(df_libya$bird) | !is.na(df_libya$mammal))
+df_libya_other <- subset(df_libya, !is.na(df_libya$fungi) | !is.na(df_libya$coleoptera) | !is.na(df_libya$papilionoidea))
+nrow(df_libya_myers); (nrow(df_libya_myers)/13001)*100
+nrow(df_libya_other); (nrow(df_libya_other)/13001)*100
+df_libya_all_taxa <- subset(df_libya, !is.na(df_libya$plant) | !is.na(df_libya$amphibian) | !is.na(df_libya$reptile) | !is.na(df_libya$bird) | !is.na(df_libya$mammal) | !is.na(df_libya$fungi) | !is.na(df_libya$coleoptera) | !is.na(df_libya$papilionoidea))
+nrow(df_libya_all_taxa)
+
+# Morocco
+df_morocco <- subset(wos_data, grepl("Morocco", wos_data$fieldwork_country))
+df_morocco_myers <- subset(df_morocco, !is.na(df_morocco$plant) | !is.na(df_morocco$amphibian) | !is.na(df_morocco$reptile) | !is.na(df_morocco$bird) | !is.na(df_morocco$mammal))
+df_morocco_other <- subset(df_morocco, !is.na(df_morocco$fungi) | !is.na(df_morocco$coleoptera) | !is.na(df_morocco$papilionoidea))
+nrow(df_morocco_myers); (nrow(df_morocco_myers)/13001)*100
+nrow(df_morocco_other); (nrow(df_morocco_other)/13001)*100
+df_morocco_all_taxa <- subset(df_morocco, !is.na(df_morocco$plant) | !is.na(df_morocco$amphibian) | !is.na(df_morocco$reptile) | !is.na(df_morocco$bird) | !is.na(df_morocco$mammal) | !is.na(df_morocco$fungi) | !is.na(df_morocco$coleoptera) | !is.na(df_morocco$papilionoidea))
+nrow(df_morocco_all_taxa)
+
+# Southern
+df_southern <- subset(wos_data, grepl("Algeria", wos_data$fieldwork_country) | grepl("Tunisia", wos_data$fieldwork_country) | grepl("Malta", wos_data$fieldwork_country) | grepl("Egypt", wos_data$fieldwork_country) | grepl("Libya", wos_data$fieldwork_country) | grepl("Morocco", wos_data$fieldwork_country))
+df_southern_myers <- subset(df_southern, !is.na(df_southern$plant) | !is.na(df_southern$amphibian) | !is.na(df_southern$reptile) | !is.na(df_southern$bird) | !is.na(df_southern$mammal))
+df_southern_other <- subset(df_southern, !is.na(df_southern$fungi) | !is.na(df_southern$coleoptera) | !is.na(df_southern$papilionoidea))
+nrow(df_southern_myers); (nrow(df_southern_myers)/13001)*100
+nrow(df_southern_other); (nrow(df_southern_other)/13001)*100
+
+# Greece
+df_greece <- subset(wos_data, grepl("Greece", wos_data$fieldwork_country) | grepl("Crete", wos_data$fieldwork_country))
+df_greece_myers <- subset(df_greece, !is.na(df_greece$plant) | !is.na(df_greece$amphibian) | !is.na(df_greece$reptile) | !is.na(df_greece$bird) | !is.na(df_greece$mammal))
+df_greece_other <- subset(df_greece, !is.na(df_greece$fungi) | !is.na(df_greece$coleoptera) | !is.na(df_greece$papilionoidea))
+nrow(df_greece_myers); (nrow(df_greece_myers)/13001)*100
+nrow(df_greece_other); (nrow(df_greece_other)/13001)*100
+df_greece_all_taxa <- subset(df_greece, !is.na(df_greece$plant) | !is.na(df_greece$amphibian) | !is.na(df_greece$reptile) | !is.na(df_greece$bird) | !is.na(df_greece$mammal) | !is.na(df_greece$fungi) | !is.na(df_greece$coleoptera) | !is.na(df_greece$papilionoidea))
+nrow(df_greece_all_taxa)
+
+# Turkey
+df_turkey <- subset(wos_data, grepl("Turkey", wos_data$fieldwork_country))
+df_turkey_myers <- subset(df_turkey, !is.na(df_turkey$plant) | !is.na(df_turkey$amphibian) | !is.na(df_turkey$reptile) | !is.na(df_turkey$bird) | !is.na(df_turkey$mammal))
+df_turkey_other <- subset(df_turkey, !is.na(df_turkey$fungi) | !is.na(df_turkey$coleoptera) | !is.na(df_turkey$papilionoidea))
+nrow(df_turkey_myers); (nrow(df_turkey_myers)/13001)*100
+nrow(df_turkey_other); (nrow(df_turkey_other)/13001)*100
+df_turkey_all_taxa <- subset(df_turkey, !is.na(df_turkey$plant) | !is.na(df_turkey$amphibian) | !is.na(df_turkey$reptile) | !is.na(df_turkey$bird) | !is.na(df_turkey$mammal) | !is.na(df_turkey$fungi) | !is.na(df_turkey$coleoptera) | !is.na(df_turkey$papilionoidea))
+nrow(df_turkey_all_taxa)
+
+# North Eastern
+df_north_eastern <- subset(wos_data, grepl("Greece", wos_data$fieldwork_country) | grepl("Crete", wos_data$fieldwork_country) | grepl("Turkey", wos_data$fieldwork_country))
+df_north_eastern_myers <- subset(df_north_eastern, !is.na(df_north_eastern$plant) | !is.na(df_north_eastern$amphibian) | !is.na(df_north_eastern$reptile) | !is.na(df_north_eastern$bird) | !is.na(df_north_eastern$mammal))
+df_north_eastern_other <- subset(df_north_eastern, !is.na(df_north_eastern$fungi) | !is.na(df_north_eastern$coleoptera) | !is.na(df_north_eastern$papilionoidea))
+nrow(df_north_eastern_myers); (nrow(df_north_eastern_myers)/13001)*100
+nrow(df_north_eastern_other); (nrow(df_north_eastern_other)/13001)*100
+
+# Israel
+df_israel <- subset(wos_data, grepl("Israel", wos_data$fieldwork_country))
+df_israel_myers <- subset(df_israel, !is.na(df_israel$plant) | !is.na(df_israel$amphibian) | !is.na(df_israel$reptile) | !is.na(df_israel$bird) | !is.na(df_israel$mammal))
+df_israel_other <- subset(df_israel, !is.na(df_israel$fungi) | !is.na(df_israel$coleoptera) | !is.na(df_israel$papilionoidea))
+nrow(df_israel_myers); (nrow(df_israel_myers)/13001)*100
+nrow(df_israel_other); (nrow(df_israel_other)/13001)*100
+df_israel_all_taxa <- subset(df_israel, !is.na(df_israel$plant) | !is.na(df_israel$amphibian) | !is.na(df_israel$reptile) | !is.na(df_israel$bird) | !is.na(df_israel$mammal) | !is.na(df_israel$fungi) | !is.na(df_israel$coleoptera) | !is.na(df_israel$papilionoidea))
+nrow(df_israel_all_taxa)
+
+# Cyprus
+df_cyprus <- subset(wos_data, grepl("Cyprus", wos_data$fieldwork_country))
+df_cyprus_myers <- subset(df_cyprus, !is.na(df_cyprus$plant) | !is.na(df_cyprus$amphibian) | !is.na(df_cyprus$reptile) | !is.na(df_cyprus$bird) | !is.na(df_cyprus$mammal))
+df_cyprus_other <- subset(df_cyprus, !is.na(df_cyprus$fungi) | !is.na(df_cyprus$coleoptera) | !is.na(df_cyprus$papilionoidea))
+nrow(df_cyprus_myers); (nrow(df_cyprus_myers)/13001)*100
+nrow(df_cyprus_other); (nrow(df_cyprus_other)/13001)*100
+df_cyprus_all_taxa <- subset(df_cyprus, !is.na(df_cyprus$plant) | !is.na(df_cyprus$amphibian) | !is.na(df_cyprus$reptile) | !is.na(df_cyprus$bird) | !is.na(df_cyprus$mammal) | !is.na(df_cyprus$fungi) | !is.na(df_cyprus$coleoptera) | !is.na(df_cyprus$papilionoidea))
+nrow(df_cyprus_all_taxa)
+
+# Lebanon
+df_lebanon <- subset(wos_data, grepl("Lebanon", wos_data$fieldwork_country))
+df_lebanon_myers <- subset(df_lebanon, !is.na(df_lebanon$plant) | !is.na(df_lebanon$amphibian) | !is.na(df_lebanon$reptile) | !is.na(df_lebanon$bird) | !is.na(df_lebanon$mammal))
+df_lebanon_other <- subset(df_lebanon, !is.na(df_lebanon$fungi) | !is.na(df_lebanon$coleoptera) | !is.na(df_lebanon$papilionoidea))
+nrow(df_lebanon_myers); (nrow(df_lebanon_myers)/13001)*100
+nrow(df_lebanon_other); (nrow(df_lebanon_other)/13001)*100
+df_lebanon_all_taxa <- subset(df_lebanon, !is.na(df_lebanon$plant) | !is.na(df_lebanon$amphibian) | !is.na(df_lebanon$reptile) | !is.na(df_lebanon$bird) | !is.na(df_lebanon$mammal) | !is.na(df_lebanon$fungi) | !is.na(df_lebanon$coleoptera) | !is.na(df_lebanon$papilionoidea))
+nrow(df_lebanon_all_taxa)
+
+# Syria
+df_syria <- subset(wos_data, grepl("Syria", wos_data$fieldwork_country))
+df_syria_myers <- subset(df_syria, !is.na(df_syria$plant) | !is.na(df_syria$amphibian) | !is.na(df_syria$reptile) | !is.na(df_syria$bird) | !is.na(df_syria$mammal))
+df_syria_other <- subset(df_syria, !is.na(df_syria$fungi) | !is.na(df_syria$coleoptera) | !is.na(df_syria$papilionoidea))
+nrow(df_syria_myers); (nrow(df_syria_myers)/13001)*100
+nrow(df_syria_other); (nrow(df_syria_other)/13001)*100
+df_syria_all_taxa <- subset(df_syria, !is.na(df_syria$plant) | !is.na(df_syria$amphibian) | !is.na(df_syria$reptile) | !is.na(df_syria$bird) | !is.na(df_syria$mammal) | !is.na(df_syria$fungi) | !is.na(df_syria$coleoptera) | !is.na(df_syria$papilionoidea))
+nrow(df_syria_all_taxa)
+
+# Palestine
+df_palestine <- subset(wos_data, grepl("Palestine", wos_data$fieldwork_country))
+df_palestine_myers <- subset(df_palestine, !is.na(df_palestine$plant) | !is.na(df_palestine$amphibian) | !is.na(df_palestine$reptile) | !is.na(df_palestine$bird) | !is.na(df_palestine$mammal))
+df_palestine_other <- subset(df_palestine, !is.na(df_palestine$fungi) | !is.na(df_palestine$coleoptera) | !is.na(df_palestine$papilionoidea))
+nrow(df_palestine_myers); (nrow(df_palestine_myers)/13001)*100
+nrow(df_palestine_other); (nrow(df_palestine_other)/13001)*100
+df_palestine_all_taxa <- subset(df_palestine, !is.na(df_palestine$plant) | !is.na(df_palestine$amphibian) | !is.na(df_palestine$reptile) | !is.na(df_palestine$bird) | !is.na(df_palestine$mammal) | !is.na(df_palestine$fungi) | !is.na(df_palestine$coleoptera) | !is.na(df_palestine$papilionoidea))
+nrow(df_palestine_all_taxa)
+
+# Near East
+df_near_east <- subset(wos_data, grepl("Israel", wos_data$fieldwork_country) | grepl("Cyprus", wos_data$fieldwork_country) | grepl("Lebanon", wos_data$fieldwork_country) | grepl("Syria", wos_data$fieldwork_country) | grepl("Palestine", wos_data$fieldwork_country))
+df_near_east_myers <- subset(df_near_east, !is.na(df_near_east$plant) | !is.na(df_near_east$amphibian) | !is.na(df_near_east$reptile) | !is.na(df_near_east$bird) | !is.na(df_near_east$mammal))
+df_near_east_other <- subset(df_near_east, !is.na(df_near_east$fungi) | !is.na(df_near_east$coleoptera) | !is.na(df_near_east$papilionoidea))
+nrow(df_near_east_myers); (nrow(df_near_east_myers)/13001)*100
+nrow(df_near_east_other); (nrow(df_near_east_other)/13001)*100
+
+
+# publications dealing with the northern side of the Mediterranean Sea
+df_north <- rbind(df_north_western, df_balkans, df_north_eastern)
+df_north <- df_north[!duplicated(df_north), ]
+df_north <- subset(df_north, !is.na(df_north$plant) | !is.na(df_north$amphibian) | !is.na(df_north$reptile) | !is.na(df_north$bird) | !is.na(df_north$mammal) | !is.na(df_north$fungi) | !is.na(df_north$coleoptera) | !is.na(df_north$papilionoidea))
+nrow(df_north); (nrow(df_north)/13001)*100
+# 72.16% of publications deal with at least one country of the northern side of the Mediterranean
+
+# contribution of the 4 north-western countries
+df_4NW <- rbind(df_portugal, df_spain, df_france, df_italy)
+df_4NW <- df_4NW[!duplicated(df_4NW), ]
+df_4NW <- subset(df_4NW, !is.na(df_4NW$plant) | !is.na(df_4NW$amphibian) | !is.na(df_4NW$reptile) | !is.na(df_4NW$bird) | !is.na(df_4NW$mammal) | !is.na(df_4NW$fungi) | !is.na(df_4NW$coleoptera) | !is.na(df_4NW$papilionoidea))
+nrow(df_4NW); (nrow(df_4NW)/13001)*100
+# 57.42 of publications deal with at least one of the four countries of NW med
+
+# contribution of 3 main marine regions
+df_marine_taxa <- subset(wos_data, !is.na(wos_data$fish) | !is.na(wos_data$porifera) | !is.na(wos_data$crustacea))
+df_marine_taxa <- subset(df_marine_taxa, !is.na(df_marine_taxa$marine_region))
+df_3_marine <- subset(df_marine_taxa, grepl("Western Mediterranean Sea", df_marine_taxa$marine_region) | grepl("Adriatic Sea", df_marine_taxa$marine_region) | grepl("Aegean Sea", df_marine_taxa$marine_region))
+nrow(df_3_marine); (nrow(df_3_marine)/nrow(df_marine_taxa))*100
+# 46.25% of publications on marine taxa deal with these 3 marine regions
+
 
 
