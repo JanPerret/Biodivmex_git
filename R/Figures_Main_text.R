@@ -126,8 +126,8 @@ my_palette <- c('#4daf4a', '#ff7f00', '#984ea3', '#377eb8', '#e41a1c')
 plot_Fig3 <- ggplot(data = df_fig_3, aes(x = tot_seq, y = tot_articles, fill = group, size = area_med)) +
   geom_point(shape = 21) +
   scale_size_continuous(range = c(3, 30)) +
-  scale_x_log10(breaks = x_breaks, limits = c(5, 120000), labels = function(x) format(x, scientific = FALSE)) +
-  scale_y_log10(breaks = x_breaks, limits = c(5, 8000), labels = function(x) format(x, scientific = FALSE)) +
+  scale_x_log10(breaks = x_breaks, limits = c(5, 120000), labels = scales::comma) +
+  scale_y_log10(breaks = x_breaks, limits = c(5, 8000), labels = scales::comma) +
   theme_bw() +
   theme(legend.position = "none") +
   xlab("Number of sequences (source GenBank)") +
