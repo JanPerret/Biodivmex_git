@@ -1,6 +1,10 @@
 # Biodivmex_git
 
-This repository contains all the code to conduct the analysis for a paper on the Mediterranean biodiversity hotspot. The data are stored separately because they are too voluminous. Please contact me if something goes wrong with the code, or for any question.
+Code for the following paper:
+
+Perret, J., Cobelli, O., Taudière, A., Andrieu, J., Aumeeruddy-Thomas, Y., Ben Souissi, J., Besnard, G., Casazza, G., Crochet, P.-A., Decaëns, T., Denis, F., Geniez, P., Loizides, M., Médail, F., Pasqualini, V., Speciale, C., Battesti, V., Chevaldonné, P., Lejeusne, C., & Richard, F. (2023). Time to refine the geography of biodiversity hotspots by integrating molecular data: The Mediterranean Basin as a case study. Biological Conservation, 284, 110162. https://doi.org/10.1016/j.biocon.2023.110162
+
+The data are stored separately because they are too voluminous. Please contact me if something goes wrong with the code, or for any question.
 
 Mail: [jan.perret\@cefe.cnrs.fr](mailto:jan.perret@cefe.cnrs.fr) or [jan.perret\@gmail.com](mailto:jan.perret@gmail.com)
 
